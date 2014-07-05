@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import co.inlist.activities.EventDetailsActivity;
+//import co.inlist.activities.EventDetailsActivity;
 import co.inlist.activities.HomeScreenActivity;
 import co.inlist.activities.R;
 import co.inlist.util.Constant;
@@ -153,10 +153,10 @@ public class EventsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(context,
-						EventDetailsActivity.class);
-				i.putExtra("pos", position);
-				context.startActivity(i);
+//				Intent i = new Intent(context,
+//						EventDetailsActivity.class);
+//				i.putExtra("pos", position);
+//				context.startActivity(i);
 			}
 		});
 
