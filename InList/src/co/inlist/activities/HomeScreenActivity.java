@@ -44,7 +44,7 @@ import co.inlist.util.UtilInList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
+//Hi
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
 		ActionBar.OnNavigationListener {
