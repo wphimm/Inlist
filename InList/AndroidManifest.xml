@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="co.inlist.activities"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <permission
+        android:name="co.inlist.activities.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="co.inlist.activities.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="co.inlist.activities.SplashScreenActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- HomeScreen Activity -->
+        <activity
+            android:name="co.inlist.activities.HomeScreenActivity"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
+        </activity>
+
+        <!-- Login activity -->
+        <activity
+            android:name="co.inlist.activities.LoginActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Sign Up activity -->
+        <activity
+            android:name="co.inlist.activities.SignUpActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Event Detail activity -->
+        <activity
+            android:name="co.inlist.activities.EventDetailsActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- PurchaseSummary Activity -->
+        <activity
+            android:name="co.inlist.activities.PurchaseSummaryActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.EventDetailsActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:name="LeadingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- Setting Account Activity -->
+        <activity
+            android:name="co.inlist.activities.SettingAccountListActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Change Password Activity -->
+        <activity
+            android:name="co.inlist.activities.ChangePasswordActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Invite Activity -->
+
+        <activity
+            android:name="co.inlist.activities.InviteActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- No Card Activity -->
+
+        <activity
+            android:name="co.inlist.activities.NoCardActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- NotificationSettings Activity -->
+
+        <activity
+            android:name="co.inlist.activities.NotificationsSettingsActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- TermsConditions Activity -->
+
+        <activity
+            android:name="co.inlist.activities.TermsConditionsActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Add a Card Activity -->
+        <activity
+            android:name="co.inlist.activities.AddCardActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Profile Activity -->
+        <activity
+            android:name="co.inlist.activities.ProfileActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Forgot Password Activity -->
+        <activity
+            android:name="co.inlist.activities.ForgotPassworActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.LoginActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- VipMemberShip Activity -->
+        <activity
+            android:name="co.inlist.activities.VipMemberShipActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.SignUpActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- VipMemberShip Review Activity -->
+        <activity
+            android:name="co.inlist.activities.VipMembershipReview"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.VipMemberShipActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- GalleryActivity Activity -->
+        <activity
+            android:name="co.inlist.activities.GalleryActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.EventDetailsActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Google MAP API V2 DATA -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyA6_DnFCyFLlKM_jRJASfbW_FmWCi2o_DI" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+</manifest>
