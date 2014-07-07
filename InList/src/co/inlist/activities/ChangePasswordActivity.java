@@ -25,9 +25,10 @@ import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
+
 public class ChangePasswordActivity extends Activity implements
 		ActionBar.OnNavigationListener {
-// Himabnsgy====
+
 	TextView txt_forgot_pwd;
 	EditText editCurrentPassword, editNewPassword, editConfirmPassword;
 
