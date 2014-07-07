@@ -20,6 +20,9 @@ import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
+/*
+ * Forgot password class
+ */
 public class ForgotPassworActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
