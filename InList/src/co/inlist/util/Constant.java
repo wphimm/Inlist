@@ -102,6 +102,10 @@ public class Constant {
 		public static final String PLZ_CARD_MONTH = "Please select month";
 		public static final String PLZ_CARD_YEAR = "Please select year";
 
+		// ChangePasswordActivity.java
+		public static final String PLZ_NEW_PWD = "Please enter new password";
+		public static final String PLZ_CNFRM_PWD = "Please enter confirm password";
+		public static final String PWD_NOT_MATCH = "New Passwords don't match";
 	}
 
 	public static class SHRED_PR {

@@ -93,7 +93,7 @@ public class EventsAdapter extends BaseAdapter {
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
-		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+//		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText(locallist.get(position).get("event_title").toString().toUpperCase());
 		txt_event_location_city.setText(""+locallist.get(position).get(
 				"event_location_club")+", "+locallist.get(position).get(

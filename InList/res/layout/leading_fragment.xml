@@ -22,8 +22,8 @@
             android:layout_below="@+id/img"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            android:text="@string/skip_nw"
             android:gravity="center_horizontal"
+            android:text="@string/skip_nw"
             android:textColor="#fff" />
     </RelativeLayout>
 

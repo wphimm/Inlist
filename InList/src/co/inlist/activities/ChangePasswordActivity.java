@@ -67,12 +67,12 @@ public class ChangePasswordActivity extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_save:
-			
+
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(editCurrentPassword.getWindowToken(), 0);
 			imm.hideSoftInputFromWindow(editNewPassword.getWindowToken(), 0);
 			imm.hideSoftInputFromWindow(editConfirmPassword.getWindowToken(), 0);
-			
+
 			if (isValidate()) {
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
@@ -173,7 +173,8 @@ public class ChangePasswordActivity extends Activity implements
 							Toast.makeText(getApplicationContext(),
 									"" + messages, Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(getApplicationContext(), "Your password was successfully changed.",
+							Toast.makeText(getApplicationContext(),
+									"Your password was successfully changed.",
 									Toast.LENGTH_SHORT).show();
 						}
 						finish();
@@ -204,19 +205,21 @@ public class ChangePasswordActivity extends Activity implements
 		 * false; }
 		 */
 		if (editNewPassword.getText().toString().trim().length() == 0) {
-			Toast.makeText(getApplicationContext(),
-					"please enter new password", Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(ChangePasswordActivity.this,
+					Constant.ERRORS.PLZ_NEW_PWD);
+
 			return false;
 		}
 		if (editConfirmPassword.getText().toString().trim().length() == 0) {
-			Toast.makeText(getApplicationContext(),
-					"please enter confirm password", Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(),
+					Constant.ERRORS.PLZ_CNFRM_PWD);
+
 			return false;
 		}
 		if (!editNewPassword.getText().toString().trim()
 				.equals("" + editConfirmPassword.getText().toString().trim())) {
-			Toast.makeText(getApplicationContext(),
-					"New Passwords don't match", Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(),
+					Constant.ERRORS.PWD_NOT_MATCH);
 			return false;
 		}
 

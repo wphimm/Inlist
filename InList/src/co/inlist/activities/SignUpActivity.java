@@ -215,7 +215,7 @@ public class SignUpActivity extends Activity implements
 		txt_su_que = (TextView) findViewById(R.id.txt_su_que);
 
 		rl_fb = (RelativeLayout) findViewById(R.id.rl_fb);
-		linearVip=(LinearLayout)findViewById(R.id.linearVip);
+		linearVip = (LinearLayout) findViewById(R.id.linearVip);
 
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
 	}
@@ -231,22 +231,22 @@ public class SignUpActivity extends Activity implements
 			// search action
 
 			if (edt_su_fname.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_FIRST_NAME);
 			} else if (edt_su_lname.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_LAST_NAME);
 			} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_EMAIL);
 			} else if (edt_su_pwd.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_PASSWORD);
 			} else if (edt_su_phno.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_CONTACT_NO);
 			} else if (edt_su_ans.getText().toString().trim().equals("")) {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.PLZ_ANS);
 
 			} else {
@@ -354,7 +354,7 @@ public class SignUpActivity extends Activity implements
 				finish();
 
 			} else {
-				UtilInList.makeToast(SignUpActivity.this,
+				UtilInList.validateDialog(SignUpActivity.this,
 						Constant.ERRORS.SOMETHING_GOES_WRONG);
 			}
 

@@ -27,7 +27,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:singleLine="true"
-                android:textColor="#fff" />
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -55,9 +56,10 @@
                     android:id="@+id/event_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@color/light_yellow"
-                    android:textSize="38sp" />
+                    android:text="TIESTO"
+                    android:textColor="@color/hs_title_yellow"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/event_location_city"

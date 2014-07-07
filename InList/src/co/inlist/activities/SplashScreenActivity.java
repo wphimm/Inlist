@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -34,11 +33,11 @@ public class SplashScreenActivity extends Activity {
 		setContentView(R.layout.splash_screen);
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-			//new AddDeviceAsyncTask(getApplicationContext()).execute("");
+			// new AddDeviceAsyncTask(getApplicationContext()).execute("");
 			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		} else {
-			Toast.makeText(getApplicationContext(),
-					"" + Constant.network_error, Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), ""
+					+ Constant.network_error);
 
 		}
 
@@ -117,8 +116,9 @@ public class SplashScreenActivity extends Activity {
 					"" + Constant.API_LIVE + Constant.ACTIONS.ADD_DEVICE
 							+ "?json=true" + "&device_id="
 							+ UtilInList.getDeviceId(getApplicationContext()));
-			Log.e("Response In Activity-->", ".."+response);
-			Log.e("DeviceId", ""+UtilInList.getDeviceId(getApplicationContext()));
+			Log.e("Response In Activity-->", ".." + response);
+			Log.e("DeviceId",
+					"" + UtilInList.getDeviceId(getApplicationContext()));
 			return response;
 		}
 
@@ -128,30 +128,24 @@ public class SplashScreenActivity extends Activity {
 			super.onPostExecute(result);
 			// fragment_addconnection_search
 
-			/*if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
-
-					InListApplication.getParty_area().clear();
-
-					if (str_temp.equals("success")) {
-						if (UtilInList
-								.isInternetConnectionExist(getApplicationContext())) {
-							new PartyAreaAsyncTask(getApplicationContext())
-									.execute("");
-						} else {
-							Toast.makeText(getApplicationContext(),
-									"" + Constant.network_error,
-									Toast.LENGTH_SHORT).show();
-
-						}
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
+			/*
+			 * if (result != null) { try { JSONObject jObject = new
+			 * JSONObject(result); String str_temp =
+			 * jObject.getString("status");
+			 * 
+			 * InListApplication.getParty_area().clear();
+			 * 
+			 * if (str_temp.equals("success")) { if (UtilInList
+			 * .isInternetConnectionExist(getApplicationContext())) { new
+			 * PartyAreaAsyncTask(getApplicationContext()) .execute(""); } else
+			 * { Toast.makeText(getApplicationContext(), "" +
+			 * Constant.network_error, Toast.LENGTH_SHORT).show();
+			 * 
+			 * } }
+			 * 
+			 * } catch (JSONException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); } }
+			 */
 
 		}
 

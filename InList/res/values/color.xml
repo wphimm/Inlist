@@ -12,4 +12,6 @@
     <color name="dark_black">#191919</color>
     <color name="red">#ff0000</color>
 
+    <!-- HomeScreen List row Color -->
+    <color name="hs_title_yellow">#deb968</color>
 </resources>

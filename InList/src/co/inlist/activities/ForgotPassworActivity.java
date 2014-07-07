@@ -63,7 +63,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				// search action
 
 				if (edt_frg_e_mail.getText().toString().equals("")) {
-					UtilInList.makeToast(getActivity(),
+					UtilInList.validateDialog(getActivity(),
 							Constant.ERRORS.PLZ_EMAIL);
 				} else {
 					new WebServiceDataCollectorAsyncTask(Constant.API
@@ -76,7 +76,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				return true;
 
 			case android.R.id.home:
-//				getActivity().finish();
+				// getActivity().finish();
 				return true;
 
 			default:
@@ -137,8 +137,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				manager.beginTransaction()
 						.replace(R.id.container, myCurrentFragment).commit();
 			} else {
-				UtilInList.makeToast(ForgotPassworActivity.this,
-						"Something goes wrong");
+				UtilInList.validateDialog(ForgotPassworActivity.this,
+						Constant.ERRORS.SOMETHING_GOES_WRONG);
 			}
 
 		} catch (JSONException e) {
