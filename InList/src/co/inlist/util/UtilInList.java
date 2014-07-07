@@ -410,8 +410,8 @@ public class UtilInList {
 		AlertDialog.Builder popupBuilder = new AlertDialog.Builder(context);
 
 		TextView myMsg = new TextView(context);
-		myMsg.setText(Constant.ERRORS.NO_INTERNET_CONNECTION);
-		popupBuilder.setTitle("No internet connection");
+		myMsg.setText(errorMsg);
+		popupBuilder.setTitle(title);
 		myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
 
 		popupBuilder.setView(myMsg);
