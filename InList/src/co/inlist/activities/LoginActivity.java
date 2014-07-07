@@ -91,7 +91,7 @@ public class LoginActivity extends Activity implements
 	public void loginToFacebook() {
 
 		mPrefs = getPreferences(MODE_PRIVATE);
-		String access_token = mPrefs.getString("access_token", null);
+
 		long expires = mPrefs.getLong("access_expires", 0);
 
 		if (expires != 0) {
@@ -241,11 +241,13 @@ public class LoginActivity extends Activity implements
 						Constant.ERRORS.PLZ_EMAIL, Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER, 0, 0);
 				toast.show();
-		/*	} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-				Toast toast = Toast.makeText(LoginActivity.this,
-						Constant.ERRORS.PLZ_PASSWORD, Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();*/
+				/*
+				 * } else if
+				 * (edt_lgn_pwd.getText().toString().trim().equals("")) { Toast
+				 * toast = Toast.makeText(LoginActivity.this,
+				 * Constant.ERRORS.PLZ_PASSWORD, Toast.LENGTH_LONG);
+				 * toast.setGravity(Gravity.CENTER, 0, 0); toast.show();
+				 */
 			} else {
 				new WebServiceDataCollectorAsyncTask(Constant.API
 						+ String.format(Constant.ACTIONS.LOGIN, "VIP", "true",
@@ -301,12 +303,16 @@ public class LoginActivity extends Activity implements
 				UtilInList.WriteSharePrefrence(LoginActivity.this,
 						Constant.SHRED_PR.KEY_PHONE,
 						result.getJSONObject("data").getString("phone"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
+				UtilInList.WriteSharePrefrence(
+						LoginActivity.this,
 						Constant.SHRED_PR.KEY_SESSIONID,
-						result.getJSONObject("session").getJSONObject("userInfo").getString("sessionId"));
+						result.getJSONObject("session")
+								.getJSONObject("userInfo")
+								.getString("sessionId"));
 				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_CURRENT_PASSWORD,edt_lgn_pwd.getText().toString().trim());
-				
+						Constant.SHRED_PR.KEY_CURRENT_PASSWORD, edt_lgn_pwd
+								.getText().toString().trim());
+
 				startActivity(new Intent(LoginActivity.this,
 						HomeScreenActivity.class));
 				finish();

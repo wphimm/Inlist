@@ -128,27 +128,7 @@ public class SplashScreenActivity extends Activity {
 			super.onPostExecute(result);
 			// fragment_addconnection_search
 
-			/*
-			 * if (result != null) { try { JSONObject jObject = new
-			 * JSONObject(result); String str_temp =
-			 * jObject.getString("status");
-			 * 
-			 * InListApplication.getParty_area().clear();
-			 * 
-			 * if (str_temp.equals("success")) { if (UtilInList
-			 * .isInternetConnectionExist(getApplicationContext())) { new
-			 * PartyAreaAsyncTask(getApplicationContext()) .execute(""); } else
-			 * { Toast.makeText(getApplicationContext(), "" +
-			 * Constant.network_error, Toast.LENGTH_SHORT).show();
-			 * 
-			 * } }
-			 * 
-			 * } catch (JSONException e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); } }
-			 */
-
 		}
-
 	}
 
 	public class PartyAreaAsyncTask extends AsyncTask<String, String, String> {
