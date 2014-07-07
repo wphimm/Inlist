@@ -3,6 +3,7 @@ package co.inlist.activities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

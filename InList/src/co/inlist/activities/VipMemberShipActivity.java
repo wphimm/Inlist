@@ -3,6 +3,7 @@ package co.inlist.activities;
 import java.io.IOException;
 import java.util.HashMap;
 
+import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;

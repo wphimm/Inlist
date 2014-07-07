@@ -3,18 +3,16 @@ package co.inlist.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import co.inlist.activities.InListApplication;
-import co.inlist.activities.R;
 import co.inlist.util.HorizontalListView;
 
 public class HorizontalListAdapter extends BaseAdapter {

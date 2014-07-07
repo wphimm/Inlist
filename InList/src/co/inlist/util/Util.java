@@ -22,6 +22,8 @@
  */
 package co.inlist.util;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -41,8 +43,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import java.util.List;
 
 /**
  * @author bin

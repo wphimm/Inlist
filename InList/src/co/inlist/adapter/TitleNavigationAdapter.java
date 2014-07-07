@@ -3,6 +3,7 @@ package co.inlist.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import co.inlist.activities.R;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import co.inlist.activities.R;
 
 public class TitleNavigationAdapter extends BaseAdapter {
 

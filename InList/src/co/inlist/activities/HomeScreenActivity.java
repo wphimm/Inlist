@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -45,8 +46,7 @@ import co.inlist.util.UtilInList;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-//Himanshu comit
-//bhavik new commit
+
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
 		ActionBar.OnNavigationListener {

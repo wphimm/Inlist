@@ -3,6 +3,7 @@ package co.inlist.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;

@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.inlist.activities.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

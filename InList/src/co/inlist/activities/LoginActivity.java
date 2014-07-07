@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 
 import org.json.JSONObject;
 
+import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +35,6 @@ import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
-//Bhavik commit
 public class LoginActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 

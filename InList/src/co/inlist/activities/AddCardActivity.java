@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
@@ -26,7 +27,6 @@ import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
-//himanshu new comit
 
 public class AddCardActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
@@ -34,6 +34,7 @@ public class AddCardActivity extends Activity implements
 	private EditText edt_card_num;
 	private EditText edt_card_name;
 	private Spinner sp_month;
+	
 	private Spinner sp_year;
 	private String selected_month, selected_year;
 
