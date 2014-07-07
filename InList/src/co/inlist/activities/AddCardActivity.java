@@ -31,7 +31,7 @@ import co.inlist.util.UtilInList;
 public class AddCardActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
-	private EditText edt_card_num;
+	private EditText edt_card_num; 
 	private EditText edt_card_name;
 	private Spinner sp_month;
 	
