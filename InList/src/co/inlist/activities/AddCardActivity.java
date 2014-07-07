@@ -35,7 +35,7 @@ public class AddCardActivity extends Activity implements
 	private EditText edt_card_name;
 	private Spinner sp_month;
 	private Spinner sp_year;
-	private String selected, spinner_item, selected_month, selected_year;
+	private String selected_month, selected_year;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
