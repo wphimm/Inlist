@@ -43,7 +43,6 @@ public class AddCardActivity extends Activity implements
 		setContentView(R.layout.add_card_screen);
 
 		init();
-		
 
 		Calendar calendar = Calendar.getInstance();
 		int year = calendar.get(Calendar.YEAR);
@@ -127,16 +126,16 @@ public class AddCardActivity extends Activity implements
 			if (edt_card_num.getText().toString().equals("")) {
 
 				UtilInList.validateDialog(getApplicationContext(),
-						Constant.ERRORS.PLZ_CARD_NUMBER);
+						Constant.ERRORS.PLZ_CARD_NUMBER, Constant.ERRORS.OOPS);
 			} else if (edt_card_name.getText().toString().equals("")) {
 				UtilInList.validateDialog(getApplicationContext(),
-						Constant.ERRORS.PLZ_CARD_NAME);
+						Constant.ERRORS.PLZ_CARD_NAME, Constant.ERRORS.OOPS);
 			} else if (selected_month.equals("Month")) {
 				UtilInList.validateDialog(getApplicationContext(),
-						Constant.ERRORS.PLZ_CARD_MONTH);
+						Constant.ERRORS.PLZ_CARD_MONTH, Constant.ERRORS.OOPS);
 			} else if (selected_year.equals("Year")) {
 				UtilInList.validateDialog(getApplicationContext(),
-						Constant.ERRORS.PLZ_CARD_YEAR);
+						Constant.ERRORS.PLZ_CARD_YEAR, Constant.ERRORS.OOPS);
 			} else {
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -153,8 +152,7 @@ public class AddCardActivity extends Activity implements
 				params.add(new BasicNameValuePair("set_default", "1"));
 
 				new WebServiceDataPosterAsyncTask(AddCardActivity.this, params,
-						Constant.API + Constant.ACTIONS.ADD_CARD)
-						.execute();
+						Constant.API + Constant.ACTIONS.ADD_CARD).execute();
 
 			}
 
@@ -181,10 +179,12 @@ public class AddCardActivity extends Activity implements
 		try {
 			if (result.getString("success").equals("true")) {
 				UtilInList.validateDialog(AddCardActivity.this, result
-						.getJSONArray("messages").getString(0));
+						.getJSONArray("messages").getString(0),
+						Constant.ERRORS.OOPS);
 			} else {
 				UtilInList.validateDialog(AddCardActivity.this, result
-						.getJSONArray("errors").getString(0));
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
 			}
 		} catch (Exception e) {
 			Log.v("", "Exception : " + e);

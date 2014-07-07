@@ -232,22 +232,22 @@ public class SignUpActivity extends Activity implements
 
 			if (edt_su_fname.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_FIRST_NAME);
+						Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
 			} else if (edt_su_lname.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_LAST_NAME);
+						Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
 			} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_EMAIL);
+						Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
 			} else if (edt_su_pwd.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_PASSWORD);
+						Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
 			} else if (edt_su_phno.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_CONTACT_NO);
+						Constant.ERRORS.PLZ_CONTACT_NO, Constant.ERRORS.OOPS);
 			} else if (edt_su_ans.getText().toString().trim().equals("")) {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_ANS);
+						Constant.ERRORS.PLZ_ANS, Constant.ERRORS.OOPS);
 
 			} else {
 
@@ -355,12 +355,13 @@ public class SignUpActivity extends Activity implements
 
 			} else {
 				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.SOMETHING_GOES_WRONG);
+						Constant.ERRORS.SOMETHING_GOES_WRONG,
+						Constant.ERRORS.OOPS);
 			}
 
 		} catch (Exception e) {
 			UtilInList.validateDialog(SignUpActivity.this,
-					Constant.ERRORS.SOMETHING_GOES_WRONG);
+					Constant.ERRORS.SOMETHING_GOES_WRONG, Constant.ERRORS.OOPS);
 			Log.v("", "Excption : " + e);
 		}
 	}

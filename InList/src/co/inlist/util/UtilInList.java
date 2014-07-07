@@ -31,6 +31,8 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -405,9 +407,27 @@ public class UtilInList {
 		return output;
 	}
 
-	public static void validateDialog(Context context, String errorMsg) {
-		new AlertDialog.Builder(context).setMessage(errorMsg)
-				.setPositiveButton("OK", null).show();
+	public static void validateDialog(Context context, String errorMsg, String title) {
+
+		AlertDialog.Builder popupBuilder = new AlertDialog.Builder(context);
+
+		TextView myMsg = new TextView(context);
+		myMsg.setText(Constant.ERRORS.NO_INTERNET_CONNECTION);
+		popupBuilder.setTitle("No internet connection");
+		myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+
+		popupBuilder.setView(myMsg);
+
+		popupBuilder.setPositiveButton("Ok", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		popupBuilder.show();
 	}
 
 	public static Typeface setHelveticatype(Context context) {

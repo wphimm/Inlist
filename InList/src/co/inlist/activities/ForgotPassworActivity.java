@@ -64,7 +64,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 				if (edt_frg_e_mail.getText().toString().equals("")) {
 					UtilInList.validateDialog(getActivity(),
-							Constant.ERRORS.PLZ_EMAIL);
+							Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
 				} else {
 					new WebServiceDataCollectorAsyncTask(Constant.API
 							+ String.format(Constant.ACTIONS.FORGOT_PASSWORD,
@@ -138,7 +138,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 						.replace(R.id.container, myCurrentFragment).commit();
 			} else {
 				UtilInList.validateDialog(ForgotPassworActivity.this,
-						Constant.ERRORS.SOMETHING_GOES_WRONG);
+						Constant.ERRORS.SOMETHING_GOES_WRONG,
+						Constant.ERRORS.OOPS);
 			}
 
 		} catch (JSONException e) {

@@ -25,7 +25,6 @@ import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
-
 public class ChangePasswordActivity extends Activity implements
 		ActionBar.OnNavigationListener {
 
@@ -207,20 +206,20 @@ public class ChangePasswordActivity extends Activity implements
 		 */
 		if (editNewPassword.getText().toString().trim().length() == 0) {
 			UtilInList.validateDialog(ChangePasswordActivity.this,
-					Constant.ERRORS.PLZ_NEW_PWD);
+					Constant.ERRORS.PLZ_NEW_PWD, Constant.ERRORS.OOPS);
 
 			return false;
 		}
 		if (editConfirmPassword.getText().toString().trim().length() == 0) {
 			UtilInList.validateDialog(getApplicationContext(),
-					Constant.ERRORS.PLZ_CNFRM_PWD);
+					Constant.ERRORS.PLZ_CNFRM_PWD, Constant.ERRORS.OOPS);
 
 			return false;
 		}
 		if (!editNewPassword.getText().toString().trim()
 				.equals("" + editConfirmPassword.getText().toString().trim())) {
 			UtilInList.validateDialog(getApplicationContext(),
-					Constant.ERRORS.PWD_NOT_MATCH);
+					Constant.ERRORS.PWD_NOT_MATCH, Constant.ERRORS.OOPS);
 			return false;
 		}
 

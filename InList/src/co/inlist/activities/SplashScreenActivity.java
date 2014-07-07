@@ -36,8 +36,9 @@ public class SplashScreenActivity extends Activity {
 			// new AddDeviceAsyncTask(getApplicationContext()).execute("");
 			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		} else {
-			UtilInList.validateDialog(getApplicationContext(), ""
-					+ Constant.network_error);
+			UtilInList.validateDialog(SplashScreenActivity.this, ""
+					+ Constant.ERRORS.NO_INTERNET_CONNECTION,
+					Constant.ERRORS.NO_INTERNET_CONNECTION_TITLE);
 
 		}
 

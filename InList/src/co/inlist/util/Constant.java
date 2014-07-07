@@ -89,7 +89,7 @@ public class Constant {
 		public static final String PLZ_VALID_EMAIL = "Please enter valid EMAIL address";
 		public static final String PLZ_CONTACT_NO = "Please enter contact no";
 		public static final String PLZ_PASSWORD = "Please enter password";
-		public static final String PLZ_REPASSWORD = "Please enter RePasword";
+		public static final String PLZ_REPASSWORD = "Please enter a password having a mix of letters and numbers, and at least 6 charecters in length.";
 		public static final String NOT_MATCHED = "Password didn't match";
 		public static final String RECORDS_NOT_FOUNT = "No records found";
 		public static final String NO_PENDING_REQUEST = "You have no pending request";
@@ -97,11 +97,13 @@ public class Constant {
 		public static final String SOMETHING_GOES_WRONG = "Something goes wrong, please try again";
 
 		public static final String NO_INTERNET_CONNECTION = "We were unable to establish a connection to the internet. Check your signal, WiFi settings or restart the app or phone.";
+		public static final String NO_INTERNET_CONNECTION_TITLE = "No internet connection";
 		public static final String PLZ_CARD_NUMBER = "Please enter card number";
 		public static final String PLZ_CARD_NAME = "Please enter card holder's name";
 		public static final String PLZ_CARD_MONTH = "Please select month";
 		public static final String PLZ_CARD_YEAR = "Please select year";
 
+		public static final String OOPS = "Oops";
 		// ChangePasswordActivity.java
 		public static final String PLZ_NEW_PWD = "Please enter new password";
 		public static final String PLZ_CNFRM_PWD = "Please enter confirm password";
