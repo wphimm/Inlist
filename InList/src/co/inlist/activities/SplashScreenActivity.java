@@ -34,7 +34,7 @@ public class SplashScreenActivity extends Activity {
 		setContentView(R.layout.splash_screen);
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-			// new AddDeviceAsyncTask(getApplicationContext()).execute("");
+			new AddDeviceAsyncTask(getApplicationContext()).execute("");
 			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		} else {
 			UtilInList.validateDialog(SplashScreenActivity.this, ""
@@ -115,9 +115,10 @@ public class SplashScreenActivity extends Activity {
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
 					nameValuePairs,
-					"" + Constant.API_LIVE + Constant.ACTIONS.ADD_DEVICE
+					"" + Constant.API + Constant.ACTIONS.ADD_DEVICE
 							+ "?json=true" + "&device_id="
-							+ UtilInList.getDeviceId(getApplicationContext()));
+							+ UtilInList.getDeviceId(getApplicationContext())
+							+"&deviceType=Android");
 			Log.e("Response In Activity-->", ".." + response);
 			Log.e("DeviceId",
 					"" + UtilInList.getDeviceId(getApplicationContext()));
@@ -128,7 +129,6 @@ public class SplashScreenActivity extends Activity {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			// fragment_addconnection_search
 
 		}
 	}

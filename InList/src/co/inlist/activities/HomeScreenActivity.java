@@ -527,6 +527,8 @@ public class HomeScreenActivity extends Activity implements
 					map.put("event_location_club",
 							"" + obj.getString("event_location_club"));
 					try {
+						map.put("event_end_time",
+								"" + obj.getString("event_end_time"));
 						map.put("tables_total",
 								"" + obj.getString("tables_total"));
 						map.put("tables_available",
@@ -540,8 +542,6 @@ public class HomeScreenActivity extends Activity implements
 
 					map.put("event_poster_url",
 							"" + obj.getString("event_poster_url"));
-					map.put("event_end_time",
-							"" + obj.getString("event_end_time"));
 
 					map.put("atmosphere", "" + obj.getString("atmosphere"));
 					map.put("music_type", "" + obj.getString("music_type"));
