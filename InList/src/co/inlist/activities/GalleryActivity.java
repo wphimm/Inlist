@@ -136,10 +136,6 @@ public class GalleryActivity extends Activity implements
 			final ImageView imageView = (ImageView) imageLayout
 					.findViewById(R.id.image);
 
-			final ProgressBar spinner = (ProgressBar) imageLayout
-					.findViewById(R.id.loading);
-			// imageView.setScaleType(ScaleType.FIT_XY);
-
 			imageLoader.displayImage(
 					"" + locallist.get(position).get("source"), imageView,
 					options);
