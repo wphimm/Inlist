@@ -31,7 +31,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forget_passwod_frame_to_replace);
 
-//		UtilInList.makeActionBarFullBlack(ForgotPassworActivity.this);
+		// UtilInList.makeActionBarFullBlack(ForgotPassworActivity.this);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -126,27 +126,30 @@ public class ForgotPassworActivity extends FragmentActivity implements
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
 
-		try {
-			Log.v("",
-					">>>>>>>>> This is response : "
-							+ result.getString("success"));
+		if (result != null) {
+			try {
 
-			if (result.getString("success").equals("true")) {
-				Fragment myCurrentFragment = new PlaceholderFragment_SendLink();
-				android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+				if (result.getString("success").equals("true")) {
+					Fragment myCurrentFragment = new PlaceholderFragment_SendLink();
+					android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
 
-				myCurrentFragment = new PlaceholderFragment_SendLink();
-				manager.beginTransaction()
-						.replace(R.id.container, myCurrentFragment).commit();
-			} else {
-				UtilInList.validateDialog(ForgotPassworActivity.this,
-						Constant.ERRORS.SOMETHING_GOES_WRONG,
-						Constant.ERRORS.OOPS);
+					myCurrentFragment = new PlaceholderFragment_SendLink();
+					manager.beginTransaction()
+							.replace(R.id.container, myCurrentFragment)
+							.commit();
+				} else {
+					UtilInList.validateDialog(ForgotPassworActivity.this,
+							Constant.ERRORS.SOMETHING_GOES_WRONG,
+							Constant.ERRORS.OOPS);
+				}
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			UtilInList.validateDialog(ForgotPassworActivity.this,
+					Constant.ERRORS.SOMETHING_GOES_WRONG, Constant.ERRORS.OOPS);
 		}
 	}
 
