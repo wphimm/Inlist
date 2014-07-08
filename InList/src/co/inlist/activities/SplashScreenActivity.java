@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.inlist.activities.R;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,11 +20,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import co.inlist.serverutils.WebServiceDataCollectorAsyncTaskSplash;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
-public class SplashScreenActivity extends Activity {
+public class SplashScreenActivity extends Activity implements
+		AsyncTaskCompleteListener {
 
 	public static final int SPLASH_TIMEOUT = 2000;
 
@@ -34,6 +37,12 @@ public class SplashScreenActivity extends Activity {
 		setContentView(R.layout.splash_screen);
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
+			
+			new WebServiceDataCollectorAsyncTaskSplash(Constant.API_LIVE
+					+ Constant.ACTIONS.PREPARE_REGISTER,
+					SplashScreenActivity.this).execute();
+			
+			
 			new AddDeviceAsyncTask(getApplicationContext()).execute("");
 			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		} else {
@@ -118,7 +127,7 @@ public class SplashScreenActivity extends Activity {
 					"" + Constant.API + Constant.ACTIONS.ADD_DEVICE
 							+ "?json=true" + "&device_id="
 							+ UtilInList.getDeviceId(getApplicationContext())
-							+"&deviceType=Android");
+							+ "&deviceType=Android");
 			Log.e("Response In Activity-->", ".." + response);
 			Log.e("DeviceId",
 					"" + UtilInList.getDeviceId(getApplicationContext()));
@@ -211,6 +220,29 @@ public class SplashScreenActivity extends Activity {
 
 		}
 
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+
+		try {
+
+			/*
+			 * Prepare registration response write in file mode private
+			 */
+			UtilInList.writeToFile(result.getJSONObject("data").toString(),
+					Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
+					SplashScreenActivity.this);
+
+			new Timer().schedule(new TimerTask() {
+				public void run() {
+					proceed();
+				}
+			}, SPLASH_TIMEOUT);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

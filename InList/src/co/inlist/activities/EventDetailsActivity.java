@@ -143,6 +143,8 @@ public class EventDetailsActivity extends Activity implements
 			e.printStackTrace();
 		}
 
+		try{
+		
 		String strStartTime = "" + map.get("event_start_time").replace(" ", "");
 		if (strStartTime.equals("null")) {
 			txt_date_time.setText("" + strDate);
@@ -156,6 +158,9 @@ public class EventDetailsActivity extends Activity implements
 			}
 		}
 
+		}catch(Exception e){
+			Log.v("","Exception : "+e);
+		}
 		// ***** Date Format ************************************//
 
 		txt_details.setText("" + map.get("event_description"));
