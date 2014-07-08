@@ -3,9 +3,16 @@ package co.inlist.activities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.android.gms.internal.js;
 
 import co.inlist.activities.R;
 import android.app.ActionBar;
@@ -31,6 +38,7 @@ import co.inlist.facebook.android.Facebook.DialogListener;
 import co.inlist.facebook.android.FacebookError;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -279,29 +287,31 @@ public class SignUpActivity extends Activity implements
 											.replace(" ", "%20"),
 							SignUpActivity.this).execute();
 				} else {
-					new WebServiceDataCollectorAsyncTask(
-							Constant.API
-									+ String.format(
-											Constant.ACTIONS.REGISTRATION,
-											Constant.TAGS.VIP,
-											"true",
-											UtilInList
-													.getDeviceId(SignUpActivity.this),
-											edt_su_e_mail.getText().toString()
-													.trim(),
-											edt_su_pwd.getText().toString()
-													.trim(),
-											edt_su_fname.getText().toString()
-													.trim(),
-											edt_su_lname.getText().toString()
-													.trim(),
-											edt_su_phno.getText().toString()
-													.trim(),
-											question_id,
-											edt_su_ans.getText().toString()
-													.trim(), "true").replace(
-											" ", "%20"), SignUpActivity.this)
-							.execute();
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("device_id", UtilInList
+							.getDeviceId(SignUpActivity.this)));
+					params.add(new BasicNameValuePair("email", edt_su_e_mail
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", edt_su_pwd
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("first_name",
+							edt_su_fname.getText().toString().trim()));
+					params.add(new BasicNameValuePair("last_name", edt_su_lname
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("phone", edt_su_phno
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("membership_question_id",
+							question_id));
+					params.add(new BasicNameValuePair(
+							"membership_question_answer", edt_su_ans.getText()
+									.toString().trim().replace(" ", "%20")));
+
+					new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+							params, Constant.API
+									+ Constant.ACTIONS.REGISTRATION).execute();
+
 				}
 
 			}
@@ -355,8 +365,11 @@ public class SignUpActivity extends Activity implements
 				finish();
 
 			} else {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.SOMETHING_GOES_WRONG,
+				
+				// JSONArray jsrr = result.getJSONArray("errors");
+				// jsrr.getString(0);
+				UtilInList.validateDialog(SignUpActivity.this, result
+						.getJSONArray("errors").getString(0).toString(),
 						Constant.ERRORS.OOPS);
 			}
 
