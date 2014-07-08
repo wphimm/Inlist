@@ -7,7 +7,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -69,12 +67,10 @@ public class InviteActivity extends Activity implements
 			if (isValid()) {
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					new InviteAsyncTask(InviteActivity.this)
-							.execute("");
+					new InviteAsyncTask(InviteActivity.this).execute("");
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}
 			}
@@ -89,8 +85,7 @@ public class InviteActivity extends Activity implements
 		}
 	}
 
-	public class InviteAsyncTask extends
-			AsyncTask<String, String, String> {
+	public class InviteAsyncTask extends AsyncTask<String, String, String> {
 
 		private MyProgressbar dialog;
 
@@ -152,33 +147,26 @@ public class InviteActivity extends Activity implements
 			if (result != null) {
 				try {
 					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
 
-					InListApplication.getParty_area().clear();
-
-					if (str_temp.equals("success")) {
-						String messages = jObject.getString("messages");
-						if (messages.length() > 4) {
-							messages = messages.substring(2, messages.length());
-							messages = messages.substring(0,
-									messages.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + messages, Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(
+					try {
+						if (jObject.getString("success").equals("true")) {
+							UtilInList.validateDialog(
 									getApplicationContext(),
-									"Thank you, your friend was successfully invited.",
-									Toast.LENGTH_SHORT).show();
+									jObject.getJSONArray("messages").getString(
+											0), Constant.AppName);
+							editFirst.setText("");
+							editLast.setText("");
+							editEmail.setText("");
+
+						} else {
+							UtilInList
+									.validateDialog(getApplicationContext(),
+											jObject.getJSONArray("errors")
+													.getString(0),
+											Constant.ERRORS.OOPS);
 						}
-						finish();
-					} else {
-						String errors = jObject.getString("errors");
-						if (errors.length() > 4) {
-							errors = errors.substring(2, errors.length());
-							errors = errors.substring(0, errors.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + errors, Toast.LENGTH_SHORT).show();
-						}
+					} catch (Exception e) {
+						Log.v("", "Exception : " + e);
 					}
 
 				} catch (JSONException e) { // TODO Auto-generated catch block
@@ -193,26 +181,24 @@ public class InviteActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 3) {
-			Toast.makeText(getApplicationContext(),
-					"Invitee's first name must be minimum 2 characters",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 3) {
-			Toast.makeText(getApplicationContext(),
-					"Invitee's last name must be minimum 2 characters",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			Toast.makeText(getApplicationContext(),
-					"please enter invitee's email", Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			Toast.makeText(getApplicationContext(), "please enter valid email",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.ERRORS.PLZ_VALID_EMAIL, Constant.ERRORS.OOPS);
 			return false;
 		}
 		return true;

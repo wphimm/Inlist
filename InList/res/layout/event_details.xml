@@ -41,8 +41,8 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/light_yellow"
                         android:textIsSelectable="true"
-                        android:textStyle="bold"
-                        android:textSize="30sp" />
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/event_location_city"
@@ -87,7 +87,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/date_time"
-                        android:textColor="@color/light" />
+                        android:textColor="@color/light"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txt_date_time"
@@ -104,7 +105,8 @@
                         android:layout_below="@+id/txt_date_time"
                         android:layout_marginTop="10dp"
                         android:text="@string/details"
-                        android:textColor="@color/light" />
+                        android:textColor="@color/light"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txt_details"
@@ -133,7 +135,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/atmosphere"
-                                android:textColor="@color/light" />
+                                android:textColor="@color/light"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/txt_atmosphere"
@@ -153,7 +156,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/music"
-                                android:textColor="@color/light" />
+                                android:textColor="@color/light"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/txt_music"
@@ -198,7 +202,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/table"
-                        android:textColor="@color/light" />
+                        android:textColor="@color/light"
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerTable"
@@ -248,7 +253,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/your_minimum_"
-                            android:textColor="@color/light" />
+                            android:textColor="@color/light"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_minimum"
@@ -301,7 +307,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/location"
-                        android:textColor="@color/light" />
+                        android:textColor="@color/light"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtaddress"
@@ -354,8 +361,8 @@
     <RelativeLayout
         android:id="@+id/relative_zoom_map"
         android:layout_width="match_parent"
-        android:background="#00000000"
         android:layout_height="match_parent"
+        android:background="#00000000"
         android:visibility="gone" >
 
         <fragment

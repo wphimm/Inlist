@@ -33,7 +33,7 @@ public class Constant {
 		public static final String REGISTRATION = "/user/register/?apiMode=NON-VIP&json=true";
 
 		public static final String USER_LIST = "user_list&user_id=%s";
-		public static final String LOGIN = "user/login/?apiMode=%s&json=%s&device_id=%s&login=%s&password=%s";
+		public static final String LOGIN = "user/login/?apiMode=VIP&json=true";
 		public static final String LOGIN_FB = "/facebook/login/?apiMode=%s&%s=true&device_id=%s&access_token=%s";
 		public static final String FORGOT_PASSWORD = "request_password_reset/?apiMode=%s&json=%s&email=%S";
 		public static final String REGISTER_FB = "/facebook/register/?apiMode=%s&json=%s&device_id=%s&email=%s&password=%s&first_name=%s&last_name=%s&phone=%s&membership_question_id=%s&membership_question_answer=%s&access_token=%s&request_vip=%s";
@@ -109,9 +109,13 @@ public class Constant {
 
 		public static final String OOPS = "Oops";
 		// ChangePasswordActivity.java
+		public static final String PLZ_CUR_PWD = "Please enter current password";
 		public static final String PLZ_NEW_PWD = "Please enter new password";
 		public static final String PLZ_CNFRM_PWD = "Please enter confirm password";
 		public static final String PWD_NOT_MATCH = "New Passwords don't match";
+
+		public static final String NO_EVENTS_FOUND = "No events could be found. Please try switching cities in the app";
+
 	}
 
 	public static class SHRED_PR {

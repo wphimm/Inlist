@@ -1,13 +1,13 @@
 package co.inlist.activities;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import co.inlist.util.Constant;
+import co.inlist.util.UtilInList;
 
 public class VipMembershipReview extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -35,9 +35,7 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-			// search action
-			Toast.makeText(VipMembershipReview.this, "Checked..", Toast.LENGTH_SHORT)
-					.show();
+			UtilInList.validateDialog(getApplicationContext(), "Checked", Constant.ERRORS.OOPS);
 			return true;
 
 		case android.R.id.home:

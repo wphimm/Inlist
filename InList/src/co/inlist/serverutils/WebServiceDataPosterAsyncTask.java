@@ -54,12 +54,19 @@ public class WebServiceDataPosterAsyncTask extends
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 
+		try {
+			dialog.dismiss();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		Log.i("result:::::", ""+result);
+		
 		JSONObject jObj;
 		try {
 			jObj = new JSONObject(result);
 			callback.onTaskComplete(jObj);
 			// fragment_addconnection_search
-			dialog.dismiss();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

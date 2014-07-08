@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -37,7 +36,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
 import co.inlist.util.MyProgressbar;
@@ -61,7 +59,7 @@ public class EventDetailsActivity extends Activity implements
 		ActionBar.OnNavigationListener {
 
 	private ScrollView scrollMain;
-	private RelativeLayout relative_zoom_map,relative_google_map;
+	private RelativeLayout relative_zoom_map, relative_google_map;
 
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
@@ -143,24 +141,30 @@ public class EventDetailsActivity extends Activity implements
 			e.printStackTrace();
 		}
 
-		try{
-		
-		String strStartTime = "" + map.get("event_start_time").replace(" ", "");
-		if (strStartTime.equals("null")) {
-			txt_date_time.setText("" + strDate);
-		} else {
-			String strEndTime = "" + map.get("event_end_time").replace(" ", "");
-			if (strEndTime.equals("null")) {
-				txt_date_time.setText("" + strDate + " " + strStartTime);
-			} else {
-				txt_date_time.setText("" + strDate + " " + strStartTime + " - "
-						+ strEndTime);
+		String strDateTime = "" + strDate;
+		try {
+			String strStartTime = ""
+					+ map.get("event_start_time").replace(" ", "");
+			if (!strStartTime.equals("null")) {
+				strDateTime = "" + strDate + " " + strStartTime;
+				String strEndTime = ""
+						+ map.get("event_end_time").replace(" ", "");
+				if (strEndTime.equals("null")) {
+					txt_date_time.setText("" + strDate + " " + strStartTime);
+					strDateTime = "" + strDate + " " + strStartTime;
+				} else {
+					txt_date_time.setText("" + strDate + " " + strStartTime
+							+ " - " + strEndTime);
+					strDateTime = "" + strDate + " " + strStartTime + " - "
+							+ strEndTime;
+				}
 			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 
-		}catch(Exception e){
-			Log.v("","Exception : "+e);
-		}
+		txt_date_time.setText("" + strDateTime);
+
 		// ***** Date Format ************************************//
 
 		txt_details.setText("" + map.get("event_description"));
@@ -242,18 +246,18 @@ public class EventDetailsActivity extends Activity implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
-					/*ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
-							0.5f, 1.0f, Animation.RELATIVE_TO_SELF,
-							(float) 0.5, Animation.RELATIVE_TO_SELF,
-							(float) 1.0);
-					animation.setDuration(500);
-					AnimationSet zoom = new AnimationSet(true);
-					zoom.addAnimation(animation);*/
+					/*
+					 * ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
+					 * 0.5f, 1.0f, Animation.RELATIVE_TO_SELF, (float) 0.5,
+					 * Animation.RELATIVE_TO_SELF, (float) 1.0);
+					 * animation.setDuration(500); AnimationSet zoom = new
+					 * AnimationSet(true); zoom.addAnimation(animation);
+					 */
 
 					relative_zoom_map.setVisibility(View.VISIBLE);
-					//relative_zoom_map.setAnimation(zoom);
-					//scrollMain.setVisibility(View.GONE);
-					//relative_google_map.setVisibility(View.INVISIBLE);
+					// relative_zoom_map.setAnimation(zoom);
+					// scrollMain.setVisibility(View.GONE);
+					// relative_google_map.setVisibility(View.INVISIBLE);
 
 				}
 			});
@@ -298,9 +302,8 @@ public class EventDetailsActivity extends Activity implements
 					new EventEntryAsyncTask(EventDetailsActivity.this)
 							.execute("");
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}
 		}, 100);

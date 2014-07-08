@@ -7,7 +7,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -76,11 +74,7 @@ public class SettingAccountListActivity extends Activity implements
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 			new Push_notificationsAsyncTask(getApplicationContext())
 					.execute("");
-		} else {
-			Toast.makeText(getApplicationContext(),
-					"" + Constant.network_error, Toast.LENGTH_SHORT).show();
-
-		}
+		} 
 
 	}
 

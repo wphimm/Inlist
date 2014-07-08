@@ -8,13 +8,9 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.internal.js;
-
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;

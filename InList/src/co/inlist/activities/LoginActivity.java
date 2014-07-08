@@ -3,10 +3,13 @@ package co.inlist.activities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +17,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.inlist.facebook.android.AsyncFacebookRunner;
 import co.inlist.facebook.android.AsyncFacebookRunner.RequestListener;
 import co.inlist.facebook.android.DialogError;
@@ -32,6 +33,7 @@ import co.inlist.facebook.android.Facebook.DialogListener;
 import co.inlist.facebook.android.FacebookError;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -237,25 +239,25 @@ public class LoginActivity extends Activity implements
 			// search action
 
 			if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-				Toast toast = Toast.makeText(LoginActivity.this,
-						Constant.ERRORS.PLZ_EMAIL, Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
-				/*
-				 * } else if
-				 * (edt_lgn_pwd.getText().toString().trim().equals("")) { Toast
-				 * toast = Toast.makeText(LoginActivity.this,
-				 * Constant.ERRORS.PLZ_PASSWORD, Toast.LENGTH_LONG);
-				 * toast.setGravity(Gravity.CENTER, 0, 0); toast.show();
-				 */
+				UtilInList.validateDialog(getApplicationContext(), "" + ""
+						+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
+
+			} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
+				UtilInList.validateDialog(getApplicationContext(), "" + ""
+						+ Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
 			} else {
-				new WebServiceDataCollectorAsyncTask(Constant.API
-						+ String.format(Constant.ACTIONS.LOGIN, "VIP", "true",
-								UtilInList.getDeviceId(LoginActivity.this),
-								edt_lgn_e_mail.getText().toString().trim(),
-								edt_lgn_pwd.getText().toString().trim())
-								.replace(" ", "%20"), LoginActivity.this)
-						.execute();
+
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+				params.add(new BasicNameValuePair("device_id", UtilInList
+						.getDeviceId(LoginActivity.this)));
+				params.add(new BasicNameValuePair("login", ""
+						+ edt_lgn_e_mail.getText().toString().trim()));
+				params.add(new BasicNameValuePair("password", edt_lgn_pwd
+						.getText().toString().trim()));
+
+				new WebServiceDataPosterAsyncTask(LoginActivity.this, params,
+						Constant.API + Constant.ACTIONS.LOGIN).execute();
 
 			}
 
@@ -317,13 +319,12 @@ public class LoginActivity extends Activity implements
 						HomeScreenActivity.class));
 				finish();
 			} else {
-				Toast.makeText(LoginActivity.this, "Wrong id/password",
-						Toast.LENGTH_SHORT).show();
+				UtilInList.validateDialog(LoginActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
 			}
 		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
-			Toast.makeText(LoginActivity.this, "Wrong id/password",
-					Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
 	}
 }

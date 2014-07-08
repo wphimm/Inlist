@@ -33,51 +33,51 @@
         android:weightSum="2" >
 
         <LinearLayout
+            android:id="@+id/linearCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <ImageButton
                 android:id="@+id/btn_conci_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_phone" />
-            <TextView 
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/light_yellow"
                 android:padding="1dp"
+                android:text="@string/conci_call"
+                android:textColor="@color/light_yellow"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                android:text="@string/conci_call"/>
-            
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <ImageButton
                 android:id="@+id/btn_conci_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_mail" />
-            
-            <TextView 
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/light_yellow"
                 android:padding="1dp"
+                android:text="@string/conci_email"
+                android:textColor="@color/light_yellow"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                android:text="@string/conci_email"/>
-            
-            
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

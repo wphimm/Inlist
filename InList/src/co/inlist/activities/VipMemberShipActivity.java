@@ -3,7 +3,6 @@ package co.inlist.activities;
 import java.io.IOException;
 import java.util.HashMap;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -343,6 +342,7 @@ public class VipMemberShipActivity extends Activity implements
 			if (size == 0) {
 
 			} else {
+				@SuppressWarnings("unused")
 				int thumbID = 0;
 				if (cursor.moveToFirst()) {
 					/**************** Captured image details ************/

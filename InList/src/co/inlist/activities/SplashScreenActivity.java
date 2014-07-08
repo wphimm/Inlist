@@ -11,8 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
-import co.inlist.interfaces.AsyncTaskCompleteListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTaskSplash;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;

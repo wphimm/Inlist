@@ -7,7 +7,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +20,6 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -80,9 +78,8 @@ public class ChangePasswordActivity extends Activity implements
 					new ChangePasswordAsyncTask(ChangePasswordActivity.this)
 							.execute("");
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}
 			}
@@ -161,32 +158,26 @@ public class ChangePasswordActivity extends Activity implements
 			if (result != null) {
 				try {
 					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
 
-					InListApplication.getParty_area().clear();
+					try {
+						if (jObject.getString("success").equals("true")) {
+							UtilInList.validateDialog(
+									getApplicationContext(),
+									jObject.getJSONArray("messages").getString(
+											0), Constant.AppName);
+							editCurrentPassword.setText("");
+							editNewPassword.setText("");
+							editConfirmPassword.setText("");
 
-					if (str_temp.equals("success")) {
-						String messages = jObject.getString("messages");
-						if (messages.length() > 4) {
-							messages = messages.substring(2, messages.length());
-							messages = messages.substring(0,
-									messages.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + messages, Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(getApplicationContext(),
-									"Your password was successfully changed.",
-									Toast.LENGTH_SHORT).show();
+							UtilInList
+									.validateDialog(getApplicationContext(),
+											jObject.getJSONArray("errors")
+													.getString(0),
+											Constant.ERRORS.OOPS);
 						}
-						finish();
-					} else {
-						String errors = jObject.getString("errors");
-						if (errors.length() > 4) {
-							errors = errors.substring(2, errors.length());
-							errors = errors.substring(0, errors.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + errors, Toast.LENGTH_SHORT).show();
-						}
+					} catch (Exception e) {
+						Log.v("", "Exception : " + e);
 					}
 
 				} catch (JSONException e) { // TODO Auto-generated catch block
@@ -199,16 +190,16 @@ public class ChangePasswordActivity extends Activity implements
 
 	private boolean isValidate() {
 		// TODO Auto-generated method stub
-		/*
-		 * if (editCurrentPassword.getText().toString().trim().length() == 0) {
-		 * Toast.makeText(getApplicationContext(),
-		 * "please enter current password", Toast.LENGTH_SHORT).show(); return
-		 * false; }
-		 */
+
+		if (editCurrentPassword.getText().toString().trim().length() == 0) {
+			UtilInList.validateDialog(ChangePasswordActivity.this,
+					Constant.ERRORS.PLZ_CUR_PWD, Constant.ERRORS.OOPS);
+			return false;
+		}
+
 		if (editNewPassword.getText().toString().trim().length() == 0) {
 			UtilInList.validateDialog(ChangePasswordActivity.this,
 					Constant.ERRORS.PLZ_NEW_PWD, Constant.ERRORS.OOPS);
-
 			return false;
 		}
 		if (editConfirmPassword.getText().toString().trim().length() == 0) {

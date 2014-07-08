@@ -27,6 +27,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.inlist.activities.ProfileActivity;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -60,6 +62,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TextView.BufferType;
 
 @SuppressLint("SimpleDateFormat")
@@ -405,27 +408,20 @@ public class UtilInList {
 		return output;
 	}
 
-	public static void validateDialog(Context context, String errorMsg, String title) {
+	public static void validateDialog(Context context, String errorMsg,
+			String title) {
 
-		AlertDialog.Builder popupBuilder = new AlertDialog.Builder(context);
-
-		TextView myMsg = new TextView(context);
-		myMsg.setText(errorMsg);
-		popupBuilder.setTitle(title);
-		myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
-
-		popupBuilder.setView(myMsg);
-
-		popupBuilder.setPositiveButton("Ok", new OnClickListener() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(context);
+		alert.setTitle(""+title);
+		alert.setMessage(""+errorMsg);
+		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-
 			}
 		});
-
-		popupBuilder.show();
+		alert.create();
+		alert.show();
 	}
 
 	public static Typeface setHelveticatype(Context context) {

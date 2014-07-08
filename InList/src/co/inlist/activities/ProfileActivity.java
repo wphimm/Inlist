@@ -7,7 +7,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -73,10 +71,7 @@ public class ProfileActivity extends Activity implements
 						new ProfileAsyncTask(ProfileActivity.this)
 								.execute("");
 					} else {
-						Toast.makeText(getApplicationContext(),
-								"" + Constant.network_error, Toast.LENGTH_SHORT)
-								.show();
-
+						UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
 					}
 				}
 			}
@@ -126,10 +121,7 @@ public class ProfileActivity extends Activity implements
 										Constant.SHRED_PR.KEY_LOGIN_STATUS, "false");
 								finish();
 							} else {
-								Toast.makeText(getApplicationContext(),
-										"" + Constant.network_error,
-										Toast.LENGTH_SHORT).show();
-
+								UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
 							}
 
 						}
@@ -231,32 +223,24 @@ public class ProfileActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 2) {
-			Toast.makeText(getApplicationContext(),
-					"first name must be minimum 2 characters",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "first name must be minimum 2 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 2) {
-			Toast.makeText(getApplicationContext(),
-					"last name must be minimum 2 characters",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "last name must be minimum 2 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			Toast.makeText(getApplicationContext(), "please enter email",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "please enter email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			Toast.makeText(getApplicationContext(), "please enter valid email",
-					Toast.LENGTH_SHORT).show();
+			UtilInList.validateDialog(getApplicationContext(), "please enter valid email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editPhone.getText().toString().trim().length() < 10) {
-			Toast.makeText(getApplicationContext(),
-					"phone must be minimum 10 characters", Toast.LENGTH_SHORT)
-					.show();
+			UtilInList.validateDialog(getApplicationContext(), "phone must be minimum 10 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		return true;
@@ -342,33 +326,24 @@ public class ProfileActivity extends Activity implements
 			if (result != null) {
 				try {
 					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
 
-					InListApplication.getParty_area().clear();
-
-					if (str_temp.equals("success")) {
-						String messages = jObject.getString("messages");
-						if (messages.length() > 4) {
-							messages = messages.substring(2, messages.length());
-							messages = messages.substring(0,
-									messages.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + messages, Toast.LENGTH_SHORT).show();
+					try {
+						if (jObject.getString("success").equals("true")) {
+							UtilInList.validateDialog(getApplicationContext(), jObject
+									.getJSONArray("messages").getString(0),
+									Constant.AppName);
+							editFirst.setText("");
+							editLast.setText("");
+							editEmail.setText("");
+							editPhone.setText("");
+						
 						} else {
-							Toast.makeText(
-									getApplicationContext(),
-									"Thank you, profile was successfully updated.",
-									Toast.LENGTH_SHORT).show();
+							UtilInList.validateDialog(getApplicationContext(), jObject
+									.getJSONArray("errors").getString(0),
+									Constant.ERRORS.OOPS);
 						}
-						finish();
-					} else {
-						String errors = jObject.getString("errors");
-						if (errors.length() > 4) {
-							errors = errors.substring(2, errors.length());
-							errors = errors.substring(0, errors.length() - 2);
-							Toast.makeText(getApplicationContext(),
-									"" + errors, Toast.LENGTH_SHORT).show();
-						}
+					} catch (Exception e) {
+						Log.v("", "Exception : " + e);
 					}
 
 				} catch (JSONException e) { // TODO Auto-generated catch block

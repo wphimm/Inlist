@@ -1,6 +1,5 @@
 package co.inlist.activities;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 import co.inlist.facebook.android.DialogError;
 import co.inlist.facebook.android.Facebook;
 import co.inlist.facebook.android.Facebook.DialogListener;
@@ -32,8 +30,6 @@ public class PurchaseSummaryActivity extends Activity implements
 	private Facebook facebook = new Facebook(APP_ID);
 	String FILENAME = "AndroidSSO_data";
 	private SharedPreferences mPrefs;
-	private static final String[] PERMISSIONS = new String[] { "publish_stream" };
-
 	// Twitter
 	private TwitterApp mTwitter;
 	// Client keys
@@ -66,9 +62,8 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToFacebook();
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}
 		});
@@ -82,9 +77,8 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToTwitter();
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}
 		});
@@ -194,17 +188,17 @@ public class PurchaseSummaryActivity extends Activity implements
 			if (response == null || response.equals("")
 					|| response.equals("false")) {
 				Log.v("Error", "Blank response");
-
-				Toast.makeText(
-						getApplicationContext(),
-						"There is some server issue to share App in your Facebook account.",
-						Toast.LENGTH_SHORT).show();
+				UtilInList
+						.validateDialog(
+								getApplicationContext(),
+								"There is some server issue to share App in your Facebook account.",
+								Constant.ERRORS.OOPS);
 
 			} else {
 
-				Toast.makeText(getApplicationContext(),
+				UtilInList.validateDialog(getApplicationContext(),
 						"App share successfully on your Facebook account.",
-						Toast.LENGTH_SHORT).show();
+						Constant.AppName);
 			}
 
 		}
@@ -244,12 +238,6 @@ public class PurchaseSummaryActivity extends Activity implements
 		mTwitter.setListener(mTwLoginDialogListener);
 		mTwitter.resetAccessToken();
 		mTwitter.authorize();
-		/*
-		 * if (mTwitter.hasAccessToken() == true) { new
-		 * Post_Twitter().execute(); mTwitter.resetAccessToken(); } else {
-		 * mTwitter.authorize(); //Toast.makeText(getApplicationContext(),
-		 * "username is: "+mTwitter.getUsername(), Toast.LENGTH_LONG).show(); }
-		 */
 	}
 
 	private void postAsToast(FROM twitterPost, MESSAGE success) {
@@ -257,13 +245,10 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_LOGIN:
 			switch (success) {
 			case SUCCESS:
-				Toast.makeText(getApplicationContext(), "Login Successful",
-						Toast.LENGTH_LONG).show();
-
+				UtilInList.validateDialog(getApplicationContext(), "Login Successful", Constant.AppName);
 				break;
 			case FAILED:
-				Toast.makeText(getApplicationContext(), "Login Failed",
-						Toast.LENGTH_LONG).show();
+				UtilInList.validateDialog(getApplicationContext(), "Login Failed", Constant.ERRORS.OOPS);
 			default:
 				break;
 			}
@@ -271,22 +256,13 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_POST:
 			switch (success) {
 			case SUCCESS:
-				// Toast.makeText(this, "Posted Successfully",
-				// Toast.LENGTH_LONG).show();
-
-				Toast.makeText(getApplicationContext(),
-						"App share successfully on your Twitter account.",
-						Toast.LENGTH_LONG).show();
-
+				UtilInList.validateDialog(getApplicationContext(), "App share successfully on your Twitter account.", Constant.AppName);
 				break;
 			case FAILED:
-				Toast.makeText(getApplicationContext(), "Posting Failed",
-						Toast.LENGTH_LONG).show();
+				UtilInList.validateDialog(getApplicationContext(), "Posting Failed" , Constant.ERRORS.OOPS);
 				break;
 			case DUPLICATE:
-				Toast.makeText(getApplicationContext(),
-						"Posting Failed because of duplicate message...",
-						Toast.LENGTH_LONG).show();
+				UtilInList.validateDialog(getApplicationContext(), "Posting Failed because of duplicate message.", Constant.ERRORS.OOPS);
 			default:
 				break;
 			}

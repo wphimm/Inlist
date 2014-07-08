@@ -7,7 +7,6 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.Toast;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -48,9 +46,9 @@ public class NotificationsSettingsActivity extends Activity implements
 					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
 							.execute("");
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
+
 
 				}
 
@@ -68,9 +66,8 @@ public class NotificationsSettingsActivity extends Activity implements
 					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
 							.execute("");
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"" + Constant.network_error, Toast.LENGTH_SHORT)
-							.show();
+					UtilInList.validateDialog(getApplicationContext(), "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}
 
@@ -133,16 +130,16 @@ public class NotificationsSettingsActivity extends Activity implements
 			if (flagDaily) {
 				strType = "daily";
 				if (flagDailyNotification) {
-					strSwitch = "enable";
-				} else {
 					strSwitch = "disable";
+				} else {
+					strSwitch = "enable";
 				}
 			} else {
 				strType = "billing";
 				if (flagBillingIssues) {
-					strSwitch = "enable";
-				} else {
 					strSwitch = "disable";
+				} else {
+					strSwitch = "enable";
 				}
 			}
 
@@ -155,6 +152,8 @@ public class NotificationsSettingsActivity extends Activity implements
 							+ Constant.ACTIONS.PUSHNOTIFICATIONS
 							+ strSwitch
 							+ "/?apiMode=VIP&json=true"
+							+"&type="
+							+strType
 							+ "&PHPSESSIONID="
 							+ UtilInList.ReadSharePrefrence(
 									NotificationsSettingsActivity.this,
@@ -183,8 +182,6 @@ public class NotificationsSettingsActivity extends Activity implements
 				try {
 					JSONObject jObject = new JSONObject(result);
 					String str_temp = jObject.getString("status");
-
-					InListApplication.getParty_area().clear();
 
 					if (str_temp.equals("success")) {
 						if (flagDaily) {

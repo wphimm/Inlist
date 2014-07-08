@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -26,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,8 +35,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 import co.inlist.adapter.EventsAdapter;
 import co.inlist.adapter.TitleNavigationAdapter;
 import co.inlist.util.Constant;
@@ -45,7 +45,6 @@ import co.inlist.util.UtilInList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
@@ -164,7 +163,15 @@ public class HomeScreenActivity extends Activity implements
 
 		case R.id.action_concierge:
 			// location found
-			makeDialogAlert();
+			if (UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+				makeDialogAlert();
+
+			} else {
+				makeAlert();
+			}
+
 			return true;
 
 		default:
@@ -178,6 +185,96 @@ public class HomeScreenActivity extends Activity implements
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.concierge_dialog_screen);
 		dialog.show();
+
+		LinearLayout linearCall = (LinearLayout) dialog
+				.findViewById(R.id.linearCall);
+		LinearLayout linearEmail = (LinearLayout) dialog
+				.findViewById(R.id.linearEmail);
+
+		linearCall.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						HomeScreenActivity.this);
+				alert.setTitle("Confirmation Required");
+				alert.setMessage("Are you sure you want to call the concierge at 8887057714 ?");
+				alert.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent callIntent = new Intent(
+										Intent.ACTION_CALL);
+								callIntent.setData(Uri.parse("tel:8887057714"));
+								startActivity(callIntent);
+							}
+						});
+				alert.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+
+			}
+		});
+
+		linearEmail.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				String strSubject = ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_FIRSTNAME)
+						+ " "
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_LASTNAME)
+						+ " Re: General Questions";
+
+				String strExtra = "\n\n\n\n\nContact Information:\n\n"
+						+ ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_FIRSTNAME)
+						+ " "
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_LASTNAME)
+						+ "\n"
+						+ ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_EMAIL)
+						+ "\n"
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_PHONE)+"\n\n";
+
+				Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				emailIntent.setType("message/rfc822");
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						strSubject);
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, ""
+						+ strExtra);
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						new String[] { "concierge@inlist.com" });
+				startActivity(Intent.createChooser(emailIntent, "Email:"));
+			}
+		});
 	}
 
 	/*
@@ -189,10 +286,8 @@ public class HomeScreenActivity extends Activity implements
 
 		if (InListApplication.getParty_area().get(itemPosition).get("status")
 				.equals("0")) {
-			Toast.makeText(
-					getApplicationContext(),
-					"No events could be found. Please try switching cities in the app",
-					Toast.LENGTH_LONG).show();
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.ERRORS.NO_EVENTS_FOUND, Constant.ERRORS.OOPS);
 			return false;
 		}
 		selected_position = itemPosition;
@@ -200,9 +295,8 @@ public class HomeScreenActivity extends Activity implements
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 			new PartyAreaAsyncTask(HomeScreenActivity.this).execute("");
 		} else {
-			Toast.makeText(getApplicationContext(),
-					"" + Constant.network_error, Toast.LENGTH_SHORT).show();
-
+			UtilInList.validateDialog(getApplicationContext(), "" + ""
+					+ Constant.network_error, Constant.ERRORS.OOPS);
 		}
 
 		return false;
@@ -297,9 +391,9 @@ public class HomeScreenActivity extends Activity implements
 							HomeScreenObj.new EventsAsyncTask(
 									HomeScreenActivity.this).execute("");
 						} else {
-							Toast.makeText(getApplicationContext(),
-									"" + Constant.network_error,
-									Toast.LENGTH_SHORT).show();
+							UtilInList.validateDialog(getApplicationContext(),
+									"" + "" + Constant.network_error,
+									Constant.ERRORS.OOPS);
 							mPullToRefreshLayout.setRefreshComplete();
 						}
 					}
@@ -322,8 +416,6 @@ public class HomeScreenActivity extends Activity implements
 		builder.setTitle("Account");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
-				Toast.makeText(getApplicationContext(), items[item],
-						Toast.LENGTH_SHORT).show();
 
 				if (items[item].equals("Log In")) {
 					startActivity(new Intent(HomeScreenActivity.this,
@@ -401,8 +493,8 @@ public class HomeScreenActivity extends Activity implements
 				flagIfProgress = false;
 				HomeScreenObj.new EventsAsyncTask(getActivity()).execute("");
 			} else {
-				Toast.makeText(getActivity(), "" + Constant.network_error,
-						Toast.LENGTH_SHORT).show();
+				UtilInList.validateDialog(getActivity(), "" + ""
+						+ Constant.network_error, Constant.ERRORS.OOPS);
 			}
 		}
 
@@ -551,11 +643,10 @@ public class HomeScreenActivity extends Activity implements
 
 				Log.i("size:", "" + InListApplication.getListEvents().size());
 			} else {
-				String errors = jObject.getString("errors");
-				errors = errors.substring(2, errors.length());
-				errors = errors.substring(0, errors.length() - 2);
-				Toast.makeText(getApplicationContext(), "" + errors,
-						Toast.LENGTH_SHORT).show();
+
+				UtilInList.validateDialog(getApplicationContext(), jObject
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
 			}
 
 		} catch (JSONException e) { // TODO Auto-generated catch block
