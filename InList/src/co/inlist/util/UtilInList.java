@@ -148,12 +148,13 @@ public class UtilInList {
 							addClickablePartTextViewResizable(
 									Html.fromHtml(tv.getText().toString()), tv,
 									maxLine, expandText, viewMore),
+
 							BufferType.SPANNABLE);
 				} else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
 					int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
 					String text = tv.getText().subSequence(0,
 							lineEndIndex - expandText.length() + 1)
-							+ " " + expandText;
+							+ expandText;
 					tv.setText(text);
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setText(
@@ -165,7 +166,7 @@ public class UtilInList {
 					int lineEndIndex = tv.getLayout().getLineEnd(
 							tv.getLayout().getLineCount() - 1);
 					String text = tv.getText().subSequence(0, lineEndIndex)
-							+ " " + expandText;
+							+ expandText;
 					tv.setText(text);
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setText(
@@ -195,12 +196,12 @@ public class UtilInList {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);
 						tv.invalidate();
-						makeTextViewResizable(tv, 10, "View Less", false);
+						makeTextViewResizable(tv, 100, "LESS", false);
 					} else {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);
 						tv.invalidate();
-						makeTextViewResizable(tv, 3, "View More", true);
+						makeTextViewResizable(tv, 3, "MORE", true);
 					}
 
 				}

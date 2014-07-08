@@ -160,14 +160,16 @@ public class EventDetailsActivity extends Activity implements
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			Log.v("", "Exception : " + e);
 		}
-
 		txt_date_time.setText("" + strDateTime);
 
 		// ***** Date Format ************************************//
 
 		txt_details.setText("" + map.get("event_description"));
+
+		UtilInList.makeTextViewResizable(txt_details, 3, "View More", true);
+
 		txt_atmosphere.setText("" + map.get("atmosphere"));
 		txt_music.setText("" + map.get("music_type"));
 

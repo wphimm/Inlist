@@ -27,9 +27,7 @@ public class Constant {
 		public static final String EVENTS = "events/";
 		public static final String PARTY_AREA = "party_area/";
 		public static final String PARTY_AREA_SET = "party_area/set/";
-		// public static final String REGISTRATION =
-		// "/user/register/?apiMode=%s&json=%s&device_id=%s&email=%s&password=%s&first_name=%s&last_name=%s&phone=%s&membership_question_id=%s&membership_question_answer=%s&request_vip=%s";
-
+				
 		public static final String REGISTRATION = "/user/register/?apiMode=NON-VIP&json=true";
 
 		public static final String USER_LIST = "user_list&user_id=%s";
