@@ -17,8 +17,6 @@ public class VipMembershipReview extends Activity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vip_membership_review);
-
-		UtilInList.makeActionBarGradiant(VipMembershipReview.this);
 	}
 
 	@Override
@@ -37,12 +35,7 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-<<<<<<< .mine
-			UtilInList.validateDialog(getApplicationContext(), "Checked",
-					Constant.ERRORS.OOPS);
-=======
 			UtilInList.validateDialog(VipMembershipReview.this, "Checked", Constant.ERRORS.OOPS);
->>>>>>> .r38
 			return true;
 
 		case android.R.id.home:

@@ -31,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import co.inlist.adapter.HorizontalListAdapter;
 import co.inlist.util.HorizontalListView;
-import co.inlist.util.UtilInList;
 
 public class VipMemberShipActivity extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -52,8 +51,6 @@ public class VipMemberShipActivity extends Activity implements
 		setContentView(R.layout.vip_membership_screen);
 
 		init();
-
-		UtilInList.makeActionBarFullBlack(VipMemberShipActivity.this);
 
 		String fileName = "Camera_Example.jpg";
 		ContentValues values = new ContentValues();
@@ -506,8 +503,7 @@ public class VipMemberShipActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.action_submit:
 			// search action
-			startActivity(new Intent(VipMemberShipActivity.this,
-					VipMembershipReview.class));
+			startActivity(new Intent(VipMemberShipActivity.this,VipMembershipReview.class));
 			return true;
 
 		case android.R.id.home:
