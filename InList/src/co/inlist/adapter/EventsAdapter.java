@@ -101,7 +101,7 @@ public class EventsAdapter extends BaseAdapter {
 		
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
-		txt_event_start_date.setTypeface(typeAvenir);
+		//txt_event_start_date.setTypeface(typeAvenir);
 
 		// ***** Date Format ************************************//
 		String strDate = "" + locallist.get(position).get("event_start_date");

@@ -27,7 +27,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:singleLine="true"
-                android:textColor="#ffffff"
+                android:textColor="@color/date_color"
                 android:textStyle="bold" />
         </RelativeLayout>
 

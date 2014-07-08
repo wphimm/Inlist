@@ -120,8 +120,11 @@ public class ProfileActivity extends Activity implements
 						public void onClick(DialogInterface dialog, int which) {
 							if (UtilInList
 									.isInternetConnectionExist(getApplicationContext())) {
-								new LogoutAsyncTask(ProfileActivity.this)
-										.execute("");
+								/*new LogoutAsyncTask(ProfileActivity.this)
+										.execute("");*/
+								UtilInList.WriteSharePrefrence(ProfileActivity.this,
+										Constant.SHRED_PR.KEY_LOGIN_STATUS, "false");
+								finish();
 							} else {
 								Toast.makeText(getApplicationContext(),
 										"" + Constant.network_error,
