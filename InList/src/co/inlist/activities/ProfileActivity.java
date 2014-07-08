@@ -40,6 +40,8 @@ public class ProfileActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
 
+		UtilInList.makeActionBarGradiant(ProfileActivity.this);
+
 		init();
 
 		editFirst.setText(""
@@ -71,7 +73,8 @@ public class ProfileActivity extends Activity implements
 							.isInternetConnectionExist(getApplicationContext())) {
 						new ProfileAsyncTask(ProfileActivity.this).execute("");
 					} else {
-						UtilInList.validateDialog(ProfileActivity.this, ""+Constant.network_error, Constant.AppName);
+						UtilInList.validateDialog(ProfileActivity.this, ""
+								+ Constant.network_error, Constant.AppName);
 					}
 				}
 			}
@@ -124,12 +127,13 @@ public class ProfileActivity extends Activity implements
 										Constant.SHRED_PR.KEY_LOGIN_STATUS,
 										"false");
 
-//								List<NameValuePair> params = new ArrayList<NameValuePair>();
-//
-//								params.add(new BasicNameValuePair(
-//										"device_id",
-//										UtilInList
-//												.getDeviceId(ProfileActivity.this)));
+								// List<NameValuePair> params = new
+								// ArrayList<NameValuePair>();
+								//
+								// params.add(new BasicNameValuePair(
+								// "device_id",
+								// UtilInList
+								// .getDeviceId(ProfileActivity.this)));
 								//
 								// params.add(new BasicNameValuePair(
 								// "device_type", "android"));
@@ -142,7 +146,9 @@ public class ProfileActivity extends Activity implements
 
 								finish();
 							} else {
-								UtilInList.validateDialog(ProfileActivity.this, ""+Constant.network_error, Constant.AppName);
+								UtilInList.validateDialog(ProfileActivity.this,
+										"" + Constant.network_error,
+										Constant.AppName);
 							}
 
 						}
@@ -244,24 +250,33 @@ public class ProfileActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(ProfileActivity.this, "first name must be minimum 2 characters", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this,
+					"first name must be minimum 2 characters",
+					Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(ProfileActivity.this, "last name must be minimum 2 characters", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this,
+					"last name must be minimum 2 characters",
+					Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			UtilInList.validateDialog(ProfileActivity.this, "please enter email", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this,
+					"please enter email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			UtilInList.validateDialog(ProfileActivity.this, "please enter valid email", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this,
+					"please enter valid email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editPhone.getText().toString().trim().length() < 10) {
-			UtilInList.validateDialog(ProfileActivity.this, "phone must be minimum 10 characters", Constant.ERRORS.OOPS);
+			UtilInList
+					.validateDialog(ProfileActivity.this,
+							"phone must be minimum 10 characters",
+							Constant.ERRORS.OOPS);
 			return false;
 		}
 		return true;
@@ -352,18 +367,21 @@ public class ProfileActivity extends Activity implements
 
 					try {
 						if (jObject.getString("success").equals("true")) {
-							UtilInList.validateDialog(ProfileActivity.this, jObject
-									.getJSONArray("messages").getString(0),
-									Constant.AppName);
+							UtilInList.validateDialog(
+									ProfileActivity.this,
+									jObject.getJSONArray("messages").getString(
+											0), Constant.AppName);
 							editFirst.setText("");
 							editLast.setText("");
 							editEmail.setText("");
 							editPhone.setText("");
-						
+
 						} else {
-							UtilInList.validateDialog(ProfileActivity.this, jObject
-									.getJSONArray("errors").getString(0),
-									Constant.ERRORS.OOPS);
+							UtilInList
+									.validateDialog(ProfileActivity.this,
+											jObject.getJSONArray("errors")
+													.getString(0),
+											Constant.ERRORS.OOPS);
 						}
 					} catch (Exception e) {
 						Log.v("", "Exception : " + e);
