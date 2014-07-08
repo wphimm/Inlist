@@ -28,8 +28,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.inlist.activities.ProfileActivity;
+import co.inlist.activities.R;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -78,6 +81,28 @@ public class UtilInList {
 		} catch (IOException e) {
 			Log.e("Exception", "File write failed: " + e.toString());
 		}
+	}
+
+	public static void makeActionBarGradiant(Context context) {
+		// get the action bar
+		ActionBar actionBar = ((Activity) context).getActionBar();
+
+		// Enabling Back navigation on Action Bar icon
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		actionBar.setBackgroundDrawable(context.getResources().getDrawable(
+				R.drawable.actionbar_gradiant));
+	}
+
+	public static void makeActionBarFullBlack(Context context) {
+		// get the action bar
+		ActionBar actionBar = ((Activity) context).getActionBar();
+
+		// Enabling Back navigation on Action Bar icon
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		actionBar.setBackgroundDrawable(context.getResources().getDrawable(
+				R.drawable.actionbar_full_black));
 	}
 
 	public static String readFromFile(String file_name, Context context) {
@@ -413,8 +438,8 @@ public class UtilInList {
 			String title) {
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(context);
-		alert.setTitle(""+title);
-		alert.setMessage(""+errorMsg);
+		alert.setTitle("" + title);
+		alert.setMessage("" + errorMsg);
 		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override

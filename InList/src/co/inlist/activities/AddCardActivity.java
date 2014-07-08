@@ -43,6 +43,8 @@ public class AddCardActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_card_screen);
 
+		
+		
 		init();
 
 		Calendar calendar = Calendar.getInstance();

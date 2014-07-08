@@ -33,6 +33,8 @@ public class SettingAccountListActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settting_list_screen);
 
+		UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
+
 		listView = (ListView) findViewById(R.id.lst_setting);
 
 		String[] values = new String[] { "Change Password", "Billing Details",
@@ -74,7 +76,7 @@ public class SettingAccountListActivity extends Activity implements
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 			new Push_notificationsAsyncTask(getApplicationContext())
 					.execute("");
-		} 
+		}
 
 	}
 
@@ -146,7 +148,7 @@ public class SettingAccountListActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-	
+
 		case android.R.id.home:
 			finish();
 			return true;

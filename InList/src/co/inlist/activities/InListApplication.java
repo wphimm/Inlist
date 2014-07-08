@@ -3,15 +3,16 @@ package co.inlist.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.ActionBar;
 import android.app.Application;
 
 public class InListApplication extends Application {
 
 	public static ArrayList<HashMap<String, String>> listEvents = new ArrayList<HashMap<String, String>>();
-	public static ArrayList<HashMap<String, String>> list_music_types= new ArrayList<HashMap<String, String>>();
-	public static ArrayList<HashMap<String, String>> gallery= new ArrayList<HashMap<String, String>>();
-	public static ArrayList<HashMap<String, String>> party_area= new ArrayList<HashMap<String, String>>();
-	public static ArrayList<HashMap<String, String>> pricing= new ArrayList<HashMap<String, String>>();
+	public static ArrayList<HashMap<String, String>> list_music_types = new ArrayList<HashMap<String, String>>();
+	public static ArrayList<HashMap<String, String>> gallery = new ArrayList<HashMap<String, String>>();
+	public static ArrayList<HashMap<String, String>> party_area = new ArrayList<HashMap<String, String>>();
+	public static ArrayList<HashMap<String, String>> pricing = new ArrayList<HashMap<String, String>>();
 
 	public static ArrayList<HashMap<String, String>> getPricing() {
 		return pricing;
@@ -29,7 +30,8 @@ public class InListApplication extends Application {
 		return party_area;
 	}
 
-	public static void setParty_area(ArrayList<HashMap<String, String>> party_area) {
+	public static void setParty_area(
+			ArrayList<HashMap<String, String>> party_area) {
 		InListApplication.party_area = party_area;
 	}
 

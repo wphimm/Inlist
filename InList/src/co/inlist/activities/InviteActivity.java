@@ -32,6 +32,8 @@ public class InviteActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.invite_person_screen);
 
+		UtilInList.makeActionBarFullBlack(InviteActivity.this);
+
 		init();
 	}
 

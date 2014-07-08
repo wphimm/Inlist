@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -81,6 +82,9 @@ public class HomeScreenActivity extends Activity implements
 		actionBar.setDisplayShowTitleEnabled(false);
 		// Enabling Spinner dropdown navigation
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+		actionBar.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.actionbar_gradiant));
 
 		for (int i = 0; i < InListApplication.getParty_area().size(); i++) {
 			Log.e("title",
@@ -261,7 +265,7 @@ public class HomeScreenActivity extends Activity implements
 						+ "\n"
 						+ UtilInList.ReadSharePrefrence(
 								getApplicationContext(),
-								Constant.SHRED_PR.KEY_PHONE)+"\n\n";
+								Constant.SHRED_PR.KEY_PHONE) + "\n\n";
 
 				Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
@@ -450,6 +454,8 @@ public class HomeScreenActivity extends Activity implements
 
 			super.onViewCreated(view, savedInstanceState);
 			ViewGroup viewGroup = (ViewGroup) view;
+			
+			viewGroup.setBackgroundColor(Color.parseColor("#00000000"));
 
 			// As we're using a ListFragment we create a PullToRefreshLayout
 			// manually

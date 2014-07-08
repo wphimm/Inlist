@@ -64,11 +64,8 @@ public class LoginActivity extends Activity implements
 
 		txt_lgn_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
-		// get the action bar
-		ActionBar actionBar = getActionBar();
 
-		// Enabling Back navigation on Action Bar icon
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		UtilInList.makeActionBarGradiant(LoginActivity.this);
 
 		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() {
 

@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import co.inlist.util.UtilInList;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -39,6 +41,8 @@ public class GalleryActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gallary);
+
+		UtilInList.makeActionBarGradiant(GalleryActivity.this);
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()

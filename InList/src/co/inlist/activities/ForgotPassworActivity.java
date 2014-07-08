@@ -32,6 +32,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forget_passwod_frame_to_replace);
 
+		UtilInList.makeActionBarFullBlack(ForgotPassworActivity.this);
+
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment_Enter_Email())

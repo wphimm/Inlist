@@ -62,6 +62,8 @@ public class SignUpActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sign_up_screen);
 		init();
+		
+		UtilInList.makeActionBarGradiant(SignUpActivity.this);
 
 		txt_su_que.setText(getQuestion());
 
@@ -361,7 +363,7 @@ public class SignUpActivity extends Activity implements
 				finish();
 
 			} else {
-				
+
 				UtilInList.validateDialog(SignUpActivity.this, result
 						.getJSONArray("errors").getString(0).toString(),
 						Constant.ERRORS.OOPS);

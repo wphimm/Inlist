@@ -1,6 +1,7 @@
 package co.inlist.activities;
 
 import co.inlist.activities.R;
+import co.inlist.util.UtilInList;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +16,8 @@ public class NoCardActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_card_screen);
+
+		UtilInList.makeActionBarFullBlack(NoCardActivity.this);
 
 	}
 

@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,6 +95,8 @@ public class EventDetailsActivity extends Activity implements
 		setContentView(R.layout.event_details);
 
 		init();
+
+		UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -173,7 +176,11 @@ public class EventDetailsActivity extends Activity implements
 
 		txt_details.setText("" + map.get("event_description"));
 
-		UtilInList.makeTextViewResizable(txt_details, 3, "View More", true);
+		String more = Html.fromHtml(
+				"<p><h3><font color=\"#ffffff\">MORE</font></h3></p>")
+				.toString();
+
+		UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
 
 		txt_atmosphere.setText("" + map.get("atmosphere"));
 		txt_music.setText("" + map.get("music_type"));

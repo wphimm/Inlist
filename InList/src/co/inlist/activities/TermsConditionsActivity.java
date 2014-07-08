@@ -1,6 +1,7 @@
 package co.inlist.activities;
 
 import co.inlist.activities.R;
+import co.inlist.util.UtilInList;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ public class TermsConditionsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.terms_conditions);
 
+		UtilInList.makeActionBarFullBlack(TermsConditionsActivity.this);
 	}
 
 	/**
