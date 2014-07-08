@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -101,13 +102,17 @@ public class EventDetailsActivity extends Activity implements
 
 		map = InListApplication.getListEvents().get(position);
 
-		options = new DisplayImageOptions.Builder().showStubImage(0)
-				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
+		options = new DisplayImageOptions.Builder().showStubImage(R.drawable.event_details_overlay)
+				.showImageForEmptyUri(R.drawable.event_details_overlay).cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
 		// UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
 
+		Typeface typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(), "helve_unbold.ttf");
+		txt_event_title.setTypeface(typeAkzidgrobemedex);
+		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
+		
 		txt_event_title.setText("" + map.get("event_title"));
 		txt_event_location_city.setText("" + map.get("event_location_club")
 				+ ", " + map.get("event_location_city"));
