@@ -221,7 +221,7 @@ public class UtilInList {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);
 						tv.invalidate();
-						makeTextViewResizable(tv, 100, "LESS", false);
+						makeTextViewResizable(tv, 100,"LESS", false);
 					} else {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);

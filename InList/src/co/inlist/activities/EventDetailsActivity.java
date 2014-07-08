@@ -110,8 +110,6 @@ public class EventDetailsActivity extends Activity implements
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
-		// UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
-
 		Typeface typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(), "helve_unbold.ttf");
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
@@ -175,10 +173,6 @@ public class EventDetailsActivity extends Activity implements
 		// ***** Date Format ************************************//
 
 		txt_details.setText("" + map.get("event_description"));
-
-		String more = Html.fromHtml(
-				"<p><h3><font color=\"#ffffff\">MORE</font></h3></p>")
-				.toString();
 
 		UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
 
