@@ -3,7 +3,6 @@ package co.inlist.activities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.activities.R;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,7 +31,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forget_passwod_frame_to_replace);
 
-		UtilInList.makeActionBarFullBlack(ForgotPassworActivity.this);
+//		UtilInList.makeActionBarFullBlack(ForgotPassworActivity.this);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()

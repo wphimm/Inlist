@@ -51,7 +51,7 @@ public class PurchaseSummaryActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_purchase_summary);
 
-		UtilInList.makeActionBarGradiant(PurchaseSummaryActivity.this);
+//		UtilInList.makeActionBarGradiant(PurchaseSummaryActivity.this);
 		
 		init();
 

@@ -32,8 +32,8 @@ public class SettingAccountListActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settting_list_screen);
-
-		UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
+//
+//		UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
 
 		listView = (ListView) findViewById(R.id.lst_setting);
 

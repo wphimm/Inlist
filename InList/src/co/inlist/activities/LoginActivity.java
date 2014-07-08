@@ -65,7 +65,7 @@ public class LoginActivity extends Activity implements
 		txt_lgn_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
 
-		UtilInList.makeActionBarGradiant(LoginActivity.this);
+//		UtilInList.makeActionBarGradiant(LoginActivity.this);
 
 		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() {
 

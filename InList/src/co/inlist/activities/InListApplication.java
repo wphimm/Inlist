@@ -3,7 +3,6 @@ package co.inlist.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.ActionBar;
 import android.app.Application;
 
 public class InListApplication extends Application {

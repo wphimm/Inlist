@@ -7,12 +7,10 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.util.MyProgressbar;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
 
 public class WebServiceDataCollectorAsyncTaskSplash extends
 		AsyncTask<String, Void, JSONObject> {

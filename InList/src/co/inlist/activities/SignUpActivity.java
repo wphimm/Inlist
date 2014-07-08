@@ -63,7 +63,7 @@ public class SignUpActivity extends Activity implements
 		setContentView(R.layout.sign_up_screen);
 		init();
 		
-		UtilInList.makeActionBarGradiant(SignUpActivity.this);
+//		UtilInList.makeActionBarGradiant(SignUpActivity.this);
 
 		txt_su_que.setText(getQuestion());
 

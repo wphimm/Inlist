@@ -1,9 +1,9 @@
 package co.inlist.util;
 
-import co.inlist.activities.R;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import co.inlist.activities.R;
 
 public class MyProgressbar extends ProgressDialog {
 

@@ -33,7 +33,7 @@ public class NotificationsSettingsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_settings_screen);
 
-		UtilInList.makeActionBarFullBlack(NotificationsSettingsActivity.this);
+//		UtilInList.makeActionBarFullBlack(NotificationsSettingsActivity.this);
 		
 		init();
 

@@ -40,7 +40,7 @@ public class ProfileActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
 
-		UtilInList.makeActionBarGradiant(ProfileActivity.this);
+//		UtilInList.makeActionBarGradiant(ProfileActivity.this);
 
 		init();
 

@@ -1,6 +1,5 @@
 package co.inlist.activities;
 
-import co.inlist.activities.R;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;

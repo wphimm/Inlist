@@ -83,8 +83,8 @@ public class HomeScreenActivity extends Activity implements
 		// Enabling Spinner dropdown navigation
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		actionBar.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.actionbar_gradiant));
+//		actionBar.setBackgroundDrawable(getResources().getDrawable(
+//				R.drawable.actionbar_gradiant));
 
 		for (int i = 0; i < InListApplication.getParty_area().size(); i++) {
 			Log.e("title",

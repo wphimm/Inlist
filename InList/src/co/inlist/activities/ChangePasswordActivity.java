@@ -37,7 +37,7 @@ public class ChangePasswordActivity extends Activity implements
 
 		init();
 
-		UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
+//		UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
 
 		txt_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));

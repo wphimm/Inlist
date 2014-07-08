@@ -1,6 +1,5 @@
 package co.inlist.fragments;
 
-import co.inlist.activities.R;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import co.inlist.activities.R;
 
 public class LeadingFragment extends Fragment {
 	// Store instance variables

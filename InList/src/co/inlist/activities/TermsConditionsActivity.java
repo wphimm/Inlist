@@ -1,11 +1,10 @@
 package co.inlist.activities;
 
-import co.inlist.activities.R;
-import co.inlist.util.UtilInList;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import co.inlist.util.UtilInList;
 
 public class TermsConditionsActivity extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -14,7 +13,7 @@ public class TermsConditionsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.terms_conditions);
 
-		UtilInList.makeActionBarFullBlack(TermsConditionsActivity.this);
+//		UtilInList.makeActionBarFullBlack(TermsConditionsActivity.this);
 	}
 
 	/**

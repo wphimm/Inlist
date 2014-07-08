@@ -1,6 +1,5 @@
 package co.inlist.twitter.android;
 
-import co.inlist.activities.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import co.inlist.activities.R;
 import co.inlist.twitter.android.TwitterApp.TwDialogListener;
 
 public class TwitterDialog extends Dialog {

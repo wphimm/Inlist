@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,7 +95,7 @@ public class EventDetailsActivity extends Activity implements
 
 		init();
 
-		UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
+//		UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {

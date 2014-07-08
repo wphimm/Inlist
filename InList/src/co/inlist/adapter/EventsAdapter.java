@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import co.inlist.activities.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import co.inlist.activities.EventDetailsActivity;
 import co.inlist.activities.HomeScreenActivity;
+import co.inlist.activities.R;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 

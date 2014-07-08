@@ -16,7 +16,6 @@
 
 package co.inlist.facebook.android;
 
-import co.inlist.activities.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,6 +35,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import co.inlist.activities.R;
 import co.inlist.facebook.android.Facebook.DialogListener;
 
 
