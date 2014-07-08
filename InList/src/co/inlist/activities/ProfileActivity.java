@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.inlist.interfaces.AsyncTaskCompleteListener;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,12 +25,13 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class ProfileActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	EditText editFirst, editLast, editEmail, editPhone;
 	Button btnUpdate;
@@ -68,8 +71,7 @@ public class ProfileActivity extends Activity implements
 				if (isValid()) {
 					if (UtilInList
 							.isInternetConnectionExist(getApplicationContext())) {
-						new ProfileAsyncTask(ProfileActivity.this)
-								.execute("");
+						new ProfileAsyncTask(ProfileActivity.this).execute("");
 					} else {
 						UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
 					}
@@ -115,10 +117,31 @@ public class ProfileActivity extends Activity implements
 						public void onClick(DialogInterface dialog, int which) {
 							if (UtilInList
 									.isInternetConnectionExist(getApplicationContext())) {
-								/*new LogoutAsyncTask(ProfileActivity.this)
-										.execute("");*/
-								UtilInList.WriteSharePrefrence(ProfileActivity.this,
-										Constant.SHRED_PR.KEY_LOGIN_STATUS, "false");
+								/*
+								 * new LogoutAsyncTask(ProfileActivity.this)
+								 * .execute("");
+								 */
+								UtilInList.WriteSharePrefrence(
+										ProfileActivity.this,
+										Constant.SHRED_PR.KEY_LOGIN_STATUS,
+										"false");
+
+//								List<NameValuePair> params = new ArrayList<NameValuePair>();
+//
+//								params.add(new BasicNameValuePair(
+//										"device_id",
+//										UtilInList
+//												.getDeviceId(ProfileActivity.this)));
+								//
+								// params.add(new BasicNameValuePair(
+								// "device_type", "android"));
+								//
+								// new WebServiceDataPosterAsyncTask(
+								// ProfileActivity.this, params,
+								// Constant.API
+								// + Constant.ACTIONS.LOGOUT_POST)
+								// .execute();
+
 								finish();
 							} else {
 								UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
@@ -268,21 +291,23 @@ public class ProfileActivity extends Activity implements
 			// TODO Auto-generated method stub
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			/*nameValuePairs.add(new BasicNameValuePair("first_name", ""+editFirst.getText().toString().trim()));
-			nameValuePairs.add(new BasicNameValuePair("last_name", ""+editLast.getText().toString().trim()));
-			nameValuePairs.add(new BasicNameValuePair("email", ""+editEmail.getText().toString().trim()));
-			nameValuePairs.add(new BasicNameValuePair("phone", ""+editPhone.getText().toString().trim()));
-			nameValuePairs.add(new BasicNameValuePair("PHPSESSIONID", ""+UtilInList.ReadSharePrefrence(
-					ProfileActivity.this,
-					Constant.SHRED_PR.KEY_SESSIONID)));
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ Constant.ACTIONS.PROFILE
-							+ "?apiMode=VIP&json=true");*/
-			
+			/*
+			 * nameValuePairs.add(new BasicNameValuePair("first_name",
+			 * ""+editFirst.getText().toString().trim()));
+			 * nameValuePairs.add(new BasicNameValuePair("last_name",
+			 * ""+editLast.getText().toString().trim())); nameValuePairs.add(new
+			 * BasicNameValuePair("email",
+			 * ""+editEmail.getText().toString().trim()));
+			 * nameValuePairs.add(new BasicNameValuePair("phone",
+			 * ""+editPhone.getText().toString().trim()));
+			 * nameValuePairs.add(new BasicNameValuePair("PHPSESSIONID",
+			 * ""+UtilInList.ReadSharePrefrence( ProfileActivity.this,
+			 * Constant.SHRED_PR.KEY_SESSIONID))); Log.e("Name Value Pair",
+			 * nameValuePairs.toString()); String response =
+			 * UtilInList.postData( nameValuePairs, "" + Constant.API +
+			 * Constant.ACTIONS.PROFILE + "?apiMode=VIP&json=true");
+			 */
+
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
@@ -301,9 +326,9 @@ public class ProfileActivity extends Activity implements
 							+ UtilInList.ReadSharePrefrence(
 									ProfileActivity.this,
 									Constant.SHRED_PR.KEY_SESSIONID));
-			
-			Log.e("Response In Activity-->", ">>"+response);
-			
+
+			Log.e("Response In Activity-->", ">>" + response);
+
 			return response;
 		}
 
@@ -366,6 +391,12 @@ public class ProfileActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		finish();
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

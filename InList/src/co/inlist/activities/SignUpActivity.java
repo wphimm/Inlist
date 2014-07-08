@@ -362,8 +362,6 @@ public class SignUpActivity extends Activity implements
 
 			} else {
 				
-				// JSONArray jsrr = result.getJSONArray("errors");
-				// jsrr.getString(0);
 				UtilInList.validateDialog(SignUpActivity.this, result
 						.getJSONArray("errors").getString(0).toString(),
 						Constant.ERRORS.OOPS);
