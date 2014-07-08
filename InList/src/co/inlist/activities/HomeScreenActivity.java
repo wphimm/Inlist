@@ -455,8 +455,6 @@ public class HomeScreenActivity extends Activity implements
 			super.onViewCreated(view, savedInstanceState);
 			ViewGroup viewGroup = (ViewGroup) view;
 			
-			viewGroup.setBackgroundColor(Color.parseColor("#00000000"));
-
 			// As we're using a ListFragment we create a PullToRefreshLayout
 			// manually
 			mPullToRefreshLayout = new PullToRefreshLayout(
