@@ -35,7 +35,7 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-			UtilInList.validateDialog(getApplicationContext(), "Checked", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(VipMembershipReview.this, "Checked", Constant.ERRORS.OOPS);
 			return true;
 
 		case android.R.id.home:

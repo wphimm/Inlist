@@ -126,16 +126,16 @@ public class AddCardActivity extends Activity implements
 
 			if (edt_card_num.getText().toString().equals("")) {
 
-				UtilInList.validateDialog(getApplicationContext(),
+				UtilInList.validateDialog(AddCardActivity.this,
 						Constant.ERRORS.PLZ_CARD_NUMBER, Constant.ERRORS.OOPS);
 			} else if (edt_card_name.getText().toString().equals("")) {
-				UtilInList.validateDialog(getApplicationContext(),
+				UtilInList.validateDialog(AddCardActivity.this,
 						Constant.ERRORS.PLZ_CARD_NAME, Constant.ERRORS.OOPS);
 			} else if (selected_month.equals("Month")) {
-				UtilInList.validateDialog(getApplicationContext(),
+				UtilInList.validateDialog(AddCardActivity.this,
 						Constant.ERRORS.PLZ_CARD_MONTH, Constant.ERRORS.OOPS);
 			} else if (selected_year.equals("Year")) {
-				UtilInList.validateDialog(getApplicationContext(),
+				UtilInList.validateDialog(AddCardActivity.this,
 						Constant.ERRORS.PLZ_CARD_YEAR, Constant.ERRORS.OOPS);
 			} else {
 				List<NameValuePair> params = new ArrayList<NameValuePair>();

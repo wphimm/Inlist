@@ -46,7 +46,7 @@ public class NotificationsSettingsActivity extends Activity implements
 					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
 							.execute("");
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(NotificationsSettingsActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 
@@ -66,7 +66,7 @@ public class NotificationsSettingsActivity extends Activity implements
 					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
 							.execute("");
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(NotificationsSettingsActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}

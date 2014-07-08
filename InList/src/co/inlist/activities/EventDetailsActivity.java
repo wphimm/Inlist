@@ -304,7 +304,7 @@ public class EventDetailsActivity extends Activity implements
 					new EventEntryAsyncTask(EventDetailsActivity.this)
 							.execute("");
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(EventDetailsActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}

@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.inlist.interfaces.AsyncTaskCompleteListener;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -73,7 +71,7 @@ public class ProfileActivity extends Activity implements
 							.isInternetConnectionExist(getApplicationContext())) {
 						new ProfileAsyncTask(ProfileActivity.this).execute("");
 					} else {
-						UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
+						UtilInList.validateDialog(ProfileActivity.this, ""+Constant.network_error, Constant.AppName);
 					}
 				}
 			}
@@ -144,7 +142,7 @@ public class ProfileActivity extends Activity implements
 
 								finish();
 							} else {
-								UtilInList.validateDialog(getApplicationContext(), ""+Constant.network_error, Constant.AppName);
+								UtilInList.validateDialog(ProfileActivity.this, ""+Constant.network_error, Constant.AppName);
 							}
 
 						}
@@ -246,24 +244,24 @@ public class ProfileActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(getApplicationContext(), "first name must be minimum 2 characters", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this, "first name must be minimum 2 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(getApplicationContext(), "last name must be minimum 2 characters", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this, "last name must be minimum 2 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			UtilInList.validateDialog(getApplicationContext(), "please enter email", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this, "please enter email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			UtilInList.validateDialog(getApplicationContext(), "please enter valid email", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this, "please enter valid email", Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editPhone.getText().toString().trim().length() < 10) {
-			UtilInList.validateDialog(getApplicationContext(), "phone must be minimum 10 characters", Constant.ERRORS.OOPS);
+			UtilInList.validateDialog(ProfileActivity.this, "phone must be minimum 10 characters", Constant.ERRORS.OOPS);
 			return false;
 		}
 		return true;
@@ -354,7 +352,7 @@ public class ProfileActivity extends Activity implements
 
 					try {
 						if (jObject.getString("success").equals("true")) {
-							UtilInList.validateDialog(getApplicationContext(), jObject
+							UtilInList.validateDialog(ProfileActivity.this, jObject
 									.getJSONArray("messages").getString(0),
 									Constant.AppName);
 							editFirst.setText("");
@@ -363,7 +361,7 @@ public class ProfileActivity extends Activity implements
 							editPhone.setText("");
 						
 						} else {
-							UtilInList.validateDialog(getApplicationContext(), jObject
+							UtilInList.validateDialog(ProfileActivity.this, jObject
 									.getJSONArray("errors").getString(0),
 									Constant.ERRORS.OOPS);
 						}

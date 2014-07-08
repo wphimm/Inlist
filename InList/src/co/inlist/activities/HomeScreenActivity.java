@@ -286,7 +286,7 @@ public class HomeScreenActivity extends Activity implements
 
 		if (InListApplication.getParty_area().get(itemPosition).get("status")
 				.equals("0")) {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(HomeScreenActivity.this, "" + ""
 					+ Constant.ERRORS.NO_EVENTS_FOUND, Constant.ERRORS.OOPS);
 			return false;
 		}
@@ -295,7 +295,7 @@ public class HomeScreenActivity extends Activity implements
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 			new PartyAreaAsyncTask(HomeScreenActivity.this).execute("");
 		} else {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(HomeScreenActivity.this, "" + ""
 					+ Constant.network_error, Constant.ERRORS.OOPS);
 		}
 
@@ -391,7 +391,7 @@ public class HomeScreenActivity extends Activity implements
 							HomeScreenObj.new EventsAsyncTask(
 									HomeScreenActivity.this).execute("");
 						} else {
-							UtilInList.validateDialog(getApplicationContext(),
+							UtilInList.validateDialog(HomeScreenActivity.this,
 									"" + "" + Constant.network_error,
 									Constant.ERRORS.OOPS);
 							mPullToRefreshLayout.setRefreshComplete();
@@ -644,7 +644,7 @@ public class HomeScreenActivity extends Activity implements
 				Log.i("size:", "" + InListApplication.getListEvents().size());
 			} else {
 
-				UtilInList.validateDialog(getApplicationContext(), jObject
+				UtilInList.validateDialog(HomeScreenActivity.this, jObject
 						.getJSONArray("errors").getString(0),
 						Constant.ERRORS.OOPS);
 			}

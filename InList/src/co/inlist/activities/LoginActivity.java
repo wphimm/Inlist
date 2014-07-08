@@ -239,11 +239,11 @@ public class LoginActivity extends Activity implements
 			// search action
 
 			if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(getApplicationContext(), "" + ""
+				UtilInList.validateDialog(LoginActivity.this, "" + ""
 						+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
 
 			} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(getApplicationContext(), "" + ""
+				UtilInList.validateDialog(LoginActivity.this, "" + ""
 						+ Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
 			} else {
 

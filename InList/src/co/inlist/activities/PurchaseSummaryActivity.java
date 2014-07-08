@@ -62,7 +62,7 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToFacebook();
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(PurchaseSummaryActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}
@@ -77,7 +77,7 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToTwitter();
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(PurchaseSummaryActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 				}
 			}
@@ -190,13 +190,13 @@ public class PurchaseSummaryActivity extends Activity implements
 				Log.v("Error", "Blank response");
 				UtilInList
 						.validateDialog(
-								getApplicationContext(),
+								PurchaseSummaryActivity.this,
 								"There is some server issue to share App in your Facebook account.",
 								Constant.ERRORS.OOPS);
 
 			} else {
 
-				UtilInList.validateDialog(getApplicationContext(),
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
 						"App share successfully on your Facebook account.",
 						Constant.AppName);
 			}
@@ -245,10 +245,10 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_LOGIN:
 			switch (success) {
 			case SUCCESS:
-				UtilInList.validateDialog(getApplicationContext(), "Login Successful", Constant.AppName);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Login Successful", Constant.AppName);
 				break;
 			case FAILED:
-				UtilInList.validateDialog(getApplicationContext(), "Login Failed", Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Login Failed", Constant.ERRORS.OOPS);
 			default:
 				break;
 			}
@@ -256,13 +256,13 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_POST:
 			switch (success) {
 			case SUCCESS:
-				UtilInList.validateDialog(getApplicationContext(), "App share successfully on your Twitter account.", Constant.AppName);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this, "App share successfully on your Twitter account.", Constant.AppName);
 				break;
 			case FAILED:
-				UtilInList.validateDialog(getApplicationContext(), "Posting Failed" , Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Posting Failed" , Constant.ERRORS.OOPS);
 				break;
 			case DUPLICATE:
-				UtilInList.validateDialog(getApplicationContext(), "Posting Failed because of duplicate message.", Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Posting Failed because of duplicate message.", Constant.ERRORS.OOPS);
 			default:
 				break;
 			}

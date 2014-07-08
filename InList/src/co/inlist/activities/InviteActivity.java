@@ -69,7 +69,7 @@ public class InviteActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					new InviteAsyncTask(InviteActivity.this).execute("");
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(InviteActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}
@@ -151,7 +151,7 @@ public class InviteActivity extends Activity implements
 					try {
 						if (jObject.getString("success").equals("true")) {
 							UtilInList.validateDialog(
-									getApplicationContext(),
+									InviteActivity.this,
 									jObject.getJSONArray("messages").getString(
 											0), Constant.AppName);
 							editFirst.setText("");
@@ -160,7 +160,7 @@ public class InviteActivity extends Activity implements
 
 						} else {
 							UtilInList
-									.validateDialog(getApplicationContext(),
+									.validateDialog(InviteActivity.this,
 											jObject.getJSONArray("errors")
 													.getString(0),
 											Constant.ERRORS.OOPS);
@@ -181,23 +181,23 @@ public class InviteActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 3) {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 3) {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			UtilInList.validateDialog(getApplicationContext(), "" + ""
+			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_VALID_EMAIL, Constant.ERRORS.OOPS);
 			return false;
 		}

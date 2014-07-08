@@ -78,7 +78,7 @@ public class ChangePasswordActivity extends Activity implements
 					new ChangePasswordAsyncTask(ChangePasswordActivity.this)
 							.execute("");
 				} else {
-					UtilInList.validateDialog(getApplicationContext(), "" + ""
+					UtilInList.validateDialog(ChangePasswordActivity.this, "" + ""
 							+ Constant.network_error, Constant.ERRORS.OOPS);
 
 				}
@@ -162,7 +162,7 @@ public class ChangePasswordActivity extends Activity implements
 					try {
 						if (jObject.getString("success").equals("true")) {
 							UtilInList.validateDialog(
-									getApplicationContext(),
+									ChangePasswordActivity.this,
 									jObject.getJSONArray("messages").getString(
 											0), Constant.AppName);
 							editCurrentPassword.setText("");
@@ -171,7 +171,7 @@ public class ChangePasswordActivity extends Activity implements
 
 						} else {
 							UtilInList
-									.validateDialog(getApplicationContext(),
+									.validateDialog(ChangePasswordActivity.this,
 											jObject.getJSONArray("errors")
 													.getString(0),
 											Constant.ERRORS.OOPS);
@@ -203,14 +203,14 @@ public class ChangePasswordActivity extends Activity implements
 			return false;
 		}
 		if (editConfirmPassword.getText().toString().trim().length() == 0) {
-			UtilInList.validateDialog(getApplicationContext(),
+			UtilInList.validateDialog(ChangePasswordActivity.this,
 					Constant.ERRORS.PLZ_CNFRM_PWD, Constant.ERRORS.OOPS);
 
 			return false;
 		}
 		if (!editNewPassword.getText().toString().trim()
 				.equals("" + editConfirmPassword.getText().toString().trim())) {
-			UtilInList.validateDialog(getApplicationContext(),
+			UtilInList.validateDialog(ChangePasswordActivity.this,
 					Constant.ERRORS.PWD_NOT_MATCH, Constant.ERRORS.OOPS);
 			return false;
 		}
