@@ -97,7 +97,6 @@ public class EventsAdapter extends BaseAdapter {
 		txt_event_location_city.setText(""+locallist.get(position).get(
 				"event_location_club")+", "+locallist.get(position).get(
 				"event_location_city"));
-		txt_event_location_city.setText("Nightclub, City");
 		
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);

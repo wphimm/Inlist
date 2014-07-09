@@ -51,10 +51,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings.Secure;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -157,44 +162,61 @@ public class UtilInList {
 
 				ViewTreeObserver obs = tv.getViewTreeObserver();
 				obs.removeGlobalOnLayoutListener(this);
+
+				String temp;
+				if(viewMore){
+					temp="... " + expandText;
+				}
+				else{
+					temp=" " + expandText;
+				}
+				
 				if (maxLine == 0) {
 					int lineEndIndex = tv.getLayout().getLineEnd(0);
+					
 					String text = tv.getText().subSequence(0,
-							lineEndIndex - expandText.length() + 1)
-							+ " " + expandText;
+							lineEndIndex - temp.length() + 1)
+							+ temp;
+
 					tv.setText(text);
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setText(
 							addClickablePartTextViewResizable(
-									Html.fromHtml(tv.getText().toString()), tv,
-									maxLine, expandText, viewMore),
+									Html.fromHtml(text), tv, maxLine,
+									expandText, viewMore),
 
 							BufferType.SPANNABLE);
 				} else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
 					int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
+
 					String text = tv.getText().subSequence(0,
-							lineEndIndex - expandText.length() + 1)
-							+ expandText;
+							lineEndIndex - temp.length() + 1)
+							+ temp;
+
 					tv.setText(text);
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setText(
 							addClickablePartTextViewResizable(
-									Html.fromHtml(tv.getText().toString()), tv,
-									maxLine, expandText, viewMore),
-							BufferType.SPANNABLE);
+									Html.fromHtml(text), tv, maxLine,
+									expandText, viewMore), BufferType.SPANNABLE);
 				} else {
 					int lineEndIndex = tv.getLayout().getLineEnd(
 							tv.getLayout().getLineCount() - 1);
+
 					String text = tv.getText().subSequence(0, lineEndIndex)
-							+ expandText;
+							+ temp;
+
 					tv.setText(text);
 					tv.setMovementMethod(LinkMovementMethod.getInstance());
 					tv.setText(
 							addClickablePartTextViewResizable(
-									Html.fromHtml(tv.getText().toString()), tv,
-									lineEndIndex, expandText, viewMore),
-							BufferType.SPANNABLE);
+									Html.fromHtml(text), tv, lineEndIndex,
+									expandText, viewMore), BufferType.SPANNABLE);
+
 				}
+
+				// stripUnderlines(tv);
+
 			}
 		});
 
@@ -203,6 +225,7 @@ public class UtilInList {
 	private static SpannableStringBuilder addClickablePartTextViewResizable(
 			final Spanned strSpanned, final TextView tv, final int maxLine,
 			final String spanableText, final boolean viewMore) {
+
 		String str = strSpanned.toString();
 		SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
@@ -216,7 +239,7 @@ public class UtilInList {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);
 						tv.invalidate();
-						makeTextViewResizable(tv, 100,"LESS", false);
+						makeTextViewResizable(tv, 100, "LESS", false);
 					} else {
 						tv.setLayoutParams(tv.getLayoutParams());
 						tv.setText(tv.getTag().toString(), BufferType.SPANNABLE);
@@ -226,11 +249,32 @@ public class UtilInList {
 
 				}
 			}, str.indexOf(spanableText), str.indexOf(spanableText)
-					+ spanableText.length(), 0);
+					+ spanableText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+			ssb.setSpan(new NonUnderlinedClickableSpan(),
+					str.indexOf(spanableText), str.indexOf(spanableText)
+							+ spanableText.length(),
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		}
 		return ssb;
 
+	}
+
+	public static class NonUnderlinedClickableSpan extends ClickableSpan {
+
+		@Override
+		public void updateDrawState(TextPaint ds) {
+
+			ds.setColor(Color.parseColor("#DFBB6A"));
+			ds.setUnderlineText(false);
+			ds.setTypeface(Typeface.DEFAULT_BOLD);
+		}
+
+		@Override
+		public void onClick(View v) {
+
+		}
 	}
 
 	public static String getAddresFromLatLong(Context context, double latitude,

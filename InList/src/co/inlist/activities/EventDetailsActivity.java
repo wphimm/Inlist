@@ -171,7 +171,7 @@ public class EventDetailsActivity extends Activity implements
 
 		// ***** Date Format ************************************//
 
-		txt_details.setText("" + map.get("event_description"));
+		txt_details.setText("" + map.get("event_description")+" ");
 
 		UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
 
