@@ -36,14 +36,11 @@ public class SplashScreenActivity extends Activity implements
 		setContentView(R.layout.splash_screen);
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-			
+
 			new WebServiceDataCollectorAsyncTaskSplash(Constant.API_LIVE
 					+ Constant.ACTIONS.PREPARE_REGISTER,
 					SplashScreenActivity.this).execute();
-			
-			
-			new AddDeviceAsyncTask(getApplicationContext()).execute("");
-			new PartyAreaAsyncTask(getApplicationContext()).execute("");
+
 		} else {
 			UtilInList.validateDialog(SplashScreenActivity.this, ""
 					+ Constant.ERRORS.NO_INTERNET_CONNECTION,
@@ -138,6 +135,7 @@ public class SplashScreenActivity extends Activity implements
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 
+			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		}
 	}
 
@@ -226,7 +224,6 @@ public class SplashScreenActivity extends Activity implements
 		// TODO Auto-generated method stub
 
 		try {
-
 			/*
 			 * Prepare registration response write in file mode private
 			 */
@@ -242,6 +239,9 @@ public class SplashScreenActivity extends Activity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		new AddDeviceAsyncTask(getApplicationContext()).execute("");
+
 	}
 
 }
