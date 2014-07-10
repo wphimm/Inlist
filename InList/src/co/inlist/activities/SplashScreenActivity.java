@@ -123,7 +123,7 @@ public class SplashScreenActivity extends Activity implements
 					"" + Constant.API + Constant.ACTIONS.ADD_DEVICE
 							+ "?json=true" + "&device_id="
 							+ UtilInList.getDeviceId(getApplicationContext())
-							+ "&deviceType=Android");
+							+ "&deviceType=android");
 			Log.e("Response In Activity-->", ".." + response);
 			Log.e("DeviceId",
 					"" + UtilInList.getDeviceId(getApplicationContext()));

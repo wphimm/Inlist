@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="horizontal" >
 
@@ -12,7 +12,7 @@
 
         <RelativeLayout
             android:id="@+id/relativemain"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <RelativeLayout
@@ -23,8 +23,9 @@
                 <ImageView
                     android:id="@+id/img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/iv_desc"
+                    android:minHeight="150dp"
                     android:scaleType="fitXY" />
 
                 <RelativeLayout
