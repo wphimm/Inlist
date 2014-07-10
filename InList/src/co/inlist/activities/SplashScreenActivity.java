@@ -65,15 +65,10 @@ public class SplashScreenActivity extends Activity implements
 	private void proceed() {
 		try {
 			if (this.isFinishing()) {
+			
 				return;
 			}
-
-			// if (CommonUtility.ReadSharePrefrence(SplashScreenActivity.this,
-			// Constant.SHRED_PR.KEY_USERID).equals(Constant.BLANK)) {
-			// startActivity(new Intent(SplashScreenActivity.this,
-			// Leading_Activity.class));
-			// } else {
-
+			
 			if (UtilInList.ifConditionDataExist(SplashScreenActivity.this)) {
 				if (UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
 						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {

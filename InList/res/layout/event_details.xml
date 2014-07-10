@@ -18,15 +18,17 @@
             <RelativeLayout
                 android:id="@+id/r1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="match_parent" >
 
-                <ImageView
+                <co.inlist.util.ResizableImageView
                     android:id="@+id/img"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <co.inlist.util.ResizableImageView
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/iv_desc"
-                    android:minHeight="150dp"
-                    android:scaleType="fitXY" />
+                    android:src="@drawable/event_details_overlay" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
