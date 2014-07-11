@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,20 +21,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class SettingAccountListActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 	ListView listView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settting_list_screen);
-//
-//		UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
+		//
+		// UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
 
 		listView = (ListView) findViewById(R.id.lst_setting);
 
@@ -57,8 +60,23 @@ public class SettingAccountListActivity extends Activity implements
 					startActivity(new Intent(SettingAccountListActivity.this,
 							ChangePasswordActivity.class));
 				} else if (position == 1) {
-					startActivity(new Intent(SettingAccountListActivity.this,
-							NoCardActivity.class));
+					
+					UtilInList.WriteSharePrefrence(SettingAccountListActivity.this,
+							Constant.SHRED_PR.KEY_ADDCARD_FROM, "0");
+					
+					if (UtilInList
+							.ReadSharePrefrence(
+									SettingAccountListActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+							.toString().equals("1")) {
+						startActivity(new Intent(
+								SettingAccountListActivity.this,
+								AddCardActivity.class));
+					} else {
+						startActivity(new Intent(
+								SettingAccountListActivity.this,
+								NoCardActivity.class));
+					}
 				} else if (position == 2) {
 					startActivity(new Intent(SettingAccountListActivity.this,
 							InviteActivity.class));
@@ -74,69 +92,37 @@ public class SettingAccountListActivity extends Activity implements
 		});
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-			new Push_notificationsAsyncTask(getApplicationContext())
-					.execute("");
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							SettingAccountListActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			new WebServiceDataPosterAsyncTask(SettingAccountListActivity.this,
+					params, Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
+							+ "/?apiMode=VIP&json=true").execute();
 		}
 
 	}
 
-	public class Push_notificationsAsyncTask extends
-			AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public Push_notificationsAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					nameValuePairs,
-					""
-							+ Constant.API_LIVE
-							+ Constant.ACTIONS.PUSHNOTIFICATIONS
-							+ "?apiMode=VIP&json=true"
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(
-									SettingAccountListActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("Response In Activity-->", response);
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// fragment_addconnection_search
-
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
-
-					if (str_temp.equals("success")) {
-
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+				UtilInList.WriteSharePrefrence(SettingAccountListActivity.this,
+						Constant.SHRED_PR.KEY_DAILY,
+						result.getJSONObject("data").getString("daily"));
+				UtilInList.WriteSharePrefrence(SettingAccountListActivity.this,
+						Constant.SHRED_PR.KEY_BILLING,
+						result.getJSONObject("data").getString("billing"));
 			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
 		}
 
 	}

@@ -102,6 +102,8 @@ public class PurchaseSummaryActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case android.R.id.home:
+			EventDetailsActivity.edObj.finish();
+			CompletePurchaseActivity.cpObj.finish();
 			finish();
 			return true;
 
@@ -325,6 +327,8 @@ public class PurchaseSummaryActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
+		EventDetailsActivity.edObj.finish();
+		CompletePurchaseActivity.cpObj.finish();
 		finish();
 	}
 }

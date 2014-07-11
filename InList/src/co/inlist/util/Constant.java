@@ -23,7 +23,7 @@ public class Constant {
 	public static final String CONSUMER_SECRET = "zsBZKsYyR6UR7r7AJ429oeEton7kNDy4RWguaQluNImNCoKXsl";
 
 	public static class ACTIONS {
-		public static final String ADD_DEVICE = "common/add_device/";
+		public static final String ADD_DEVICE = "common/add_device/?json=true";
 		public static final String EVENTS = "events/";
 		public static final String PARTY_AREA = "party_area/";
 		public static final String PARTY_AREA_SET = "party_area/set/";
@@ -38,11 +38,13 @@ public class Constant {
 		public static final String PREPARE_REGISTER = "common/prepare_registration/?json=true";
 		public static final String CHANGE_PASSWORD = "user/login/save/";
 		public static final String PUSHNOTIFICATIONS = "push_notifications/";
+		public static final String PUSHNOTIFICATIONS_TEST = "push_notifications/test/?apiMode=VIP&json=true";
 		public static final String USER_INVITE = "user/invite/";
-		public static final String LOGOUT = "user/logout/";
+		public static final String LOGOUT = "user/logout/?apiMode=VIP&json=true";
 		public static final String PROFILE = "user/small_details/";
 		public static final String ADD_CARD = "credit_card/save/?apiMode=VIP&json=true"; // &user_card_id=%s&card_type=%s&card_number=%s&card_name=%s&card_exp_year=%s&card_exp_month=%s&set_default=1";
-
+		public static final String REMOVE_CARD = "credit_card/remove/?apiMode=VIP&json=true";
+		public static final String CARD_GET = "credit_cards/get/?apiMode=VIP&json=true";
 	}
 
 	public static class TAGS {
@@ -127,7 +129,19 @@ public class Constant {
 		public static final String KEY_LOGIN_STATUS = "login_status";
 		public static final String KEY_SESSIONID = "sessionId";
 		public static final String KEY_CURRENT_PASSWORD = "current_password";
+		public static final String KEY_DAILY = "daily";
+		public static final String KEY_BILLING = "billing";
+		public static final String KEY_LOGIN_FROM = "login_from";
+		public static final String KEY_ADDCARD_FROM = "addcard_from";
 
+		//Credit Card Details:
+		public static final String KEY_USER_CARD_ADDED = "user_card_added";
+		public static final String KEY_USER_CARD_ID = "user_card_id";
+		public static final String KEY_USER_CARD_NUMBER = "user_card_number";
+		public static final String KEY_USER_CARD_HOLDER_NAME = "user_card_holder_name";
+		public static final String KEY_USER_CARD_CVV = "user_card_cvv";
+		public static final String KEY_USER_CARD_EXP_MONTH = "user_card_exp_month";
+		public static final String KEY_USER_CARD_EXP_YEAR = "user_card_exp_year";
 	}
 
 	public static class PREF_VAL {

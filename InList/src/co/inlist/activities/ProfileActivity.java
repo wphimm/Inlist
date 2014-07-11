@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -40,7 +42,7 @@ public class ProfileActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
 
-//		UtilInList.makeActionBarGradiant(ProfileActivity.this);
+		// UtilInList.makeActionBarGradiant(ProfileActivity.this);
 
 		init();
 
@@ -71,7 +73,30 @@ public class ProfileActivity extends Activity implements
 				if (isValid()) {
 					if (UtilInList
 							.isInternetConnectionExist(getApplicationContext())) {
-						new ProfileAsyncTask(ProfileActivity.this).execute("");
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("first_name", ""
+								+ editFirst.getText().toString().trim()));
+						params.add(new BasicNameValuePair("last_name", ""
+								+ editLast.getText().toString().trim()));
+						params.add(new BasicNameValuePair("phone", ""
+								+ editPhone.getText().toString().trim()));
+						params.add(new BasicNameValuePair("email", ""
+								+ editEmail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										ProfileActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								ProfileActivity.this,
+								params,
+								Constant.API
+										+ "user/small_details/save/?apiMode=VIP&json=true")
+								.execute();
+
 					} else {
 						UtilInList.validateDialog(ProfileActivity.this, ""
 								+ Constant.network_error, Constant.AppName);
@@ -126,6 +151,9 @@ public class ProfileActivity extends Activity implements
 										ProfileActivity.this,
 										Constant.SHRED_PR.KEY_LOGIN_STATUS,
 										"false");
+								
+								UtilInList.WriteSharePrefrence(ProfileActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_ADDED, "0");
 
 								// List<NameValuePair> params = new
 								// ArrayList<NameValuePair>();
@@ -282,120 +310,6 @@ public class ProfileActivity extends Activity implements
 		return true;
 	}
 
-	public class ProfileAsyncTask extends AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public ProfileAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			/*
-			 * nameValuePairs.add(new BasicNameValuePair("first_name",
-			 * ""+editFirst.getText().toString().trim()));
-			 * nameValuePairs.add(new BasicNameValuePair("last_name",
-			 * ""+editLast.getText().toString().trim())); nameValuePairs.add(new
-			 * BasicNameValuePair("email",
-			 * ""+editEmail.getText().toString().trim()));
-			 * nameValuePairs.add(new BasicNameValuePair("phone",
-			 * ""+editPhone.getText().toString().trim()));
-			 * nameValuePairs.add(new BasicNameValuePair("PHPSESSIONID",
-			 * ""+UtilInList.ReadSharePrefrence( ProfileActivity.this,
-			 * Constant.SHRED_PR.KEY_SESSIONID))); Log.e("Name Value Pair",
-			 * nameValuePairs.toString()); String response =
-			 * UtilInList.postData( nameValuePairs, "" + Constant.API +
-			 * Constant.ACTIONS.PROFILE + "?apiMode=VIP&json=true");
-			 */
-
-			String response = UtilInList.postData(
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ Constant.ACTIONS.PROFILE
-							+ "?apiMode=VIP&json=true"
-							+ "&first_name="
-							+ editFirst.getText().toString().trim()
-							+ "&last_name="
-							+ editLast.getText().toString().trim()
-							+ "&email="
-							+ editEmail.getText().toString().trim()
-							+ "&phone="
-							+ editPhone.getText().toString().trim()
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(
-									ProfileActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
-
-			Log.e("Response In Activity-->", ">>" + response);
-
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// fragment_addconnection_search
-
-			try {
-				if (dialog != null) {
-					if (dialog.isShowing()) {
-						dialog.dismiss();
-					}
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-
-					try {
-						if (jObject.getString("success").equals("true")) {
-							UtilInList.validateDialog(
-									ProfileActivity.this,
-									jObject.getJSONArray("messages").getString(
-											0), Constant.AppName);
-							editFirst.setText("");
-							editLast.setText("");
-							editEmail.setText("");
-							editPhone.setText("");
-
-						} else {
-							UtilInList
-									.validateDialog(ProfileActivity.this,
-											jObject.getJSONArray("errors")
-													.getString(0),
-											Constant.ERRORS.OOPS);
-						}
-					} catch (Exception e) {
-						Log.v("", "Exception : " + e);
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
 	@Override
 	public boolean onNavigationItemSelected(int arg0, long arg1) {
 		// TODO Auto-generated method stub
@@ -412,6 +326,25 @@ public class ProfileActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+
+				editFirst.setText("");
+				editLast.setText("");
+				editEmail.setText("");
+				editPhone.setText("");
+
+				UtilInList.validateDialog(ProfileActivity.this, result
+						.getJSONArray("messages").getString(0),
+						Constant.ERRORS.OOPS);
+			} else {
+				UtilInList.validateDialog(ProfileActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
+		}
 
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,24 +18,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class NotificationsSettingsActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	ImageButton btnDailyNotification, btnBillingIssues;
 	boolean flagDaily = true;
-	boolean flagDailyNotification = true, flagBillingIssues = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_settings_screen);
 
-//		UtilInList.makeActionBarFullBlack(NotificationsSettingsActivity.this);
-		
+		// UtilInList.makeActionBarFullBlack(NotificationsSettingsActivity.this);
+
 		init();
 
 		btnDailyNotification.setOnClickListener(new OnClickListener() {
@@ -45,12 +47,50 @@ public class NotificationsSettingsActivity extends Activity implements
 				flagDaily = true;
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
-							.execute("");
-				} else {
-					UtilInList.validateDialog(NotificationsSettingsActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
 
+					String strSwitch, strType;
+					if (flagDaily) {
+						strType = "daily";
+						if (UtilInList
+								.ReadSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_DAILY).toString()
+								.equals("1")) {
+							strSwitch = "disable";
+						} else {
+							strSwitch = "enable";
+						}
+					} else {
+						strType = "billing";
+						if (UtilInList
+								.ReadSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_BILLING)
+								.toString().equals("1")) {
+							strSwitch = "disable";
+						} else {
+							strSwitch = "enable";
+						}
+					}
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("type", "" + strType));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									NotificationsSettingsActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							NotificationsSettingsActivity.this, params,
+							Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
+									+ strSwitch + "/?apiMode=VIP&json=true")
+							.execute();
+				} else {
+					UtilInList.validateDialog(
+							NotificationsSettingsActivity.this, "" + ""
+									+ Constant.network_error,
+							Constant.ERRORS.OOPS);
 
 				}
 
@@ -65,11 +105,51 @@ public class NotificationsSettingsActivity extends Activity implements
 				flagDaily = false;
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					new Push_notificationsAsyncTask(NotificationsSettingsActivity.this)
-							.execute("");
+
+					String strSwitch, strType;
+					if (flagDaily) {
+						strType = "daily";
+						if (UtilInList
+								.ReadSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_DAILY).toString()
+								.equals("1")) {
+							strSwitch = "disable";
+						} else {
+							strSwitch = "enable";
+						}
+					} else {
+						strType = "billing";
+						if (UtilInList
+								.ReadSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_BILLING)
+								.toString().equals("1")) {
+							strSwitch = "disable";
+						} else {
+							strSwitch = "enable";
+						}
+					}
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("type", "" + strType));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									NotificationsSettingsActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							NotificationsSettingsActivity.this, params,
+							Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
+									+ strSwitch + "/?apiMode=VIP&json=true")
+							.execute();
+
 				} else {
-					UtilInList.validateDialog(NotificationsSettingsActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
+					UtilInList.validateDialog(
+							NotificationsSettingsActivity.this, "" + ""
+									+ Constant.network_error,
+							Constant.ERRORS.OOPS);
 
 				}
 
@@ -81,6 +161,22 @@ public class NotificationsSettingsActivity extends Activity implements
 		// TODO Auto-generated method stub
 		btnDailyNotification = (ImageButton) findViewById(R.id.btnDailyNotification);
 		btnBillingIssues = (ImageButton) findViewById(R.id.btnBillingIssues);
+
+		if (UtilInList
+				.ReadSharePrefrence(NotificationsSettingsActivity.this,
+						Constant.SHRED_PR.KEY_DAILY).toString().equals("1")) {
+			btnDailyNotification.setBackgroundResource(R.drawable.on);
+		} else {
+			btnDailyNotification.setBackgroundResource(R.drawable.off);
+		}
+
+		if (UtilInList
+				.ReadSharePrefrence(NotificationsSettingsActivity.this,
+						Constant.SHRED_PR.KEY_BILLING).toString().equals("1")) {
+			btnBillingIssues.setBackgroundResource(R.drawable.on);
+		} else {
+			btnBillingIssues.setBackgroundResource(R.drawable.off);
+		}
 	}
 
 	/**
@@ -131,14 +227,20 @@ public class NotificationsSettingsActivity extends Activity implements
 			String strSwitch, strType;
 			if (flagDaily) {
 				strType = "daily";
-				if (flagDailyNotification) {
+				if (UtilInList
+						.ReadSharePrefrence(NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_DAILY).toString()
+						.equals("1")) {
 					strSwitch = "disable";
 				} else {
 					strSwitch = "enable";
 				}
 			} else {
 				strType = "billing";
-				if (flagBillingIssues) {
+				if (UtilInList
+						.ReadSharePrefrence(NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_BILLING).toString()
+						.equals("1")) {
 					strSwitch = "disable";
 				} else {
 					strSwitch = "enable";
@@ -154,8 +256,8 @@ public class NotificationsSettingsActivity extends Activity implements
 							+ Constant.ACTIONS.PUSHNOTIFICATIONS
 							+ strSwitch
 							+ "/?apiMode=VIP&json=true"
-							+"&type="
-							+strType
+							+ "&type="
+							+ strType
 							+ "&PHPSESSIONID="
 							+ UtilInList.ReadSharePrefrence(
 									NotificationsSettingsActivity.this,
@@ -187,24 +289,41 @@ public class NotificationsSettingsActivity extends Activity implements
 
 					if (str_temp.equals("success")) {
 						if (flagDaily) {
-							if (flagDailyNotification) {
+							if (UtilInList
+									.ReadSharePrefrence(
+											NotificationsSettingsActivity.this,
+											Constant.SHRED_PR.KEY_DAILY)
+									.toString().equals("1")) {
 								btnDailyNotification
 										.setBackgroundResource(R.drawable.off);
-								flagDailyNotification = false;
+								UtilInList.WriteSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_DAILY, "0");
+
 							} else {
 								btnDailyNotification
 										.setBackgroundResource(R.drawable.on);
-								flagDailyNotification = true;
+								UtilInList.WriteSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_DAILY, "1");
 							}
 						} else {
-							if (flagBillingIssues) {
-								flagBillingIssues = false;
+							if (UtilInList
+									.ReadSharePrefrence(
+											NotificationsSettingsActivity.this,
+											Constant.SHRED_PR.KEY_BILLING)
+									.toString().equals("1")) {
+								UtilInList.WriteSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_BILLING, "0");
 								btnBillingIssues
 										.setBackgroundResource(R.drawable.off);
 							} else {
 								btnBillingIssues
 										.setBackgroundResource(R.drawable.on);
-								flagBillingIssues = true;
+								UtilInList.WriteSharePrefrence(
+										NotificationsSettingsActivity.this,
+										Constant.SHRED_PR.KEY_BILLING, "1");
 							}
 						}
 					}
@@ -214,6 +333,60 @@ public class NotificationsSettingsActivity extends Activity implements
 				}
 
 			}
+		}
+
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+
+				if (flagDaily) {
+					if (UtilInList
+							.ReadSharePrefrence(
+									NotificationsSettingsActivity.this,
+									Constant.SHRED_PR.KEY_DAILY).toString()
+							.equals("1")) {
+						btnDailyNotification
+								.setBackgroundResource(R.drawable.off);
+						UtilInList.WriteSharePrefrence(
+								NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_DAILY, "0");
+
+					} else {
+						btnDailyNotification
+								.setBackgroundResource(R.drawable.on);
+						UtilInList.WriteSharePrefrence(
+								NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_DAILY, "1");
+					}
+				} else {
+					if (UtilInList
+							.ReadSharePrefrence(
+									NotificationsSettingsActivity.this,
+									Constant.SHRED_PR.KEY_BILLING).toString()
+							.equals("1")) {
+						UtilInList.WriteSharePrefrence(
+								NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_BILLING, "0");
+						btnBillingIssues.setBackgroundResource(R.drawable.off);
+					} else {
+						btnBillingIssues.setBackgroundResource(R.drawable.on);
+						UtilInList.WriteSharePrefrence(
+								NotificationsSettingsActivity.this,
+								Constant.SHRED_PR.KEY_BILLING, "1");
+					}
+				}
+
+			} else {
+				UtilInList.validateDialog(NotificationsSettingsActivity.this,
+						result.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
 		}
 
 	}

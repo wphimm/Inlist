@@ -59,6 +59,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class EventDetailsActivity extends Activity implements
 		ActionBar.OnNavigationListener {
 
+	public static EventDetailsActivity edObj;
 	private ScrollView scrollMain;
 	private RelativeLayout relative_zoom_map, relative_google_map;
 
@@ -95,7 +96,8 @@ public class EventDetailsActivity extends Activity implements
 
 		init();
 
-//		UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
+		edObj=this;
+		// UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -104,15 +106,18 @@ public class EventDetailsActivity extends Activity implements
 
 		map = InListApplication.getListEvents().get(position);
 
-		options = new DisplayImageOptions.Builder().showStubImage(R.drawable.event_details_overlay)
-				.showImageForEmptyUri(R.drawable.event_details_overlay).cacheInMemory().cacheOnDisc()
+		options = new DisplayImageOptions.Builder()
+				.showStubImage(R.drawable.event_details_overlay)
+				.showImageForEmptyUri(R.drawable.event_details_overlay)
+				.cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
-		Typeface typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(), "helve_unbold.ttf");
+		Typeface typeAkzidgrobemedex = Typeface.createFromAsset(
+				context.getAssets(), "helve_unbold.ttf");
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
-		
+
 		txt_event_title.setText("" + map.get("event_title"));
 		txt_event_location_city.setText("" + map.get("event_location_club")
 				+ ", " + map.get("event_location_city"));
@@ -171,7 +176,7 @@ public class EventDetailsActivity extends Activity implements
 
 		// ***** Date Format ************************************//
 
-		txt_details.setText("" + map.get("event_description")+" ");
+		txt_details.setText("" + map.get("event_description") + " ");
 
 		UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
 
@@ -309,8 +314,10 @@ public class EventDetailsActivity extends Activity implements
 					new EventEntryAsyncTask(EventDetailsActivity.this)
 							.execute("");
 				} else {
-					UtilInList.validateDialog(EventDetailsActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
+					UtilInList
+							.validateDialog(EventDetailsActivity.this, "" + ""
+									+ Constant.network_error,
+									Constant.ERRORS.OOPS);
 				}
 			}
 		}, 100);
@@ -399,11 +406,32 @@ public class EventDetailsActivity extends Activity implements
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		invalidateOptionsMenu();
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_event_details_actions, menu);
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+
+		if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+			menu.getItem(0).setIcon(R.drawable.btn_purchase);
+		} else {
+			menu.getItem(0).setIcon(R.drawable.btn_login);
+		}
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**
@@ -415,8 +443,33 @@ public class EventDetailsActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case R.id.action_sign:
-			startActivity(new Intent(EventDetailsActivity.this,
-					PurchaseSummaryActivity.class));
+
+			if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+				if (UtilInList
+						.ReadSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+						.toString().equals("1")) {
+					startActivity(new Intent(EventDetailsActivity.this,
+							CompletePurchaseActivity.class));
+				} else {
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
+					startActivity(new Intent(
+							EventDetailsActivity.this,
+							AddCardActivity.class));
+				}
+
+			} else {
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
+				
+				startActivity(new Intent(EventDetailsActivity.this,
+						LoginActivity.class));
+			}
+
 			return true;
 
 		case android.R.id.home:

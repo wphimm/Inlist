@@ -2,6 +2,7 @@ package co.inlist.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,13 +36,14 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-			UtilInList.validateDialog(VipMembershipReview.this, "Checked", Constant.ERRORS.OOPS);
+			startActivity(new Intent(VipMembershipReview.this,
+					HomeScreenActivity.class));
 			return true;
 
 		case android.R.id.home:
 			finish();
 			return true;
-
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

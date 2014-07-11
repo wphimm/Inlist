@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.json.JSONException;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -20,12 +19,13 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
-import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class ChangePasswordActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	TextView txt_forgot_pwd;
 	EditText editCurrentPassword, editNewPassword, editConfirmPassword;
@@ -37,7 +37,7 @@ public class ChangePasswordActivity extends Activity implements
 
 		init();
 
-//		UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
+		// UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
 
 		txt_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
@@ -77,11 +77,30 @@ public class ChangePasswordActivity extends Activity implements
 			if (isValidate()) {
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					new ChangePasswordAsyncTask(ChangePasswordActivity.this)
-							.execute("");
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("current_password",
+							""+editCurrentPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", ""+editNewPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("confirm_password",
+							""+editConfirmPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									ChangePasswordActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							ChangePasswordActivity.this, params, Constant.API
+									+ "user/login/save/?apiMode=VIP&json=true")
+							.execute();
+
 				} else {
-					UtilInList.validateDialog(ChangePasswordActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
+					UtilInList
+							.validateDialog(ChangePasswordActivity.this, ""
+									+ "" + Constant.network_error,
+									Constant.ERRORS.OOPS);
 
 				}
 			}
@@ -97,97 +116,28 @@ public class ChangePasswordActivity extends Activity implements
 		}
 	}
 
-	public class ChangePasswordAsyncTask extends
-			AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public ChangePasswordAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ Constant.ACTIONS.CHANGE_PASSWORD
-							+ "?apiMode=VIP&json=true"
-							+ "&current_password="
-							+ UtilInList.ReadSharePrefrence(
-									ChangePasswordActivity.this,
-									Constant.SHRED_PR.KEY_CURRENT_PASSWORD)
-							+ "&password="
-							+ editNewPassword.getText().toString().trim()
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(
-									ChangePasswordActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("Response In Activity-->", response);
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// fragment_addconnection_search
-
-			try {
-				if (dialog != null) {
-					if (dialog.isShowing()) {
-						dialog.dismiss();
-					}
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+				
+				editCurrentPassword.setText("");
+				editNewPassword.setText("");
+				editConfirmPassword.setText("");
+				
+				UtilInList.validateDialog(ChangePasswordActivity.this, result
+						.getJSONArray("messages").getString(0),
+						Constant.ERRORS.OOPS);
+			} else {
+				UtilInList.validateDialog(ChangePasswordActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
 			}
-
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-
-					try {
-						if (jObject.getString("success").equals("true")) {
-							UtilInList.validateDialog(
-									ChangePasswordActivity.this,
-									jObject.getJSONArray("messages").getString(
-											0), Constant.AppName);
-							editCurrentPassword.setText("");
-							editNewPassword.setText("");
-							editConfirmPassword.setText("");
-
-						} else {
-							UtilInList
-									.validateDialog(ChangePasswordActivity.this,
-											jObject.getJSONArray("errors")
-													.getString(0),
-											Constant.ERRORS.OOPS);
-						}
-					} catch (Exception e) {
-						Log.v("", "Exception : " + e);
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
 		}
+
 	}
 
 	private boolean isValidate() {

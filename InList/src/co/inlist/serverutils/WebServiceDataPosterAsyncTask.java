@@ -60,7 +60,7 @@ public class WebServiceDataPosterAsyncTask extends
 			// TODO: handle exception
 		}
 		
-		Log.i("result:::::", ""+result);
+		Log.i("result", ">>"+result);
 		
 		JSONObject jObj;
 		try {

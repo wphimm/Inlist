@@ -182,12 +182,12 @@ public class InviteActivity extends Activity implements
 
 	private boolean isValid() {
 		// TODO Auto-generated method stub
-		if (editFirst.getText().toString().trim().length() < 3) {
+		if (editFirst.getText().toString().trim().length() < 2) {
 			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
 			return false;
 		}
-		if (editLast.getText().toString().trim().length() < 3) {
+		if (editLast.getText().toString().trim().length() < 2) {
 			UtilInList.validateDialog(InviteActivity.this, "" + ""
 					+ Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
 			return false;

@@ -422,6 +422,8 @@ public class HomeScreenActivity extends Activity implements
 			public void onClick(DialogInterface dialog, int item) {
 
 				if (items[item].equals("Log In")) {
+					UtilInList.WriteSharePrefrence(HomeScreenActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
 					startActivity(new Intent(HomeScreenActivity.this,
 							LoginActivity.class));
 				} else {

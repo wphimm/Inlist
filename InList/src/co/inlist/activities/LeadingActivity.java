@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import co.inlist.fragments.LeadingFragment;
+import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
+import co.inlist.util.UtilInList;
 
 public class LeadingActivity extends FragmentActivity {
 	// ...
@@ -33,6 +35,7 @@ public class LeadingActivity extends FragmentActivity {
 	Typeface typeAkzidgrobeligex,typeAvenir,typeLeaguegothic_condensedregular;
 
 	public static GPSTracker gps;
+	public static LeadingActivity laObj;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,8 @@ public class LeadingActivity extends FragmentActivity {
 		setContentView(R.layout.activity_intro);
 
 		init();
+		
+		laObj=this;
 
 		rl_btn_register.setOnClickListener(new OnClickListener() {
 
@@ -57,6 +62,8 @@ public class LeadingActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				UtilInList.WriteSharePrefrence(LeadingActivity.this,
+						Constant.SHRED_PR.KEY_LOGIN_FROM, "0");
 				startActivity(new Intent(LeadingActivity.this,
 						LoginActivity.class));
 			}

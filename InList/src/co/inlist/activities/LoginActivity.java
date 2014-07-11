@@ -3,13 +3,17 @@ package co.inlist.activities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +41,7 @@ import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
+@SuppressLint("SimpleDateFormat")
 public class LoginActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
@@ -55,6 +60,7 @@ public class LoginActivity extends Activity implements
 	// private String fb_user_email = Constant.BLANK;
 	// private String fb_user_pic_url = Constant.BLANK;
 	private RelativeLayout rl_fb_login;
+	boolean flagCard = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +71,7 @@ public class LoginActivity extends Activity implements
 		txt_lgn_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
 
-//		UtilInList.makeActionBarGradiant(LoginActivity.this);
+		// UtilInList.makeActionBarGradiant(LoginActivity.this);
 
 		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() {
 
@@ -253,6 +259,7 @@ public class LoginActivity extends Activity implements
 				params.add(new BasicNameValuePair("password", edt_lgn_pwd
 						.getText().toString().trim()));
 
+				flagCard = false;
 				new WebServiceDataPosterAsyncTask(LoginActivity.this, params,
 						Constant.API + Constant.ACTIONS.LOGIN).execute();
 
@@ -279,49 +286,142 @@ public class LoginActivity extends Activity implements
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
 
-		try {
-			if (result.getString("success").toString().equals("true")) {
+		if (flagCard) {
 
-				Log.v("", ">>> chk this : "
-						+ result.getJSONObject("data").getString("last_name"));
+			try {
+				if (result.getString("success").toString().equals("true")) {
 
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_LOGIN_STATUS, "true");
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_USERID,
-						result.getJSONObject("data").getString("user_id"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_EMAIL,
-						result.getJSONObject("data").getString("email"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_FIRSTNAME,
-						result.getJSONObject("data").getString("first_name"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_LASTNAME,
-						result.getJSONObject("data").getString("last_name"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_PHONE,
-						result.getJSONObject("data").getString("phone"));
-				UtilInList.WriteSharePrefrence(
-						LoginActivity.this,
-						Constant.SHRED_PR.KEY_SESSIONID,
-						result.getJSONObject("session")
-								.getJSONObject("userInfo")
-								.getString("sessionId"));
-				UtilInList.WriteSharePrefrence(LoginActivity.this,
-						Constant.SHRED_PR.KEY_CURRENT_PASSWORD, edt_lgn_pwd
-								.getText().toString().trim());
+					JSONArray data = result.getJSONArray("data");
+					for (int i = 0; i < data.length(); i++) {
+						JSONObject obj = data.getJSONObject(i);
 
-				startActivity(new Intent(LoginActivity.this,
-						HomeScreenActivity.class));
-				finish();
-			} else {
-				UtilInList.validateDialog(LoginActivity.this, result
-						.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
+						if (obj.getString("is_default").equals("1")) {
+
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ADDED, "1");
+
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ID,
+									obj.getString("user_card_id"));
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_NUMBER, ""
+											+ obj.getString("card_number"));
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_CVV, "111");
+
+							UtilInList
+									.WriteSharePrefrence(
+											LoginActivity.this,
+											Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME,
+											"" + obj.getString("card_name"));
+
+							String strDate = "" + obj.get("card_exp_date");
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd");
+							Date date1;
+							String strYear = null, strMonth = null;
+							try {
+								date1 = sdf.parse(strDate);
+								SimpleDateFormat format = new SimpleDateFormat(
+										"yyyy");
+								strYear = format.format(date1);
+								SimpleDateFormat format1 = new SimpleDateFormat(
+										"MM");
+								strMonth = format1.format(date1);
+
+							} catch (java.text.ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH,
+									"" + strMonth);
+
+							UtilInList.WriteSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR,
+									"" + strYear);
+						}
+					}
+
+				} else {
+					UtilInList.validateDialog(LoginActivity.this, result
+							.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			if (UtilInList.ReadSharePrefrence(LoginActivity.this,
+					Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
+				finish();
+			}
+			else{
+			startActivity(new Intent(LoginActivity.this,
+					HomeScreenActivity.class));
+			LeadingActivity.laObj.finish();
+			finish();
+			}
+
+		} else {
+			try {
+				if (result.getString("success").toString().equals("true")) {
+
+					Log.v("",
+							">>> chk this : "
+									+ result.getJSONObject("data").getString(
+											"last_name"));
+
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_STATUS, "true");
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_USERID,
+							result.getJSONObject("data").getString("user_id"));
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_EMAIL,
+							result.getJSONObject("data").getString("email"));
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_FIRSTNAME,
+							result.getJSONObject("data")
+									.getString("first_name"));
+					UtilInList
+							.WriteSharePrefrence(
+									LoginActivity.this,
+									Constant.SHRED_PR.KEY_LASTNAME,
+									result.getJSONObject("data").getString(
+											"last_name"));
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_PHONE,
+							result.getJSONObject("data").getString("phone"));
+					UtilInList.WriteSharePrefrence(
+							LoginActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID,
+							result.getJSONObject("session")
+									.getJSONObject("userInfo")
+									.getString("sessionId"));
+					UtilInList.WriteSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_CURRENT_PASSWORD, edt_lgn_pwd
+									.getText().toString().trim());
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					flagCard = true;
+					new WebServiceDataPosterAsyncTask(LoginActivity.this,
+							params, Constant.API + Constant.ACTIONS.CARD_GET)
+							.execute();
+
+				} else {
+					UtilInList.validateDialog(LoginActivity.this, result
+							.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

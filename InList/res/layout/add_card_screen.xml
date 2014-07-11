@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
                 android:hint="@string/cvv"
-                android:inputType="number"
+                android:inputType="numberPassword"
                 android:maxLength="3"
                 android:textColor="@color/light_yellow" />
         </LinearLayout>
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:textColor="@color/light_yellow"
-            android:hint="@string/card_name" />
+            android:hint="@string/card_name"
+            android:textColor="@color/light_yellow" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,41 +92,49 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/or"
-            android:textColor="@color/light_yellow"
-            android:textSize="18sp" />
-
-        <RelativeLayout
-            android:id="@+id/rl_scan_card"
+        <LinearLayout
+            android:id="@+id/linearScan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/light_yellow"
-            android:gravity="center"
-            android:padding="15dp" >
-
-            <ImageView
-                android:id="@+id/card_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/icon_camera"
-                android:contentDescription="@string/iv_desc" />
+            android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/txt_card_scan_card"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/card_iv"
-                android:text="@string/scan_card"
-                android:textColor="@color/white"
-                android:textSize="19sp" />
-        </RelativeLayout>
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:text="@string/or"
+                android:textColor="@color/light_yellow"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_scan_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/light_yellow"
+                android:gravity="center"
+                android:padding="15dp" >
+
+                <ImageView
+                    android:id="@+id/card_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/icon_camera"
+                    android:contentDescription="@string/iv_desc" />
+
+                <TextView
+                    android:id="@+id/txt_card_scan_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/card_iv"
+                    android:text="@string/scan_card"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

@@ -71,6 +71,7 @@
     <string name="card_name">Card Holder\'s Name</string>
     <string name="card_exp">EXPIRATION DATE</string>
     <string name="scan_card">SCAN YOUR CARD</string>
+    <string name="delete_card">DELETE CARD</string>
 
     <!-- activity_intro xml -->
     <string name="login">LOG IN</string>
@@ -87,6 +88,12 @@
     <string name="location">LOCATION</string>
     <string name="your_minimum">You will be charged for the minimum amount once your InList concierge confirms your reservation by calling the phone number on your account.</string>
 
+    <!--  Complete Purchase  -->
+    <string name="payment_details">PAYMENT DETAILS</string>
+    <string name="total">TOTAL</string>
+    <string name="tc">By tapping "Continue" I agree to the Terms and Conditions, and that:</string>
+    <string name="cp">COMPLETE PURCHASE</string>
+    
     <!-- Forgot Password -->
     <string name="forget_pass_content">Enter your email address and we\'ll send you a link to reset your password.</string>
     <string name="forget_edt_email_hint">Card holder\'s Name</string>
@@ -136,9 +143,10 @@
         <item>February</item>
         <item>March</item>
         <item>April</item>
+        <item>May</item>
         <item>June</item>
         <item>July</item>
-        <item>Ogust</item>
+        <item>August</item>
         <item>September</item>
         <item>October</item>
         <item>November</item>

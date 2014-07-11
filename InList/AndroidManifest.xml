@@ -278,6 +278,21 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
+        
+        
+        <!-- CompletePurchase Activity -->
+        <activity
+            android:name="co.inlist.activities.CompletePurchaseActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.EventDetailsActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
 
         <!-- Google MAP API V2 DATA -->
         <meta-data
