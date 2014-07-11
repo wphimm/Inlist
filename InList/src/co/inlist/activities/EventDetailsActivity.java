@@ -96,7 +96,7 @@ public class EventDetailsActivity extends Activity implements
 
 		init();
 
-		edObj=this;
+		edObj = this;
 		// UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
@@ -411,7 +411,7 @@ public class EventDetailsActivity extends Activity implements
 		super.onResume();
 		invalidateOptionsMenu();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -447,9 +447,15 @@ public class EventDetailsActivity extends Activity implements
 			if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
 					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_YOUR_MINIMUM,
+						"" + map.get("event_min_price"));
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_PRICE_POSITION,
+						"" + spinnerTable.getSelectedItemPosition());
+
 				if (UtilInList
-						.ReadSharePrefrence(
-								EventDetailsActivity.this,
+						.ReadSharePrefrence(EventDetailsActivity.this,
 								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
 						.toString().equals("1")) {
 					startActivity(new Intent(EventDetailsActivity.this,
@@ -457,15 +463,14 @@ public class EventDetailsActivity extends Activity implements
 				} else {
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
-					startActivity(new Intent(
-							EventDetailsActivity.this,
+					startActivity(new Intent(EventDetailsActivity.this,
 							AddCardActivity.class));
 				}
 
 			} else {
 				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 						Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
-				
+
 				startActivity(new Intent(EventDetailsActivity.this,
 						LoginActivity.class));
 			}

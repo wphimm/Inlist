@@ -133,6 +133,8 @@ public class Constant {
 		public static final String KEY_BILLING = "billing";
 		public static final String KEY_LOGIN_FROM = "login_from";
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
+		public static final String KEY_PRICE_POSITION = "price_position";
+		public static final String KEY_YOUR_MINIMUM = "your_minimum";
 
 		//Credit Card Details:
 		public static final String KEY_USER_CARD_ADDED = "user_card_added";
