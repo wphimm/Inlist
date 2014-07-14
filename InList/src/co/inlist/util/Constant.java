@@ -27,14 +27,14 @@ public class Constant {
 		public static final String EVENTS = "events/";
 		public static final String PARTY_AREA = "party_area/";
 		public static final String PARTY_AREA_SET = "party_area/set/";
-				
+
 		public static final String REGISTRATION = "/user/register/?apiMode=NON-VIP&json=true";
 
 		public static final String USER_LIST = "user_list&user_id=%s";
 		public static final String LOGIN = "user/login/?apiMode=VIP&json=true";
 		public static final String LOGIN_FB = "/facebook/login/?apiMode=%s&%s=true&device_id=%s&access_token=%s";
 		public static final String FORGOT_PASSWORD = "request_password_reset/?apiMode=%s&json=%s&email=%S";
-		public static final String REGISTER_FB = "/facebook/register/?apiMode=%s&json=%s&device_id=%s&email=%s&password=%s&first_name=%s&last_name=%s&phone=%s&membership_question_id=%s&membership_question_answer=%s&access_token=%s&request_vip=%s";
+		public static final String REGISTER_FB = "/facebook/register/?apiMode=VIP&json=true";
 		public static final String PREPARE_REGISTER = "common/prepare_registration/?json=true";
 		public static final String CHANGE_PASSWORD = "user/login/save/";
 		public static final String PUSHNOTIFICATIONS = "push_notifications/";
@@ -45,6 +45,9 @@ public class Constant {
 		public static final String ADD_CARD = "credit_card/save/?apiMode=VIP&json=true"; // &user_card_id=%s&card_type=%s&card_number=%s&card_name=%s&card_exp_year=%s&card_exp_month=%s&set_default=1";
 		public static final String REMOVE_CARD = "credit_card/remove/?apiMode=VIP&json=true";
 		public static final String CARD_GET = "credit_cards/get/?apiMode=VIP&json=true";
+
+		public static final String GET_EVENT_TABLE = "event/get_available_table_set/?apiMode=VIP&json=true";
+		public static final String BOOK_EVENT_TABLE = "reservation/prepaid/?apiMode=VIP&json=true";
 	}
 
 	public static class TAGS {
@@ -135,8 +138,10 @@ public class Constant {
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
 		public static final String KEY_PRICE_POSITION = "price_position";
 		public static final String KEY_YOUR_MINIMUM = "your_minimum";
+		
+		public static final String KEY_EVENT_ID = "event_id";
 
-		//Credit Card Details:
+		// Credit Card Details:
 		public static final String KEY_USER_CARD_ADDED = "user_card_added";
 		public static final String KEY_USER_CARD_ID = "user_card_id";
 		public static final String KEY_USER_CARD_NUMBER = "user_card_number";

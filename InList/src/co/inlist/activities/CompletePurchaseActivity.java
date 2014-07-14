@@ -1,7 +1,11 @@
 package co.inlist.activities;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -10,11 +14,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -119,8 +125,44 @@ public class CompletePurchaseActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.complete_purchase:
 
-			startActivity(new Intent(CompletePurchaseActivity.this,
-					PurchaseSummaryActivity.class));
+			String strCapacity = ""
+					+ InListApplication
+							.getPricing()
+							.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_PRICE_POSITION)
+									.toString())).get("table_capacity");
+			String strPriceId = ""
+					+ InListApplication
+							.getPricing()
+							.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_PRICE_POSITION)
+									.toString())).get("event_pricing_id");
+			
+			String strCardId = ""
+					+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("event_id", ""+UtilInList.ReadSharePrefrence(
+					CompletePurchaseActivity.this,
+					Constant.SHRED_PR.KEY_EVENT_ID)
+					.toString()));
+			params.add(new BasicNameValuePair("party_size", "" + strCapacity));
+			params.add(new BasicNameValuePair("bookingItem", "event"));
+			params.add(new BasicNameValuePair("event_pricing_id", "" + strPriceId));
+			params.add(new BasicNameValuePair("user_card_id", ""+strCardId ));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			new WebServiceDataPosterAsyncTask(CompletePurchaseActivity.this,
+					params, Constant.API + Constant.ACTIONS.BOOK_EVENT_TABLE)
+					.execute();
 
 			return true;
 
@@ -142,6 +184,18 @@ public class CompletePurchaseActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+				startActivity(new Intent(CompletePurchaseActivity.this,
+						PurchaseSummaryActivity.class));
+			} else {
+				UtilInList.validateDialog(CompletePurchaseActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
+		}
 
 	}
 

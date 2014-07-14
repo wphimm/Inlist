@@ -143,7 +143,7 @@ public class HomeScreenActivity extends Activity implements
 					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
 				startActivity(new Intent(HomeScreenActivity.this,
-						ProfileActivity.class));
+						EditProfileActivity.class));
 
 			} else {
 				makeAlert();

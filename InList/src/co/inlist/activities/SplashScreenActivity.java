@@ -65,10 +65,10 @@ public class SplashScreenActivity extends Activity implements
 	private void proceed() {
 		try {
 			if (this.isFinishing()) {
-			
+
 				return;
 			}
-			
+
 			if (UtilInList.ifConditionDataExist(SplashScreenActivity.this)) {
 				if (UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
 						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
@@ -116,7 +116,7 @@ public class SplashScreenActivity extends Activity implements
 			String response = UtilInList.postData(
 					nameValuePairs,
 					"" + Constant.API + Constant.ACTIONS.ADD_DEVICE
-							+ "?json=true" + "&device_id="
+							+ "&device_id="
 							+ UtilInList.getDeviceId(getApplicationContext())
 							+ "&deviceType=android");
 			Log.e("Response In Activity-->", ".." + response);
@@ -226,17 +226,12 @@ public class SplashScreenActivity extends Activity implements
 					Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
 					SplashScreenActivity.this);
 
-			new Timer().schedule(new TimerTask() {
-				public void run() {
-					proceed();
-				}
-			}, SPLASH_TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		new AddDeviceAsyncTask(getApplicationContext()).execute("");
-
+		// new AddDeviceAsyncTask(getApplicationContext()).execute("");
+		new PartyAreaAsyncTask(getApplicationContext()).execute("");
 	}
 
 }

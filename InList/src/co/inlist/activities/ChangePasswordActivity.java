@@ -128,7 +128,7 @@ public class ChangePasswordActivity extends Activity implements
 				
 				UtilInList.validateDialog(ChangePasswordActivity.this, result
 						.getJSONArray("messages").getString(0),
-						Constant.ERRORS.OOPS);
+						Constant.AppName);
 			} else {
 				UtilInList.validateDialog(ChangePasswordActivity.this, result
 						.getJSONArray("errors").getString(0),

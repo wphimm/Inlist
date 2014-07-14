@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
 import co.inlist.util.MyProgressbar;
@@ -57,7 +60,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 @SuppressLint("SimpleDateFormat")
 public class EventDetailsActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	public static EventDetailsActivity edObj;
 	private ScrollView scrollMain;
@@ -444,27 +447,52 @@ public class EventDetailsActivity extends Activity implements
 
 		case R.id.action_sign:
 
+			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+					Constant.SHRED_PR.KEY_EVENT_ID,
+					""+map.get("event_id"));
+			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+					Constant.SHRED_PR.KEY_YOUR_MINIMUM,
+					"" + map.get("event_min_price"));
+			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+					Constant.SHRED_PR.KEY_PRICE_POSITION,
+					"" + spinnerTable.getSelectedItemPosition());
+			
 			if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
 					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_YOUR_MINIMUM,
-						"" + map.get("event_min_price"));
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_PRICE_POSITION,
-						"" + spinnerTable.getSelectedItemPosition());
-
 				if (UtilInList
-						.ReadSharePrefrence(EventDetailsActivity.this,
-								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-						.toString().equals("1")) {
-					startActivity(new Intent(EventDetailsActivity.this,
-							CompletePurchaseActivity.class));
+						.isInternetConnectionExist(getApplicationContext())) {
+
+					String strCapacity = ""
+							+ InListApplication
+									.getPricing()
+									.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+											EventDetailsActivity.this,
+											Constant.SHRED_PR.KEY_PRICE_POSITION)
+											.toString())).get("table_capacity");
+					
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("event_id", ""+map.get("event_id")));
+					params.add(new BasicNameValuePair("capacity", ""
+							+ strCapacity));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									EventDetailsActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							EventDetailsActivity.this, params, Constant.API
+									+ Constant.ACTIONS.GET_EVENT_TABLE)
+							.execute();
+					
 				} else {
-					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
-					startActivity(new Intent(EventDetailsActivity.this,
-							AddCardActivity.class));
+					UtilInList
+							.validateDialog(EventDetailsActivity.this, "" + ""
+									+ Constant.network_error,
+									Constant.ERRORS.OOPS);
+
 				}
 
 			} else {
@@ -541,10 +569,10 @@ public class EventDetailsActivity extends Activity implements
 					if (dialog.isShowing()) {
 						dialog.dismiss();
 					}
-				}
+				}   
 			} catch (Exception e) {
 				// TODO: handle exception
-			}
+			}     
 
 			InListApplication.getGallery().clear();
 			InListApplication.getPricing().clear();
@@ -607,6 +635,36 @@ public class EventDetailsActivity extends Activity implements
 			} catch (JSONException e) { // TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+
+				if (UtilInList
+						.ReadSharePrefrence(EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+						.toString().equals("1")) {
+					startActivity(new Intent(EventDetailsActivity.this,
+							CompletePurchaseActivity.class));
+				} else {
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
+					startActivity(new Intent(EventDetailsActivity.this,
+							AddCardActivity.class));
+				}
+
+			} else {
+				UtilInList.validateDialog(EventDetailsActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
 		}
 
 	}

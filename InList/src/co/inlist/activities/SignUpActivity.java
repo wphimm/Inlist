@@ -259,31 +259,34 @@ public class SignUpActivity extends Activity implements
 			} else {
 
 				if (fb_regiter_flag) {
+					
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-					new WebServiceDataCollectorAsyncTask(
-							Constant.API
-									+ String.format(
-											Constant.ACTIONS.REGISTER_FB,
-											Constant.TAGS.VIP,
-											"true",
-											UtilInList
-													.getDeviceId(SignUpActivity.this),
-											edt_su_e_mail.getText().toString()
-													.trim(),
-											edt_su_pwd.getText().toString()
-													.trim(),
-											edt_su_fname.getText().toString()
-													.trim(),
-											edt_su_lname.getText().toString()
-													.trim(),
-											edt_su_phno.getText().toString()
-													.trim(),
-											question_id,
-											edt_su_ans.getText().toString(),
-											facebook.getAccessToken()
-													.toString().trim(), "true")
-											.replace(" ", "%20"),
-							SignUpActivity.this).execute();
+					params.add(new BasicNameValuePair("device_id", UtilInList
+							.getDeviceId(SignUpActivity.this)));
+					params.add(new BasicNameValuePair("email", edt_su_e_mail
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", edt_su_pwd
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("first_name",
+							edt_su_fname.getText().toString().trim()));
+					params.add(new BasicNameValuePair("last_name", edt_su_lname
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("phone", edt_su_phno
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("membership_question_id",
+							question_id));
+					params.add(new BasicNameValuePair(
+							"membership_question_answer", edt_su_ans.getText()
+									.toString().trim().replace(" ", "%20")));
+					params.add(new BasicNameValuePair("access_token",
+							""+facebook.getAccessToken()
+							.toString().trim()));
+
+					new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+							params, Constant.API
+									+ Constant.ACTIONS.REGISTER_FB).execute();
+					
 				} else {
 
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
