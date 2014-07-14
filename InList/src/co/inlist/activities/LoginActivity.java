@@ -21,12 +21,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.facebook.android.AsyncFacebookRunner;
@@ -67,6 +66,8 @@ public class LoginActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_screen);
 		init();
+
+		actionBarAndButtonActions();
 
 		txt_lgn_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
@@ -215,13 +216,13 @@ public class LoginActivity extends Activity implements
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_login_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_login_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	private void init() {
 		edt_lgn_e_mail = (EditText) findViewById(R.id.edt_lgn_e_mail);
@@ -356,12 +357,11 @@ public class LoginActivity extends Activity implements
 			if (UtilInList.ReadSharePrefrence(LoginActivity.this,
 					Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
 				finish();
-			}
-			else{
-			startActivity(new Intent(LoginActivity.this,
-					HomeScreenActivity.class));
-			LeadingActivity.laObj.finish();
-			finish();
+			} else {
+				startActivity(new Intent(LoginActivity.this,
+						HomeScreenActivity.class));
+				LeadingActivity.laObj.finish();
+				finish();
 			}
 
 		} else {
@@ -424,4 +424,54 @@ public class LoginActivity extends Activity implements
 			}
 		}
 	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(LoginActivity.this, "" + ""
+							+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
+
+				} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(LoginActivity.this, "" + ""
+							+ Constant.ERRORS.PLZ_PASSWORD,
+							Constant.ERRORS.OOPS);
+				} else {
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("device_id", UtilInList
+							.getDeviceId(LoginActivity.this)));
+					params.add(new BasicNameValuePair("login", ""
+							+ edt_lgn_e_mail.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", edt_lgn_pwd
+							.getText().toString().trim()));
+
+					flagCard = false;
+					new WebServiceDataPosterAsyncTask(LoginActivity.this,
+							params, Constant.API + Constant.ACTIONS.LOGIN)
+							.execute();
+
+				}
+			}
+		});
+
+	}
+
 }

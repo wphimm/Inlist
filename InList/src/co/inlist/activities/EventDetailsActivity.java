@@ -1,6 +1,7 @@
 package co.inlist.activities;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,8 +26,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -98,6 +97,8 @@ public class EventDetailsActivity extends Activity implements
 		setContentView(R.layout.event_details);
 
 		init();
+
+		actionBarAndButtonActions();
 
 		edObj = this;
 		// UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
@@ -415,27 +416,27 @@ public class EventDetailsActivity extends Activity implements
 		invalidateOptionsMenu();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_event_details_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-
-		if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
-				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-			menu.getItem(0).setIcon(R.drawable.btn_purchase);
-		} else {
-			menu.getItem(0).setIcon(R.drawable.btn_login);
-		}
-
-		return super.onPrepareOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_event_details_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
+	//
+	// @Override
+	// public boolean onPrepareOptionsMenu(Menu menu) {
+	// // TODO Auto-generated method stub
+	//
+	// if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+	// Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+	// menu.getItem(0).setIcon(R.drawable.btn_purchase);
+	// } else {
+	// menu.getItem(0).setIcon(R.drawable.btn_login);
+	// }
+	//
+	// return super.onPrepareOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -448,15 +449,14 @@ public class EventDetailsActivity extends Activity implements
 		case R.id.action_sign:
 
 			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_EVENT_ID,
-					""+map.get("event_id"));
+					Constant.SHRED_PR.KEY_EVENT_ID, "" + map.get("event_id"));
 			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 					Constant.SHRED_PR.KEY_YOUR_MINIMUM,
 					"" + map.get("event_min_price"));
 			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 					Constant.SHRED_PR.KEY_PRICE_POSITION,
 					"" + spinnerTable.getSelectedItemPosition());
-			
+
 			if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
 					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
@@ -466,14 +466,18 @@ public class EventDetailsActivity extends Activity implements
 					String strCapacity = ""
 							+ InListApplication
 									.getPricing()
-									.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-											EventDetailsActivity.this,
-											Constant.SHRED_PR.KEY_PRICE_POSITION)
-											.toString())).get("table_capacity");
-					
+									.get(Integer
+											.parseInt(UtilInList
+													.ReadSharePrefrence(
+															EventDetailsActivity.this,
+															Constant.SHRED_PR.KEY_PRICE_POSITION)
+													.toString()))
+									.get("table_capacity");
+
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-					params.add(new BasicNameValuePair("event_id", ""+map.get("event_id")));
+					params.add(new BasicNameValuePair("event_id", ""
+							+ map.get("event_id")));
 					params.add(new BasicNameValuePair("capacity", ""
 							+ strCapacity));
 					params.add(new BasicNameValuePair("device_type", "android"));
@@ -486,7 +490,7 @@ public class EventDetailsActivity extends Activity implements
 							EventDetailsActivity.this, params, Constant.API
 									+ Constant.ACTIONS.GET_EVENT_TABLE)
 							.execute();
-					
+
 				} else {
 					UtilInList
 							.validateDialog(EventDetailsActivity.this, "" + ""
@@ -569,10 +573,10 @@ public class EventDetailsActivity extends Activity implements
 					if (dialog.isShowing()) {
 						dialog.dismiss();
 					}
-				}   
+				}
 			} catch (Exception e) {
 				// TODO: handle exception
-			}     
+			}
 
 			InListApplication.getGallery().clear();
 			InListApplication.getPricing().clear();
@@ -665,6 +669,95 @@ public class EventDetailsActivity extends Activity implements
 			}
 		} catch (Exception e) {
 			Log.v("", "Exception : " + e);
+		}
+
+	}
+
+	private void actionBarAndButtonActions() {
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.event_details_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_EVENT_ID,
+						"" + map.get("event_id"));
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_YOUR_MINIMUM,
+						"" + map.get("event_min_price"));
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_PRICE_POSITION,
+						"" + spinnerTable.getSelectedItemPosition());
+
+				if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+
+						String strCapacity = ""
+								+ InListApplication
+										.getPricing()
+										.get(Integer
+												.parseInt(UtilInList
+														.ReadSharePrefrence(
+																EventDetailsActivity.this,
+																Constant.SHRED_PR.KEY_PRICE_POSITION)
+														.toString()))
+										.get("table_capacity");
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("event_id", ""
+								+ map.get("event_id")));
+						params.add(new BasicNameValuePair("capacity", ""
+								+ strCapacity));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										EventDetailsActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								EventDetailsActivity.this, params, Constant.API
+										+ Constant.ACTIONS.GET_EVENT_TABLE)
+								.execute();
+
+					} else {
+						UtilInList.validateDialog(EventDetailsActivity.this, ""
+								+ "" + Constant.network_error,
+								Constant.ERRORS.OOPS);
+
+					}
+
+				} else {
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
+
+					startActivity(new Intent(EventDetailsActivity.this,
+							LoginActivity.class));
+				}
+			}
+		});
+
+		if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+			action_button.setBackgroundResource(R.drawable.purchanse_onclick);
+		} else {
+			action_button.setBackgroundResource(R.drawable.login_onclick);
 		}
 
 	}
