@@ -21,6 +21,7 @@
     <string name="mn_settings">Settings</string>
     <string name="logout">LOG OUT</string>
     <string name="nocard">ADD A CARD</string>
+    <string name="edit">EDIT</string>
 
     <!-- Search -->
     <string name="search_hint">Search color..</string>
@@ -135,6 +136,8 @@
 
     <!-- Profile Scree -->
     <string name="update">Update</string>
+    <string name="cat">CATEGORIES</string>
+    <string name="archive">ARCHIVE</string>
 
     <!-- Array of 12 months -->
     <string-array name="array_months">

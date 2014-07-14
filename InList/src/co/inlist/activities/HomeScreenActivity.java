@@ -83,8 +83,8 @@ public class HomeScreenActivity extends Activity implements
 		// Enabling Spinner dropdown navigation
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-//		actionBar.setBackgroundDrawable(getResources().getDrawable(
-//				R.drawable.actionbar_gradiant));
+		// actionBar.setBackgroundDrawable(getResources().getDrawable(
+		// R.drawable.actionbar_gradiant));
 
 		for (int i = 0; i < InListApplication.getParty_area().size(); i++) {
 			Log.e("title",
@@ -143,7 +143,7 @@ public class HomeScreenActivity extends Activity implements
 					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
 				startActivity(new Intent(HomeScreenActivity.this,
-						EditProfileActivity.class));
+						ProfileActivity.class));
 
 			} else {
 				makeAlert();
@@ -456,7 +456,7 @@ public class HomeScreenActivity extends Activity implements
 
 			super.onViewCreated(view, savedInstanceState);
 			ViewGroup viewGroup = (ViewGroup) view;
-			
+
 			// As we're using a ListFragment we create a PullToRefreshLayout
 			// manually
 			mPullToRefreshLayout = new PullToRefreshLayout(

@@ -209,20 +209,6 @@
                 android:value="splitActionBarWhenNarrow" />
         </activity>
 
-        <!-- Profile Activity -->
-        <activity
-            android:name="co.inlist.activities.EditProfileActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
-            android:label="@string/activity_login"
-            android:parentActivityName="co.inlist.activities.HomeScreenActivity"
-            android:screenOrientation="portrait" >
-
-            <!-- To support split actionbar below API Level 14 -->
-            <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-        </activity>
-
         <!-- Forgot Password Activity -->
         <activity
             android:name="co.inlist.activities.ForgotPassworActivity"
@@ -278,14 +264,41 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
-        
-        
+
         <!-- CompletePurchase Activity -->
         <activity
             android:name="co.inlist.activities.CompletePurchaseActivity"
             android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.EventDetailsActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Profile Activity -->
+        <activity
+            android:name="co.inlist.activities.ProfileActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.HomeScreenActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- To support split actionbar below API Level 14 -->
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+
+        <!-- Edit Profile Activity -->
+        <activity
+            android:name="co.inlist.activities.EditProfileActivity"
+            android:icon="@drawable/logotype_icon_actionbar"
+            android:label="@string/activity_login"
+            android:parentActivityName="co.inlist.activities.ProfileActivity"
             android:screenOrientation="portrait" >
 
             <!-- To support split actionbar below API Level 14 -->

@@ -119,7 +119,7 @@ public class EditProfileActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_profile_actions, menu);
+		inflater.inflate(R.menu.activity_editprofile_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -143,10 +143,7 @@ public class EditProfileActivity extends Activity implements
 						public void onClick(DialogInterface dialog, int which) {
 							if (UtilInList
 									.isInternetConnectionExist(getApplicationContext())) {
-								/*
-								 * new LogoutAsyncTask(ProfileActivity.this)
-								 * .execute("");
-								 */
+								
 								UtilInList.WriteSharePrefrence(
 										EditProfileActivity.this,
 										Constant.SHRED_PR.KEY_LOGIN_STATUS,
@@ -155,23 +152,8 @@ public class EditProfileActivity extends Activity implements
 								UtilInList.WriteSharePrefrence(EditProfileActivity.this,
 										Constant.SHRED_PR.KEY_USER_CARD_ADDED, "0");
 
-								// List<NameValuePair> params = new
-								// ArrayList<NameValuePair>();
-								//
-								// params.add(new BasicNameValuePair(
-								// "device_id",
-								// UtilInList
-								// .getDeviceId(ProfileActivity.this)));
-								//
-								// params.add(new BasicNameValuePair(
-								// "device_type", "android"));
-								//
-								// new WebServiceDataPosterAsyncTask(
-								// ProfileActivity.this, params,
-								// Constant.API
-								// + Constant.ACTIONS.LOGOUT_POST)
-								// .execute();
-
+						
+								ProfileActivity.profObj.finish();
 								finish();
 							} else {
 								UtilInList.validateDialog(EditProfileActivity.this,
