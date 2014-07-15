@@ -6,19 +6,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import co.inlist.adapter.EventsAdapter;
+import co.inlist.adapter.ReservedEventsAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
@@ -57,7 +52,7 @@ public class ProfileActivity extends Activity implements
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_PHONE));
 
-		lst.setAdapter(new EventsAdapter(InListApplication.getListEvents(),
+		lst.setAdapter(new ReservedEventsAdapter(InListApplication.getListEvents(),
 				ProfileActivity.this));
 
 		relativeCategories.setOnClickListener(new OnClickListener() {
