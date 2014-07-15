@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
@@ -46,6 +47,7 @@ public class EditProfileActivity extends Activity implements
 
 		init();
 
+		actionBarAndButtonActions();
 		editFirst.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_FIRSTNAME));
@@ -116,12 +118,12 @@ public class EditProfileActivity extends Activity implements
 		btnUpdate = (Button) findViewById(R.id.btnUpdate);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_editprofile_actions, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_editprofile_actions, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -143,21 +145,23 @@ public class EditProfileActivity extends Activity implements
 						public void onClick(DialogInterface dialog, int which) {
 							if (UtilInList
 									.isInternetConnectionExist(getApplicationContext())) {
-								
+
 								UtilInList.WriteSharePrefrence(
 										EditProfileActivity.this,
 										Constant.SHRED_PR.KEY_LOGIN_STATUS,
 										"false");
-								
-								UtilInList.WriteSharePrefrence(EditProfileActivity.this,
-										Constant.SHRED_PR.KEY_USER_CARD_ADDED, "0");
 
-						
+								UtilInList.WriteSharePrefrence(
+										EditProfileActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_ADDED,
+										"0");
+
 								ProfileActivity.profObj.finish();
 								finish();
 							} else {
-								UtilInList.validateDialog(EditProfileActivity.this,
-										"" + Constant.network_error,
+								UtilInList.validateDialog(
+										EditProfileActivity.this, ""
+												+ Constant.network_error,
 										Constant.AppName);
 							}
 
@@ -327,6 +331,80 @@ public class EditProfileActivity extends Activity implements
 		} catch (Exception e) {
 			Log.v("", "Exception : " + e);
 		}
+
+	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.logout_action_bar);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				// search action
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						EditProfileActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to logout?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(getApplicationContext())) {
+
+									UtilInList.WriteSharePrefrence(
+											EditProfileActivity.this,
+											Constant.SHRED_PR.KEY_LOGIN_STATUS,
+											"false");
+
+									UtilInList
+											.WriteSharePrefrence(
+													EditProfileActivity.this,
+													Constant.SHRED_PR.KEY_USER_CARD_ADDED,
+													"0");
+
+									ProfileActivity.profObj.finish();
+									finish();
+								} else {
+									UtilInList.validateDialog(
+											EditProfileActivity.this, ""
+													+ Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+			}
+		});
 
 	}
 

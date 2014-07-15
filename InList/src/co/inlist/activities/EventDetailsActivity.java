@@ -676,7 +676,7 @@ public class EventDetailsActivity extends Activity implements
 	private void actionBarAndButtonActions() {
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.event_details_custome_action_bar);
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);
@@ -686,6 +686,8 @@ public class EventDetailsActivity extends Activity implements
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
+//		action_button.setBackgroundResource(R.drawable.ev)
+		
 		action_button.setOnClickListener(new OnClickListener() {
 
 			@Override

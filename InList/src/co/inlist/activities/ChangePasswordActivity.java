@@ -16,8 +16,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -37,6 +40,8 @@ public class ChangePasswordActivity extends Activity implements
 
 		init();
 
+		actionBarAndButtonActions();
+
 		// UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
 
 		txt_forgot_pwd.setText(Html.fromHtml("<p><u>"
@@ -52,14 +57,14 @@ public class ChangePasswordActivity extends Activity implements
 		editConfirmPassword = (EditText) findViewById(R.id.edt_confirm_pwd);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_add_card_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
-
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_add_card_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
+	//
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -80,11 +85,12 @@ public class ChangePasswordActivity extends Activity implements
 
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-					params.add(new BasicNameValuePair("current_password",
-							""+editCurrentPassword.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", ""+editNewPassword.getText().toString().trim()));
-					params.add(new BasicNameValuePair("confirm_password",
-							""+editConfirmPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("current_password", ""
+							+ editCurrentPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", ""
+							+ editNewPassword.getText().toString().trim()));
+					params.add(new BasicNameValuePair("confirm_password", ""
+							+ editConfirmPassword.getText().toString().trim()));
 					params.add(new BasicNameValuePair("device_type", "android"));
 					params.add(new BasicNameValuePair("PHPSESSIONID", ""
 							+ UtilInList.ReadSharePrefrence(
@@ -121,11 +127,11 @@ public class ChangePasswordActivity extends Activity implements
 		// TODO Auto-generated method stub
 		try {
 			if (result.getString("success").equals("true")) {
-				
+
 				editCurrentPassword.setText("");
 				editNewPassword.setText("");
 				editConfirmPassword.setText("");
-				
+
 				UtilInList.validateDialog(ChangePasswordActivity.this, result
 						.getJSONArray("messages").getString(0),
 						Constant.AppName);
@@ -182,4 +188,69 @@ public class ChangePasswordActivity extends Activity implements
 		super.onBackPressed();
 		finish();
 	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.save_onclick);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(editCurrentPassword.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editNewPassword.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editConfirmPassword.getWindowToken(), 0);
+
+				if (isValidate()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("current_password", ""
+								+ editCurrentPassword.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password", ""
+								+ editNewPassword.getText().toString().trim()));
+						params.add(new BasicNameValuePair("confirm_password", ""
+								+ editConfirmPassword.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										ChangePasswordActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								ChangePasswordActivity.this, params, Constant.API
+										+ "user/login/save/?apiMode=VIP&json=true")
+								.execute();
+
+					} else {
+						UtilInList
+								.validateDialog(ChangePasswordActivity.this, ""
+										+ "" + Constant.network_error,
+										Constant.ERRORS.OOPS);
+
+					}
+				}
+			}
+		});
+
+	}
+
 }

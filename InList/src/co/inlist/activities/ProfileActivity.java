@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -25,7 +26,7 @@ public class ProfileActivity extends Activity implements
 
 	TextView txtName, txtEmail, txtPhone;
 	public static ProfileActivity profObj;
-	RelativeLayout relativeCategories, relativeArchive,relativeVip;
+	RelativeLayout relativeCategories, relativeArchive, relativeVip;
 	View viewCategories, viewArchive;
 	ListView lst;
 
@@ -38,6 +39,8 @@ public class ProfileActivity extends Activity implements
 		profObj = this;
 
 		init();
+
+		actionBarAndButtonActions();
 
 		txtName.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
@@ -74,7 +77,7 @@ public class ProfileActivity extends Activity implements
 				viewCategories.setVisibility(View.GONE);
 			}
 		});
-		
+
 		relativeVip.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -100,12 +103,12 @@ public class ProfileActivity extends Activity implements
 		lst = (ListView) findViewById(R.id.lst);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_profile_actions, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_profile_actions, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -147,4 +150,31 @@ public class ProfileActivity extends Activity implements
 		finish();
 	}
 
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.edit_onclick);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(ProfileActivity.this,
+						EditProfileActivity.class));
+			}
+		});
+
+	}
 }

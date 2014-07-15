@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -50,6 +51,8 @@ public class AddCardActivity extends Activity implements
 		// UtilInList.makeActionBarFullBlack(AddCardActivity.this);
 
 		init();
+
+		actionBarAndButtonActions();
 
 		Calendar calendar = Calendar.getInstance();
 		int year = calendar.get(Calendar.YEAR);
@@ -168,28 +171,28 @@ public class AddCardActivity extends Activity implements
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_add_card_actions, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_add_card_actions, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-
-		if (UtilInList
-				.ReadSharePrefrence(AddCardActivity.this,
-						Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
-				.equals("1")) {
-			menu.getItem(0).setIcon(R.drawable.btn_delete);
-		} else {
-			menu.getItem(0).setIcon(R.drawable.btn_save);
-		}
-
-		return super.onPrepareOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		// TODO Auto-generated method stub
+//
+//		if (UtilInList
+//				.ReadSharePrefrence(AddCardActivity.this,
+//						Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
+//				.equals("1")) {
+//			menu.getItem(0).setIcon(R.drawable.btn_delete);
+//		} else {
+//			menu.getItem(0).setIcon(R.drawable.btn_save);
+//		}
+//
+//		return super.onPrepareOptionsMenu(menu);
+//	}
 
 	/**
 	 * On selecting action bar icons
@@ -382,4 +385,103 @@ public class AddCardActivity extends Activity implements
 			}
 		}
 	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.delete_card_onclick);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				if (UtilInList
+						.ReadSharePrefrence(AddCardActivity.this,
+								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+						.toString().equals("1")) {
+
+					flagCardDelete = true;
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("user_card_id", ""
+							+ UtilInList.ReadSharePrefrence(
+									AddCardActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ID)
+									.toString()));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									AddCardActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(AddCardActivity.this,
+							params, Constant.API + Constant.ACTIONS.REMOVE_CARD)
+							.execute();
+
+				} else {
+
+					if (edt_card_num.getText().toString().equals("")) {
+
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_NUMBER,
+								Constant.ERRORS.OOPS);
+					} else if (edt_card_name.getText().toString().equals("")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_NAME,
+								Constant.ERRORS.OOPS);
+					} else if (selected_month.equals("Month")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_MONTH,
+								Constant.ERRORS.OOPS);
+					} else if (selected_year.equals("Year")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_YEAR,
+								Constant.ERRORS.OOPS);
+					} else {
+
+						flagCardDelete = false;
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("user_card_id", "0"));
+						params.add(new BasicNameValuePair("card_type", "visa"));
+						params.add(new BasicNameValuePair("card_number",
+								edt_card_num.getText().toString().trim()));
+						params.add(new BasicNameValuePair("card_name",
+								edt_card_name.getText().toString().trim()));
+						params.add(new BasicNameValuePair("card_exp_year",
+								selected_year));
+						params.add(new BasicNameValuePair("card_exp_month",
+								selected_month));
+						params.add(new BasicNameValuePair("set_default", "1"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										AddCardActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(AddCardActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.ADD_CARD).execute();
+
+					}
+				}
+
+			}
+		});
+
+	}
+
 }

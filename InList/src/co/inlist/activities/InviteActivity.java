@@ -16,8 +16,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -32,9 +35,11 @@ public class InviteActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.invite_person_screen);
 
-//		UtilInList.makeActionBarFullBlack(InviteActivity.this);
+		// UtilInList.makeActionBarFullBlack(InviteActivity.this);
 
 		init();
+
+		actionBarAndButtonActions();
 	}
 
 	private void init() {
@@ -44,48 +49,50 @@ public class InviteActivity extends Activity implements
 		editEmail = (EditText) findViewById(R.id.edt_invite_e_mail);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_invite_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
+	//
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_invite_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
 	 * */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Take appropriate action for each action item click
-		switch (item.getItemId()) {
-		case R.id.action_send:
-
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
-			imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
-			imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
-
-			if (isValid()) {
-				if (UtilInList
-						.isInternetConnectionExist(getApplicationContext())) {
-					new InviteAsyncTask(InviteActivity.this).execute("");
-				} else {
-					UtilInList.validateDialog(InviteActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
-
-				}
-			}
-			return true;
-
-		case android.R.id.home:
-			finish();
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// // Take appropriate action for each action item click
+	// switch (item.getItemId()) {
+	// case R.id.action_send:
+	//
+	// InputMethodManager imm = (InputMethodManager)
+	// getSystemService(Context.INPUT_METHOD_SERVICE);
+	// imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
+	// imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
+	// imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
+	//
+	// if (isValid()) {
+	// if (UtilInList
+	// .isInternetConnectionExist(getApplicationContext())) {
+	// new InviteAsyncTask(InviteActivity.this).execute("");
+	// } else {
+	// UtilInList.validateDialog(InviteActivity.this, "" + ""
+	// + Constant.network_error, Constant.ERRORS.OOPS);
+	//
+	// }
+	// }
+	// return true;
+	//
+	// case android.R.id.home:
+	// finish();
+	// return true;
+	//
+	// default:
+	// return super.onOptionsItemSelected(item);
+	// }
+	// }
 
 	public class InviteAsyncTask extends AsyncTask<String, String, String> {
 
@@ -211,4 +218,48 @@ public class InviteActivity extends Activity implements
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.send_onclick);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
+
+				if (isValid()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+						new InviteAsyncTask(InviteActivity.this).execute("");
+					} else {
+						UtilInList.validateDialog(InviteActivity.this, "" + ""
+								+ Constant.network_error, Constant.ERRORS.OOPS);
+
+					}
+				}
+
+			}
+		});
+
+	}
+
 }
