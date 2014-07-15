@@ -27,7 +27,7 @@
                 android:layout_weight="0.5"
                 android:hint="@string/card_num"
                 android:inputType="number"
-                android:maxLength="16"
+                android:maxLength="19"
                 android:textColor="@color/light_yellow" />
 
             <EditText

@@ -12,19 +12,20 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -42,6 +43,9 @@ public class AddCardActivity extends Activity implements
 	private String selected_month, selected_year;
 	LinearLayout linearScan;
 	boolean flagCardDelete = false;
+
+	String strTemp;
+	int keyDel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +87,7 @@ public class AddCardActivity extends Activity implements
 			try {
 				String subString = strCardNum.substring(
 						strCardNum.length() - 4, strCardNum.length());
-				edt_card_num.setText("************" + subString);
+				edt_card_num.setText("**** **** **** " + subString);
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -154,6 +158,73 @@ public class AddCardActivity extends Activity implements
 
 			}
 		});
+
+		edt_card_num.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+				if (edt_card_num.length() < 19) {
+					boolean flag = true;
+					String eachBlock[] = edt_card_num.getText().toString()
+							.split(" ");
+					for (int i = 0; i < eachBlock.length; i++) {
+						if (eachBlock[i].length() > 4) {
+							flag = false;
+						}
+					}
+					if (flag) {
+
+						edt_card_num.setOnKeyListener(new OnKeyListener() {
+
+							@Override
+							public boolean onKey(View v, int keyCode,
+									KeyEvent event) {
+
+								if (keyCode == KeyEvent.KEYCODE_DEL)
+									keyDel = 1;
+								return false;
+							}
+						});
+
+						if (keyDel == 0) {
+
+							if (((edt_card_num.getText().length() + 1) % 5) == 0) {
+
+								if (edt_card_num.getText().toString()
+										.split("-").length <= 3) {
+									edt_card_num.setText(edt_card_num.getText()
+											+ " ");
+									edt_card_num.setSelection(edt_card_num
+											.getText().length());
+								}
+							}
+							strTemp = edt_card_num.getText().toString();
+						} else {
+							strTemp = edt_card_num.getText().toString();
+							keyDel = 0;
+						}
+
+					} else {
+						edt_card_num.setText(strTemp);
+					}
+				}
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
 	}
 
 	/*
@@ -178,21 +249,21 @@ public class AddCardActivity extends Activity implements
 	// return super.onCreateOptionsMenu(menu);
 	// }
 
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		// TODO Auto-generated method stub
-//
-//		if (UtilInList
-//				.ReadSharePrefrence(AddCardActivity.this,
-//						Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
-//				.equals("1")) {
-//			menu.getItem(0).setIcon(R.drawable.btn_delete);
-//		} else {
-//			menu.getItem(0).setIcon(R.drawable.btn_save);
-//		}
-//
-//		return super.onPrepareOptionsMenu(menu);
-//	}
+	// @Override
+	// public boolean onPrepareOptionsMenu(Menu menu) {
+	// // TODO Auto-generated method stub
+	//
+	// if (UtilInList
+	// .ReadSharePrefrence(AddCardActivity.this,
+	// Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
+	// .equals("1")) {
+	// menu.getItem(0).setIcon(R.drawable.btn_delete);
+	// } else {
+	// menu.getItem(0).setIcon(R.drawable.btn_save);
+	// }
+	//
+	// return super.onPrepareOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -459,7 +530,7 @@ public class AddCardActivity extends Activity implements
 						params.add(new BasicNameValuePair("user_card_id", "0"));
 						params.add(new BasicNameValuePair("card_type", "visa"));
 						params.add(new BasicNameValuePair("card_number",
-								edt_card_num.getText().toString().trim()));
+								edt_card_num.getText().toString().trim().replace(" ","")));
 						params.add(new BasicNameValuePair("card_name",
 								edt_card_name.getText().toString().trim()));
 						params.add(new BasicNameValuePair("card_exp_year",

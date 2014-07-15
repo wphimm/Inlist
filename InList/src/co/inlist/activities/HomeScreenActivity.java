@@ -463,6 +463,7 @@ public class HomeScreenActivity extends Activity implements
 					viewGroup.getContext());
 
 			// We can now setup the PullToRefreshLayout
+		
 			ActionBarPullToRefresh
 					.from(getActivity())
 					// We need to insert the PullToRefreshLayout into the

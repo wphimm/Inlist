@@ -98,8 +98,6 @@ public class EventDetailsActivity extends Activity implements
 
 		init();
 
-		actionBarAndButtonActions();
-
 		edObj = this;
 		// UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
@@ -328,6 +326,7 @@ public class EventDetailsActivity extends Activity implements
 
 	}
 
+	
 	private void init() {
 		// TODO Auto-generated method stub
 		scrollMain = (ScrollView) findViewById(R.id.scrollmain);
@@ -413,7 +412,7 @@ public class EventDetailsActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		invalidateOptionsMenu();
+		actionBarAndButtonActions();
 	}
 
 	// @Override

@@ -218,6 +218,8 @@ public class SplashScreenActivity extends Activity implements
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
 
+		Log.e("result..", ">>" + result);
+
 		try {
 			/*
 			 * Prepare registration response write in file mode private
@@ -232,6 +234,11 @@ public class SplashScreenActivity extends Activity implements
 
 		// new AddDeviceAsyncTask(getApplicationContext()).execute("");
 		new PartyAreaAsyncTask(getApplicationContext()).execute("");
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
 	}
 
 }

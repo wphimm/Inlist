@@ -41,10 +41,10 @@ public class CompletePurchaseActivity extends Activity implements
 
 		cpObj = this;
 
-		String strHTML = "<html><body><ul><li>I will arrive on-time before 12.30AM</li>"
-				+ "<li>I will dress approprately for the venue</li>"
-				+ "<li>I will arrive sober</li>"
-				+ "<li>I understand this sale is final. Certain changes can be made in exchange for credit.</li></ul></body></html>";
+		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
+				+ "&#8226; I will dress approprately for the venue <br/>"
+				+ "&#8226; I will arrive sober <br/>"
+				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
 		txtPoints.setText(Html.fromHtml(strHTML));
 
 		String strTable = ""

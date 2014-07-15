@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="@string/pwd"
+            android:inputType="textPassword"
             android:singleLine="true"
             android:textColor="@color/light_yellow" />
 
