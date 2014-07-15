@@ -70,20 +70,6 @@ public class HorizontalListAdapter extends BaseAdapter {
 			txtMusic.setTextColor(Color.WHITE);
 		}
 
-		/*row.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				listview.setAdapter(new HorizontalListAdapter(InListApplication
-						.getList_music_types(), context, listview, position));
-				main.setBackgroundColor(Color.parseColor("#DFBB6A"));
-				txtMusic.setTextColor(Color.WHITE);
-			}
-		});*/
-		
-	
-
 		return row;
 	}
 

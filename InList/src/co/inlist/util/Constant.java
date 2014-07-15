@@ -36,7 +36,7 @@ public class Constant {
 		public static final String FORGOT_PASSWORD = "request_password_reset/?apiMode=%s&json=%s&email=%S";
 		public static final String REGISTER_FB = "/facebook/register/?apiMode=VIP&json=true";
 		public static final String PREPARE_REGISTER = "common/prepare_registration/?json=true";
-		public static final String CHANGE_PASSWORD = "user/login/save/";
+		public static final String CHANGE_PASSWORD = "user/login/save/?apiMode=VIP&json=true";
 		public static final String PUSHNOTIFICATIONS = "push_notifications/";
 		public static final String PUSHNOTIFICATIONS_TEST = "push_notifications/test/?apiMode=VIP&json=true";
 		public static final String USER_INVITE = "user/invite/";
@@ -48,6 +48,8 @@ public class Constant {
 
 		public static final String GET_EVENT_TABLE = "event/get_available_table_set/?apiMode=VIP&json=true";
 		public static final String BOOK_EVENT_TABLE = "reservation/prepaid/?apiMode=VIP&json=true";
+		public static final String REQUEST_VIP = "user/request_vip/?apiMode=VIP&json=true";
+		
 	}
 
 	public static class TAGS {
@@ -118,6 +120,10 @@ public class Constant {
 		public static final String PWD_NOT_MATCH = "New Passwords don't match";
 
 		public static final String NO_EVENTS_FOUND = "No events could be found. Please try switching cities in the app";
+		public static final String PLZ_ENTER_MFC="Please enter most frequent clubs";
+		public static final String PLZ_ENTER_OCM="Please enter other club memberships";
+		public static final String PLZ_ANNUAL_INCOME="Please select annual income";
+		public static final String PLZ_MUSIC_TYPE="Please select music type";
 
 	}
 

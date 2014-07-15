@@ -1,12 +1,19 @@
 package co.inlist.activities;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,23 +33,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import co.inlist.adapter.HorizontalListAdapter;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
+import co.inlist.util.Constant;
 import co.inlist.util.HorizontalListView;
+import co.inlist.util.UtilInList;
 
 public class VipMemberShipActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	ImageView img1, img2, img3, img4, imgProfile;
 	int height, width;
 	HorizontalListView horizontalList;
+	EditText editInviteCode, editOccupation, editMostFrequentedClubs,
+			editOtherClub;
 
 	Uri imageUri = null;
 	static Cursor cursor = null;
 	static String camera_pathname = "";
 	Bitmap bmp;
+
+	public static VipMemberShipActivity vmaObj;
+	int selectedIncomePosition = -1;
+	int selectedMusicTypePosition = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,38 +71,17 @@ public class VipMemberShipActivity extends Activity implements
 
 		init();
 
+		vmaObj = this;
+
 		String fileName = "Camera_Example.jpg";
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.Images.Media.TITLE, fileName);
 		imageUri = this.getContentResolver().insert(
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-		InListApplication.getList_music_types().clear();
-		for (int i = 0; i < 4; i++) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			switch (i) {
-			case 0:
-				map.put("title", "Electronic Dance Music");
-				break;
-			case 1:
-				map.put("title", "Hip Hop");
-				break;
-			case 2:
-				map.put("title", "Top 40");
-				break;
-			case 3:
-				map.put("title", "Other");
-				break;
-			default:
-				map.put("title", "Other");
-				break;
-			}
-			InListApplication.getList_music_types().add(map);
-		}
-
 		horizontalList.setAdapter(new HorizontalListAdapter(InListApplication
 				.getList_music_types(), getApplicationContext(),
-				horizontalList, 0));
+				horizontalList, -1));
 
 		horizontalList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -91,6 +89,7 @@ public class VipMemberShipActivity extends Activity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
+				selectedMusicTypePosition = position;
 				horizontalList.setAdapter(new HorizontalListAdapter(
 						InListApplication.getList_music_types(),
 						getApplicationContext(), horizontalList, position));
@@ -114,6 +113,7 @@ public class VipMemberShipActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedIncomePosition = 0;
 				img1.setBackgroundResource(R.drawable.circle_selected);
 				img2.setBackgroundResource(R.drawable.circle_notselected);
 				img3.setBackgroundResource(R.drawable.circle_notselected);
@@ -136,6 +136,7 @@ public class VipMemberShipActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedIncomePosition = 1;
 				img2.setBackgroundResource(R.drawable.circle_selected);
 				img1.setBackgroundResource(R.drawable.circle_notselected);
 				img3.setBackgroundResource(R.drawable.circle_notselected);
@@ -157,6 +158,7 @@ public class VipMemberShipActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedIncomePosition = 2;
 				img3.setBackgroundResource(R.drawable.circle_selected);
 				img2.setBackgroundResource(R.drawable.circle_notselected);
 				img1.setBackgroundResource(R.drawable.circle_notselected);
@@ -178,6 +180,7 @@ public class VipMemberShipActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedIncomePosition = 3;
 				img4.setBackgroundResource(R.drawable.circle_selected);
 				img2.setBackgroundResource(R.drawable.circle_notselected);
 				img3.setBackgroundResource(R.drawable.circle_notselected);
@@ -214,6 +217,11 @@ public class VipMemberShipActivity extends Activity implements
 		img2 = (ImageView) findViewById(R.id.img2);
 		img3 = (ImageView) findViewById(R.id.img3);
 		img4 = (ImageView) findViewById(R.id.img4);
+
+		editInviteCode = (EditText) findViewById(R.id.editInviteCode);
+		editMostFrequentedClubs = (EditText) findViewById(R.id.editMostFrequentedClubs);
+		editOccupation = (EditText) findViewById(R.id.editOccupation);
+		editOtherClub = (EditText) findViewById(R.id.editOtherClub);
 
 		horizontalList = (HorizontalListView) findViewById(R.id.listview);
 	}
@@ -503,7 +511,54 @@ public class VipMemberShipActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.action_submit:
 			// search action
-			startActivity(new Intent(VipMemberShipActivity.this,VipMembershipReview.class));
+
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(editInviteCode.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(
+					editMostFrequentedClubs.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(editOccupation.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(editOtherClub.getWindowToken(), 0);
+
+			if (isValidate()) {
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("user_id", ""
+							+ UtilInList.ReadSharePrefrence(
+									VipMemberShipActivity.this,
+									Constant.SHRED_PR.KEY_USERID)));
+					params.add(new BasicNameValuePair("income_bracket_id", ""
+							+ (selectedIncomePosition + 1)));
+					params.add(new BasicNameValuePair("music_type_id", ""
+							+ InListApplication.getList_music_types()
+									.get(selectedMusicTypePosition)
+									.get("music_type_id")));
+					params.add(new BasicNameValuePair("favorite_clubs", ""
+							+ editMostFrequentedClubs.getText().toString()
+									.trim()));
+					params.add(new BasicNameValuePair("other_memberships", ""
+							+ editOtherClub.getText().toString().trim()));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									VipMemberShipActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							VipMemberShipActivity.this, params, Constant.API
+									+ Constant.ACTIONS.REQUEST_VIP).execute();
+
+				} else {
+					UtilInList
+							.validateDialog(VipMemberShipActivity.this, "" + ""
+									+ Constant.network_error,
+									Constant.ERRORS.OOPS);
+
+				}
+			}
+
 			return true;
 
 		case android.R.id.home:
@@ -513,6 +568,57 @@ public class VipMemberShipActivity extends Activity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+
+				startActivity(new Intent(VipMemberShipActivity.this,
+						VipMembershipReview.class));
+
+			} else {
+
+				UtilInList.validateDialog(VipMemberShipActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
+		}
+
+	}
+
+	private boolean isValidate() {
+		// TODO Auto-generated method stub
+		if (selectedIncomePosition == -1) {
+			UtilInList.validateDialog(VipMemberShipActivity.this,
+					Constant.ERRORS.PLZ_ANNUAL_INCOME, Constant.ERRORS.OOPS);
+			return false;
+		}
+
+		if (selectedMusicTypePosition == -1) {
+			UtilInList.validateDialog(VipMemberShipActivity.this,
+					Constant.ERRORS.PLZ_MUSIC_TYPE, Constant.ERRORS.OOPS);
+			return false;
+		}
+
+		if (editMostFrequentedClubs.getText().toString().trim().length() == 0) {
+			UtilInList.validateDialog(VipMemberShipActivity.this,
+					Constant.ERRORS.PLZ_ENTER_MFC, Constant.ERRORS.OOPS);
+			return false;
+		}
+
+		if (editOtherClub.getText().toString().trim().length() == 0) {
+			UtilInList.validateDialog(VipMemberShipActivity.this,
+					Constant.ERRORS.PLZ_ENTER_OCM, Constant.ERRORS.OOPS);
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override

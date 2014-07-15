@@ -36,11 +36,16 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-			startActivity(new Intent(VipMembershipReview.this,
-					HomeScreenActivity.class));
+			
+			ProfileActivity.profObj.finish();
+			VipMemberShipActivity.vmaObj.finish();
+			finish();
+			
 			return true;
 
 		case android.R.id.home:
+			ProfileActivity.profObj.finish();
+			VipMemberShipActivity.vmaObj.finish();
 			finish();
 			return true;
 			
@@ -59,6 +64,8 @@ public class VipMembershipReview extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
+		ProfileActivity.profObj.finish();
+		VipMemberShipActivity.vmaObj.finish();
 		finish();
 	}
 

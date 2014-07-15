@@ -228,6 +228,22 @@ public class SplashScreenActivity extends Activity implements
 					Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
 					SplashScreenActivity.this);
 
+			String str_temp = result.getString("status");
+			if (str_temp.equals("success")) {
+				JSONObject jObjectData = new JSONObject(
+						result.getString("data"));
+				JSONArray data = jObjectData.getJSONArray("music_types");
+				Log.e("Length of json array ----->", "" + data.length());
+				InListApplication.getList_music_types().clear();
+				for (int i = 0; i < data.length(); i++) {
+					JSONObject obj = data.getJSONObject(i);
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("music_type_id", "" + obj.getString("music_type_id"));
+					map.put("title", "" + obj.getString("title"));
+					InListApplication.getList_music_types().add(map);
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

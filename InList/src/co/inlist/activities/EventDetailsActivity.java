@@ -326,7 +326,6 @@ public class EventDetailsActivity extends Activity implements
 
 	}
 
-	
 	private void init() {
 		// TODO Auto-generated method stub
 		scrollMain = (ScrollView) findViewById(R.id.scrollmain);
@@ -685,8 +684,8 @@ public class EventDetailsActivity extends Activity implements
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
-//		action_button.setBackgroundResource(R.drawable.ev)
-		
+		// action_button.setBackgroundResource(R.drawable.ev)
+
 		action_button.setOnClickListener(new OnClickListener() {
 
 			@Override

@@ -99,7 +99,7 @@ public class ChangePasswordActivity extends Activity implements
 
 					new WebServiceDataPosterAsyncTask(
 							ChangePasswordActivity.this, params, Constant.API
-									+ "user/login/save/?apiMode=VIP&json=true")
+									+Constant.ACTIONS.CHANGE_PASSWORD)
 							.execute();
 
 				} else {
