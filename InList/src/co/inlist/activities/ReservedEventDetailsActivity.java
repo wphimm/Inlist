@@ -77,7 +77,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 	private TextView txt_atmosphere;
 	private TextView txt_music;
 	private TextView txtaddress;
-	private TextView txtcity,txtPoints;
+	private TextView txtcity, txtPoints;
 
 	private GoogleMap googleMap, zoomMap;
 	int position;
@@ -95,6 +95,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		init();
 
+		actionBarAndButtonActions();
 		edObj = this;
 		// UtilInList.makeActionBarGradiant(ReservedEventDetailsActivity.this);
 
@@ -108,7 +109,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 				+ "&#8226; I will arrive sober <br/>"
 				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
 		txtPoints.setText(Html.fromHtml(strHTML));
-		
+
 		map = InListApplication.getListEvents().get(position);
 
 		options = new DisplayImageOptions.Builder()
@@ -409,7 +410,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
@@ -573,6 +574,25 @@ public class ReservedEventDetailsActivity extends Activity implements
 			Log.v("", "Exception : " + e);
 		}
 
+	}
+
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.delete_card_onclick);
+
+		action_button.setVisibility(View.INVISIBLE);
 	}
 
 }

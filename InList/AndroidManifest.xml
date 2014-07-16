@@ -8,23 +8,22 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
-    <permission
-        android:name="co.inlist.activities.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-
     <uses-permission android:name="co.inlist.activities.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <permission
+        android:name="co.inlist.activities.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -129,7 +128,6 @@
         </activity>
 
         <!-- Invite Activity -->
-
         <activity
             android:name="co.inlist.activities.InviteActivity"
             android:label="@string/activity_login"
@@ -143,7 +141,6 @@
         </activity>
 
         <!-- No Card Activity -->
-
         <activity
             android:name="co.inlist.activities.NoCardActivity"
             android:label="@string/activity_login"
@@ -291,7 +288,6 @@
         <!-- ReservedEventDetails Activity -->
         <activity
             android:name="co.inlist.activities.ReservedEventDetailsActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.ProfileActivity"
             android:screenOrientation="portrait" >

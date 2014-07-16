@@ -673,7 +673,7 @@ public class EventDetailsActivity extends Activity implements
 	private void actionBarAndButtonActions() {
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.login_custome_action_bar);
+		actionBar.setCustomView(R.layout.custome_action_bar);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);

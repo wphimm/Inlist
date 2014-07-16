@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import co.inlist.adapter.ReservedEventsAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
@@ -228,7 +229,7 @@ public class ProfileActivity extends Activity implements
 
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.login_custome_action_bar);
+		actionBar.setCustomView(R.layout.custome_action_bar);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);
