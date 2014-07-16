@@ -1,14 +1,13 @@
 package co.inlist.activities;
 
 import android.app.ActionBar;
+
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import co.inlist.util.Constant;
-import co.inlist.util.UtilInList;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 public class VipMembershipReview extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -18,15 +17,17 @@ public class VipMembershipReview extends Activity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vip_membership_review);
+
+		actionBarAndButtonActions();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_vip_membership_review_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_vip_membership_review_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -36,11 +37,11 @@ public class VipMembershipReview extends Activity implements
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
 		case R.id.action_check:
-			
+
 			ProfileActivity.profObj.finish();
 			VipMemberShipActivity.vmaObj.finish();
 			finish();
-			
+
 			return true;
 
 		case android.R.id.home:
@@ -48,7 +49,7 @@ public class VipMembershipReview extends Activity implements
 			VipMemberShipActivity.vmaObj.finish();
 			finish();
 			return true;
-			
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -60,13 +61,36 @@ public class VipMembershipReview extends Activity implements
 		return false;
 	}
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		ProfileActivity.profObj.finish();
-		VipMemberShipActivity.vmaObj.finish();
-		finish();
-	}
+	/*
+	 * moth
+	 */
+	private void actionBarAndButtonActions() {
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.custome_action_bar);
 
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.chk_out_action_btn);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				ProfileActivity.profObj.finish();
+				VipMemberShipActivity.vmaObj.finish();
+				finish();
+
+			}
+		});
+
+	}
 }

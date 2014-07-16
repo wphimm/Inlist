@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import co.inlist.facebook.android.DialogError;
 import co.inlist.facebook.android.Facebook;
 import co.inlist.facebook.android.Facebook.DialogListener;
@@ -51,9 +52,11 @@ public class PurchaseSummaryActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_purchase_summary);
 
-//		UtilInList.makeActionBarGradiant(PurchaseSummaryActivity.this);
-		
+		// UtilInList.makeActionBarGradiant(PurchaseSummaryActivity.this);
+
 		init();
+
+		actionBarAndButtonActions();
 
 		btnFacebook.setOnClickListener(new OnClickListener() {
 
@@ -64,8 +67,10 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToFacebook();
 				} else {
-					UtilInList.validateDialog(PurchaseSummaryActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
+					UtilInList
+							.validateDialog(PurchaseSummaryActivity.this, ""
+									+ "" + Constant.network_error,
+									Constant.ERRORS.OOPS);
 				}
 			}
 		});
@@ -79,8 +84,10 @@ public class PurchaseSummaryActivity extends Activity implements
 						.isInternetConnectionExist(getApplicationContext())) {
 					loginToTwitter();
 				} else {
-					UtilInList.validateDialog(PurchaseSummaryActivity.this, "" + ""
-							+ Constant.network_error, Constant.ERRORS.OOPS);
+					UtilInList
+							.validateDialog(PurchaseSummaryActivity.this, ""
+									+ "" + Constant.network_error,
+									Constant.ERRORS.OOPS);
 				}
 			}
 		});
@@ -249,10 +256,12 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_LOGIN:
 			switch (success) {
 			case SUCCESS:
-				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Login Successful", Constant.AppName);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
+						"Login Successful", Constant.AppName);
 				break;
 			case FAILED:
-				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Login Failed", Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
+						"Login Failed", Constant.ERRORS.OOPS);
 			default:
 				break;
 			}
@@ -260,13 +269,18 @@ public class PurchaseSummaryActivity extends Activity implements
 		case TWITTER_POST:
 			switch (success) {
 			case SUCCESS:
-				UtilInList.validateDialog(PurchaseSummaryActivity.this, "App share successfully on your Twitter account.", Constant.AppName);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
+						"App share successfully on your Twitter account.",
+						Constant.AppName);
 				break;
 			case FAILED:
-				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Posting Failed" , Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
+						"Posting Failed", Constant.ERRORS.OOPS);
 				break;
 			case DUPLICATE:
-				UtilInList.validateDialog(PurchaseSummaryActivity.this, "Posting Failed because of duplicate message.", Constant.ERRORS.OOPS);
+				UtilInList.validateDialog(PurchaseSummaryActivity.this,
+						"Posting Failed because of duplicate message.",
+						Constant.ERRORS.OOPS);
 			default:
 				break;
 			}
@@ -323,12 +337,21 @@ public class PurchaseSummaryActivity extends Activity implements
 
 	}
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		EventDetailsActivity.edObj.finish();
-		CompletePurchaseActivity.cpObj.finish();
-		finish();
+	private void actionBarAndButtonActions() {
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setVisibility(View.INVISIBLE);
+
 	}
+
 }

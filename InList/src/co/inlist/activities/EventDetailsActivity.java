@@ -656,7 +656,7 @@ public class EventDetailsActivity extends Activity implements
 								Constant.ERRORS.OOPS);
 
 					}
-
+					
 				} else {
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");

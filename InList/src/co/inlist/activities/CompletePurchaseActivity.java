@@ -15,9 +15,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -39,6 +40,7 @@ public class CompletePurchaseActivity extends Activity implements
 
 		init();
 
+		actionBarAndButtonActions();
 		cpObj = this;
 
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
@@ -108,13 +110,13 @@ public class CompletePurchaseActivity extends Activity implements
 		txtCardName = (TextView) findViewById(R.id.txt_card_name);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_complete_purchase_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_complete_purchase_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	/**
 	 * On selecting action bar icons
@@ -125,44 +127,51 @@ public class CompletePurchaseActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.complete_purchase:
 
-			String strCapacity = ""
-					+ InListApplication
-							.getPricing()
-							.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_PRICE_POSITION)
-									.toString())).get("table_capacity");
-			String strPriceId = ""
-					+ InListApplication
-							.getPricing()
-							.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_PRICE_POSITION)
-									.toString())).get("event_pricing_id");
-			
-			String strCardId = ""
-					+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
-							Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
-			
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			// String strCapacity = ""
+			// + InListApplication
+			// .getPricing()
+			// .get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+			// CompletePurchaseActivity.this,
+			// Constant.SHRED_PR.KEY_PRICE_POSITION)
+			// .toString())).get("table_capacity");
+			// String strPriceId = ""
+			// + InListApplication
+			// .getPricing()
+			// .get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+			// CompletePurchaseActivity.this,
+			// Constant.SHRED_PR.KEY_PRICE_POSITION)
+			// .toString())).get("event_pricing_id");
+			//
+			// String strCardId = ""
+			// + UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
+			// Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
+			//
+			// List<NameValuePair> params = new ArrayList<NameValuePair>();
+			//
+			// params.add(new BasicNameValuePair("event_id",
+			// ""+UtilInList.ReadSharePrefrence(
+			// CompletePurchaseActivity.this,
+			// Constant.SHRED_PR.KEY_EVENT_ID)
+			// .toString()));
+			// params.add(new BasicNameValuePair("party_size", "" +
+			// strCapacity));
+			// params.add(new BasicNameValuePair("bookingItem", "event"));
+			// params.add(new BasicNameValuePair("event_pricing_id", "" +
+			// strPriceId));
+			// params.add(new BasicNameValuePair("user_card_id", ""+strCardId
+			// ));
+			// params.add(new BasicNameValuePair("device_type", "android"));
+			// params.add(new BasicNameValuePair("PHPSESSIONID", ""
+			// + UtilInList.ReadSharePrefrence(
+			// CompletePurchaseActivity.this,
+			// Constant.SHRED_PR.KEY_SESSIONID)));
+			//
+			// new WebServiceDataPosterAsyncTask(CompletePurchaseActivity.this,
+			// params, Constant.API + Constant.ACTIONS.BOOK_EVENT_TABLE)
+			// .execute();
 
-			params.add(new BasicNameValuePair("event_id", ""+UtilInList.ReadSharePrefrence(
-					CompletePurchaseActivity.this,
-					Constant.SHRED_PR.KEY_EVENT_ID)
-					.toString()));
-			params.add(new BasicNameValuePair("party_size", "" + strCapacity));
-			params.add(new BasicNameValuePair("bookingItem", "event"));
-			params.add(new BasicNameValuePair("event_pricing_id", "" + strPriceId));
-			params.add(new BasicNameValuePair("user_card_id", ""+strCardId ));
-			params.add(new BasicNameValuePair("device_type", "android"));
-			params.add(new BasicNameValuePair("PHPSESSIONID", ""
-					+ UtilInList.ReadSharePrefrence(
-							CompletePurchaseActivity.this,
-							Constant.SHRED_PR.KEY_SESSIONID)));
-
-			new WebServiceDataPosterAsyncTask(CompletePurchaseActivity.this,
-					params, Constant.API + Constant.ACTIONS.BOOK_EVENT_TABLE)
-					.execute();
+			startActivity(new Intent(CompletePurchaseActivity.this,
+					PurchaseSummaryActivity.class));
 
 			return true;
 
@@ -199,4 +208,82 @@ public class CompletePurchaseActivity extends Activity implements
 
 	}
 
+<<<<<<< .mine
+	private void actionBarAndButtonActions() {
+
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.confirm_update_onclick);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				String strCapacity = ""
+						+ InListApplication
+								.getPricing()
+								.get(Integer
+										.parseInt(UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_PRICE_POSITION)
+												.toString()))
+								.get("table_capacity");
+				String strPriceId = ""
+						+ InListApplication
+								.getPricing()
+								.get(Integer
+										.parseInt(UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_PRICE_POSITION)
+												.toString()))
+								.get("event_pricing_id");
+
+				String strCardId = ""
+						+ UtilInList.ReadSharePrefrence(
+								CompletePurchaseActivity.this,
+								Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
+
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+				params.add(new BasicNameValuePair("event_id", ""
+						+ UtilInList.ReadSharePrefrence(
+								CompletePurchaseActivity.this,
+								Constant.SHRED_PR.KEY_EVENT_ID).toString()));
+				params.add(new BasicNameValuePair("party_size", ""
+						+ strCapacity));
+				params.add(new BasicNameValuePair("bookingItem", "event"));
+				params.add(new BasicNameValuePair("event_pricing_id", ""
+						+ strPriceId));
+				params.add(new BasicNameValuePair("user_card_id", ""
+						+ strCardId));
+				params.add(new BasicNameValuePair("device_type", "android"));
+				params.add(new BasicNameValuePair("PHPSESSIONID", ""
+						+ UtilInList.ReadSharePrefrence(
+								CompletePurchaseActivity.this,
+								Constant.SHRED_PR.KEY_SESSIONID)));
+
+				new WebServiceDataPosterAsyncTask(
+						CompletePurchaseActivity.this, params, Constant.API
+								+ Constant.ACTIONS.BOOK_EVENT_TABLE).execute();
+
+			}
+		});
+	}
+
+=======
+>>>>>>> .r72
 }
