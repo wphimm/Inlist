@@ -1,5 +1,10 @@
 package co.inlist.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,16 +12,18 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -47,15 +54,55 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 		private EditText edt_frg_e_mail;
 
+		private void actionBarAndButtonActions() {
+			ActionBar actionBar = getActivity().getActionBar();
+			// add the custom view to the action bar
+			actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+					| ActionBar.DISPLAY_SHOW_HOME);
+
+			actionBar.setDisplayHomeAsUpEnabled(true);
+
+			ImageButton action_button = (ImageButton) actionBar.getCustomView()
+					.findViewById(R.id.btn_action_bar);
+
+			action_button.setBackgroundResource(R.drawable.done_btn_action_bar);
+
+			action_button.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+					if (edt_frg_e_mail.getText().toString().equals("")) {
+						UtilInList
+								.validateDialog(getActivity(),
+										Constant.ERRORS.PLZ_EMAIL,
+										Constant.ERRORS.OOPS);
+					} else {
+						new WebServiceDataCollectorAsyncTask(Constant.API
+								+ String.format(
+										Constant.ACTIONS.FORGOT_PASSWORD,
+										"VIP", "true", edt_frg_e_mail.getText()
+												.toString().trim()),
+								getActivity()).execute();
+					}
+
+				}
+			});
+
+		}
+
 		public PlaceholderFragment_Enter_Email() {
 
 		}
 
-		@Override
-		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-			super.onCreateOptionsMenu(menu, inflater);
-			inflater.inflate(R.menu.activity_login_actions, menu);
-		}
+		// @Override
+		// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// super.onCreateOptionsMenu(menu, inflater);
+		// inflater.inflate(R.menu.activity_login_actions, menu);
+		// }
 
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
@@ -94,6 +141,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 			View rootView = inflater.inflate(R.layout.forgot_password_screen,
 					container, false);
 
+			actionBarAndButtonActions();
+
 			edt_frg_e_mail = (EditText) rootView
 					.findViewById(R.id.edt_frg_e_mail);
 
@@ -116,6 +165,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 			return rootView;
 		}
+
 	}
 
 	/**
@@ -158,4 +208,5 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 }

@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,8 +63,10 @@ public class SignUpActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sign_up_screen);
 		init();
-		
-//		UtilInList.makeActionBarGradiant(SignUpActivity.this);
+
+		actionBarAndButtonActions();
+
+		// UtilInList.makeActionBarGradiant(SignUpActivity.this);
 
 		txt_su_que.setText(getQuestion());
 
@@ -87,13 +90,13 @@ public class SignUpActivity extends Activity implements
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_signup_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.activity_signup_actions, menu);
+	//
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	public void loginToFacebook() {
 
@@ -259,7 +262,7 @@ public class SignUpActivity extends Activity implements
 			} else {
 
 				if (fb_regiter_flag) {
-					
+
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 					params.add(new BasicNameValuePair("device_id", UtilInList
@@ -279,14 +282,13 @@ public class SignUpActivity extends Activity implements
 					params.add(new BasicNameValuePair(
 							"membership_question_answer", edt_su_ans.getText()
 									.toString().trim().replace(" ", "%20")));
-					params.add(new BasicNameValuePair("access_token",
-							""+facebook.getAccessToken()
-							.toString().trim()));
+					params.add(new BasicNameValuePair("access_token", ""
+							+ facebook.getAccessToken().toString().trim()));
 
 					new WebServiceDataPosterAsyncTask(SignUpActivity.this,
-							params, Constant.API
-									+ Constant.ACTIONS.REGISTER_FB).execute();
-					
+							params, Constant.API + Constant.ACTIONS.REGISTER_FB)
+							.execute();
+
 				} else {
 
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -401,6 +403,118 @@ public class SignUpActivity extends Activity implements
 		}
 
 		return question;
+	}
+
+	private void actionBarAndButtonActions() {
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.sign_up_action_bar);
+
+		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (edt_su_fname.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(SignUpActivity.this,
+							Constant.ERRORS.PLZ_FIRST_NAME,
+							Constant.ERRORS.OOPS);
+				} else if (edt_su_lname.getText().toString().trim().equals("")) {
+					UtilInList
+							.validateDialog(SignUpActivity.this,
+									Constant.ERRORS.PLZ_LAST_NAME,
+									Constant.ERRORS.OOPS);
+				} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(SignUpActivity.this,
+							Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
+				} else if (edt_su_pwd.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(SignUpActivity.this,
+							Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
+				} else if (edt_su_phno.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(SignUpActivity.this,
+							Constant.ERRORS.PLZ_CONTACT_NO,
+							Constant.ERRORS.OOPS);
+				} else if (edt_su_ans.getText().toString().trim().equals("")) {
+					UtilInList.validateDialog(SignUpActivity.this,
+							Constant.ERRORS.PLZ_ANS, Constant.ERRORS.OOPS);
+
+				} else {
+
+					if (fb_regiter_flag) {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(SignUpActivity.this)));
+						params.add(new BasicNameValuePair("email",
+								edt_su_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_su_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("first_name",
+								edt_su_fname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("last_name",
+								edt_su_lname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("phone", edt_su_phno
+								.getText().toString().trim()));
+						params.add(new BasicNameValuePair(
+								"membership_question_id", question_id));
+						params.add(new BasicNameValuePair(
+								"membership_question_answer", edt_su_ans
+										.getText().toString().trim()
+										.replace(" ", "%20")));
+						params.add(new BasicNameValuePair("access_token", ""
+								+ facebook.getAccessToken().toString().trim()));
+
+						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.REGISTER_FB)
+								.execute();
+
+					} else {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(SignUpActivity.this)));
+						params.add(new BasicNameValuePair("email",
+								edt_su_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_su_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("first_name",
+								edt_su_fname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("last_name",
+								edt_su_lname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("phone", edt_su_phno
+								.getText().toString().trim()));
+						params.add(new BasicNameValuePair(
+								"membership_question_id", question_id));
+						params.add(new BasicNameValuePair(
+								"membership_question_answer", edt_su_ans
+										.getText().toString().trim()
+										.replace(" ", "%20")));
+
+						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.REGISTRATION)
+								.execute();
+
+					}
+
+				}
+
+			}
+		});
+
 	}
 
 }

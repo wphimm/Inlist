@@ -39,6 +39,7 @@ public class NotificationsSettingsActivity extends Activity implements
 
 		init();
 
+		actionBarAndButtonActions();
 		btnDailyNotification.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -397,4 +398,24 @@ public class NotificationsSettingsActivity extends Activity implements
 		super.onBackPressed();
 		finish();
 	}
+	
+	
+	private void actionBarAndButtonActions() {
+		ActionBar actionBar = getActionBar();
+		// add the custom view to the action bar
+		actionBar.setCustomView(R.layout.login_custome_action_bar);
+
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		ImageButton action_button = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar);
+
+		action_button.setBackgroundResource(R.drawable.sign_up_action_bar);
+		action_button.setVisibility(View.INVISIBLE);
+
+	}
+
 }

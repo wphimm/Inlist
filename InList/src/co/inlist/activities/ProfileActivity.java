@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import co.inlist.adapter.ReservedEventsAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
