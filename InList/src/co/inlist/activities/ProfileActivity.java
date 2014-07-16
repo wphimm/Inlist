@@ -1,11 +1,21 @@
 package co.inlist.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.adapter.ReservedEventsAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -26,6 +37,7 @@ public class ProfileActivity extends Activity implements
 	RelativeLayout relativeCategories, relativeArchive, relativeVip;
 	View viewCategories, viewArchive;
 	ListView lst;
+	ReservedEventsAdapter adapterReservedEvents;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +64,46 @@ public class ProfileActivity extends Activity implements
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_PHONE));
 
-		lst.setAdapter(new ReservedEventsAdapter(InListApplication.getListEvents(),
-				ProfileActivity.this));
+		adapterReservedEvents = new ReservedEventsAdapter(
+				InListApplication.getListReservedEvents(), ProfileActivity.this);
+		
+		lst.setAdapter(new ReservedEventsAdapter(InListApplication
+				.getListEvents(), ProfileActivity.this));
+
+		Handler hn = new Handler();
+		hn.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+
+					int pageNo = ((int) (InListApplication
+							.getListReservedEvents().size() / 10)) + 1;
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("page", "" + pageNo));
+					params.add(new BasicNameValuePair("sort_option", "by_date"));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									ProfileActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(ProfileActivity.this,
+							params, Constant.API
+									+ Constant.ACTIONS.RESERVATION_LIST)
+							.execute();
+
+				} else {
+					UtilInList.validateDialog(ProfileActivity.this, "" + ""
+							+ Constant.network_error, Constant.ERRORS.OOPS);
+
+				}
+			}
+		}, 100);
 
 		relativeCategories.setOnClickListener(new OnClickListener() {
 
@@ -129,9 +179,37 @@ public class ProfileActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(JSONObject jObject) {
 		// TODO Auto-generated method stub
+		try {
+			String str_temp = jObject.getString("status");
+			if (str_temp.equals("success")) {
+				JSONObject jObjectData = new JSONObject(
+						jObject.getString("data"));
+				JSONArray data = jObjectData.getJSONArray("entries");
+				Log.e("Length of json array ----->", "" + data.length());
+				for (int i = 0; i < data.length(); i++) {
+					JSONObject obj = data.getJSONObject(i);
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("event_id", "" + obj.getString("event_id"));
+					map.put("event_title", "" + obj.getString("event_title"));
 
+					InListApplication.getListReservedEvents().add(map);
+				}
+
+				Log.i("size:", "" + InListApplication.getListReservedEvents().size());
+			} else {
+
+				UtilInList.validateDialog(ProfileActivity.this, jObject
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+
+		} catch (JSONException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		adapterReservedEvents.notifyDataSetChanged();
 	}
 
 	@Override

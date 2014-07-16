@@ -49,6 +49,7 @@ public class Constant {
 		public static final String GET_EVENT_TABLE = "event/get_available_table_set/?apiMode=VIP&json=true";
 		public static final String BOOK_EVENT_TABLE = "reservation/prepaid/?apiMode=VIP&json=true";
 		public static final String REQUEST_VIP = "user/request_vip/?apiMode=VIP&json=true";
+		public static final String RESERVATION_LIST = "reservations/mine/?apiMode=VIP&json=true";
 		
 	}
 

@@ -13,6 +13,7 @@
     <color name="red">#ff0000</color>
     <color name="date_color">#919191</color>
     <color name="light_red">#c95a5a</color>
+    <color name="black_shadow">#595959</color>
 
     <!-- HomeScreen List row Color -->
     <color name="hs_title_yellow">#deb968</color>

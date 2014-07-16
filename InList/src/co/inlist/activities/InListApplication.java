@@ -12,6 +12,16 @@ public class InListApplication extends Application {
 	public static ArrayList<HashMap<String, String>> gallery = new ArrayList<HashMap<String, String>>();
 	public static ArrayList<HashMap<String, String>> party_area = new ArrayList<HashMap<String, String>>();
 	public static ArrayList<HashMap<String, String>> pricing = new ArrayList<HashMap<String, String>>();
+	public static ArrayList<HashMap<String, String>> listReservedEvents = new ArrayList<HashMap<String, String>>();
+
+	public static ArrayList<HashMap<String, String>> getListReservedEvents() {
+		return listReservedEvents;
+	}
+
+	public static void setListReservedEvents(
+			ArrayList<HashMap<String, String>> listReservedEvents) {
+		InListApplication.listReservedEvents = listReservedEvents;
+	}
 
 	public static ArrayList<HashMap<String, String>> getPricing() {
 		return pricing;

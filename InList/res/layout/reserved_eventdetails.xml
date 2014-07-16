@@ -32,30 +32,36 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:orientation="vertical" >
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp" >
 
-                    <TextView
-                        android:id="@+id/event_title"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:textColor="@color/light_yellow"
-                        android:textIsSelectable="true"
-                        android:textSize="36sp"
-                        android:textStyle="bold" />
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/event_location_city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/event_title"
-                        android:textColor="#fff"
-                        android:textIsSelectable="true"
-                        android:textSize="25sp" />
+                        <TextView
+                            android:id="@+id/event_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:textColor="@color/light_yellow"
+                            android:textIsSelectable="true"
+                            android:textSize="36sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/event_location_city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/event_title"
+                            android:textColor="#fff"
+                            android:textIsSelectable="true"
+                            android:textSize="25sp" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -65,6 +71,15 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/r1"
                 android:background="@color/light" />
+
+            <ImageButton
+                android:id="@+id/img_reservation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/v1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/purchase_history_reservation_confirmed" />
 
             <RelativeLayout
                 android:id="@+id/r2"
@@ -77,7 +92,7 @@
                     android:id="@+id/img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/info_icon"
+                    android:background="@drawable/info_icon_dark"
                     android:contentDescription="@string/iv_desc" />
 
                 <RelativeLayout
@@ -91,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/date_time"
-                        android:textColor="@color/light"
+                        android:textColor="@color/black_shadow"
                         android:textStyle="bold" />
 
                     <TextView
@@ -100,6 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/t1"
                         android:layout_marginTop="2dp"
+                        android:textColor="@color/light"
                         android:textIsSelectable="true" />
 
                     <TextView
@@ -109,7 +125,7 @@
                         android:layout_below="@+id/txt_date_time"
                         android:layout_marginTop="10dp"
                         android:text="@string/details"
-                        android:textColor="@color/light"
+                        android:textColor="@color/black_shadow"
                         android:textStyle="bold" />
 
                     <TextView
@@ -118,6 +134,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/t2"
                         android:layout_marginTop="2dp"
+                        android:textColor="@color/light"
                         android:textIsSelectable="true" />
 
                     <LinearLayout
@@ -139,7 +156,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/atmosphere"
-                                android:textColor="@color/light"
+                                android:textColor="@color/black_shadow"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -147,6 +164,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
+                                android:textColor="@color/light"
                                 android:textIsSelectable="true" />
                         </LinearLayout>
 
@@ -160,7 +178,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/music"
-                                android:textColor="@color/light"
+                                android:textColor="@color/black_shadow"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -168,6 +186,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
+                                android:textColor="@color/light"
                                 android:textIsSelectable="true" />
                         </LinearLayout>
                     </LinearLayout>
@@ -182,100 +201,51 @@
                 android:background="@color/light" />
 
             <RelativeLayout
-                android:id="@+id/r3"
+                android:id="@+id/r4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/v2"
                 android:layout_margin="20dp" >
 
                 <ImageView
-                    android:id="@+id/img2"
+                    android:id="@+id/img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/table_icon"
+                    android:background="@drawable/tc_icon"
                     android:contentDescription="@string/iv_desc" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@+id/img2" >
+                    android:layout_toRightOf="@+id/img1" >
 
                     <TextView
-                        android:id="@+id/t3"
+                        android:id="@+id/t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/table"
+                        android:text="@string/tandc"
+                        android:textColor="@color/black_shadow"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/t2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/t1"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/agreed"
                         android:textColor="@color/light"
                         android:textStyle="bold" />
 
-                    <Spinner
-                        android:id="@+id/spinnerTable"
-                        android:layout_width="200dp"
-                        android:layout_height="40dp"
-                        android:layout_below="@+id/t3"
-                        android:layout_marginTop="2dp"
-                        android:background="@drawable/spinner" />
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/v3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/r3"
-                android:background="@color/light" />
-
-            <RelativeLayout
-                android:id="@+id/r4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/v3"
-                android:layout_margin="20dp" >
-
-                <ImageView
-                    android:id="@+id/img3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/money_icon"
-                    android:contentDescription="@string/iv_desc" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@+id/img3" >
-
-                    <LinearLayout
-                        android:id="@+id/l1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/your_minimum_"
-                            android:textColor="@color/light"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/txt_minimum"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@color/light_yellow"
-                            android:textIsSelectable="true" />
-                    </LinearLayout>
-
                     <TextView
+                        android:id="@+id/txt_points"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/l1"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/your_minimum"
-                        android:textColor="@color/light" />
+                        android:layout_below="@+id/t2"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/light"
+                        android:textIsSelectable="true" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -297,7 +267,7 @@
                     android:id="@+id/img4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/location_icon"
+                    android:background="@drawable/location_icon_dark"
                     android:contentDescription="@string/iv_desc" />
 
                 <RelativeLayout
@@ -311,7 +281,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/location"
-                        android:textColor="@color/light"
+                        android:textColor="@color/black_shadow"
                         android:textStyle="bold" />
 
                     <TextView
@@ -320,6 +290,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/t4"
                         android:layout_marginTop="2dp"
+                        android:textColor="@color/light"
                         android:textIsSelectable="true" />
 
                     <TextView
@@ -327,6 +298,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/txtaddress"
+                        android:textColor="@color/light"
                         android:textIsSelectable="true" />
 
                     <ImageButton

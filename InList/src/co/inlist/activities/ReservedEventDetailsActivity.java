@@ -1,7 +1,6 @@
 package co.inlist.activities;
 
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +35,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -77,10 +76,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 	private TextView txt_details;
 	private TextView txt_atmosphere;
 	private TextView txt_music;
-	private Spinner spinnerTable;
-	private TextView txt_minimum;
 	private TextView txtaddress;
-	private TextView txtcity;
+	private TextView txtcity,txtPoints;
 
 	private GoogleMap googleMap, zoomMap;
 	int position;
@@ -106,6 +103,12 @@ public class ReservedEventDetailsActivity extends Activity implements
 			position = extras.getInt("pos");
 		}
 
+		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
+				+ "&#8226; I will dress approprately for the venue <br/>"
+				+ "&#8226; I will arrive sober <br/>"
+				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
+		txtPoints.setText(Html.fromHtml(strHTML));
+		
 		map = InListApplication.getListEvents().get(position);
 
 		options = new DisplayImageOptions.Builder()
@@ -149,6 +152,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 			strDate = format.format(date1);
 		} catch (java.text.ParseException e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -184,8 +188,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		txt_atmosphere.setText("" + map.get("atmosphere"));
 		txt_music.setText("" + map.get("music_type"));
-
-		txt_minimum.setText("$" + map.get("event_min_price"));
 
 		txtaddress.setText("" + map.get("event_location_address"));
 		txtcity.setText("" + map.get("event_location_city") + ", "
@@ -284,7 +286,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				LeadingActivity.gps = new GPSTracker(ReservedEventDetailsActivity.this);
+				LeadingActivity.gps = new GPSTracker(
+						ReservedEventDetailsActivity.this);
 				startActivity(new Intent(android.content.Intent.ACTION_VIEW,
 						Uri.parse("http://maps.google.com/maps?saddr="
 								+ LeadingActivity.gps.getLatitude() + ","
@@ -316,10 +319,10 @@ public class ReservedEventDetailsActivity extends Activity implements
 					new EventEntryAsyncTask1(ReservedEventDetailsActivity.this)
 							.execute("");
 				} else {
-					UtilInList
-							.validateDialog(ReservedEventDetailsActivity.this, "" + ""
+					UtilInList.validateDialog(
+							ReservedEventDetailsActivity.this, "" + ""
 									+ Constant.network_error,
-									Constant.ERRORS.OOPS);
+							Constant.ERRORS.OOPS);
 				}
 			}
 		}, 100);
@@ -342,10 +345,9 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		txt_atmosphere = (TextView) findViewById(R.id.txt_atmosphere);
 		txt_music = (TextView) findViewById(R.id.txt_music);
-		spinnerTable = (Spinner) findViewById(R.id.spinnerTable);
-		txt_minimum = (TextView) findViewById(R.id.txt_minimum);
 		txtaddress = (TextView) findViewById(R.id.txtaddress);
 		txtcity = (TextView) findViewById(R.id.txtcity);
+		txtPoints = (TextView) findViewById(R.id.txt_points);
 	}
 
 	public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
@@ -389,6 +391,26 @@ public class ReservedEventDetailsActivity extends Activity implements
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Take appropriate action for each action item click
+		switch (item.getItemId()) {
+
+		case android.R.id.home:
+			if (relative_zoom_map.getVisibility() == View.VISIBLE) {
+				relative_zoom_map.setVisibility(View.GONE);
+				scrollMain.setVisibility(View.VISIBLE);
+				relative_google_map.setVisibility(View.VISIBLE);
+			} else {
+				finish();
+			}
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (relative_zoom_map.getVisibility() == View.VISIBLE) {
@@ -405,121 +427,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		actionBarAndButtonActions();
-	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_event_details_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
-	//
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// // TODO Auto-generated method stub
-	//
-	// if (UtilInList.ReadSharePrefrence(ReservedEventDetailsActivity.this,
-	// Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-	// menu.getItem(0).setIcon(R.drawable.btn_purchase);
-	// } else {
-	// menu.getItem(0).setIcon(R.drawable.btn_login);
-	// }
-	//
-	// return super.onPrepareOptionsMenu(menu);
-	// }
-
-	/**
-	 * On selecting action bar icons
-	 * */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Take appropriate action for each action item click
-		switch (item.getItemId()) {
-
-		case R.id.action_sign:
-
-			UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_EVENT_ID, "" + map.get("event_id"));
-			UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_YOUR_MINIMUM,
-					"" + map.get("event_min_price"));
-			UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_PRICE_POSITION,
-					"" + spinnerTable.getSelectedItemPosition());
-
-			if (UtilInList.ReadSharePrefrence(ReservedEventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-
-				if (UtilInList
-						.isInternetConnectionExist(getApplicationContext())) {
-
-					String strCapacity = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															ReservedEventDetailsActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("table_capacity");
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("event_id", ""
-							+ map.get("event_id")));
-					params.add(new BasicNameValuePair("capacity", ""
-							+ strCapacity));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(
-									ReservedEventDetailsActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					new WebServiceDataPosterAsyncTask(
-							ReservedEventDetailsActivity.this, params, Constant.API
-									+ Constant.ACTIONS.GET_EVENT_TABLE)
-							.execute();
-
-				} else {
-					UtilInList
-							.validateDialog(ReservedEventDetailsActivity.this, "" + ""
-									+ Constant.network_error,
-									Constant.ERRORS.OOPS);
-
-				}
-
-			} else {
-				UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
-
-				startActivity(new Intent(ReservedEventDetailsActivity.this,
-						LoginActivity.class));
-			}
-
-			return true;
-
-		case android.R.id.home:
-			if (relative_zoom_map.getVisibility() == View.VISIBLE) {
-				relative_zoom_map.setVisibility(View.GONE);
-				scrollMain.setVisibility(View.VISIBLE);
-				relative_google_map.setVisibility(View.VISIBLE);
-			} else {
-				finish();
-			}
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	public class EventEntryAsyncTask1 extends AsyncTask<String, String, String> {
@@ -628,10 +535,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 						InListApplication.getPricing().add(map);
 					}
 
-					spinnerTable.setAdapter(new MyAdapter(
-							ReservedEventDetailsActivity.this,
-							R.layout.spinnertable_row, InListApplication
-									.getPricing()));
 				}
 
 			} catch (JSONException e) { // TODO Auto-generated catch block
@@ -654,15 +557,16 @@ public class ReservedEventDetailsActivity extends Activity implements
 					startActivity(new Intent(ReservedEventDetailsActivity.this,
 							CompletePurchaseActivity.class));
 				} else {
-					UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
+					UtilInList.WriteSharePrefrence(
+							ReservedEventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
 					startActivity(new Intent(ReservedEventDetailsActivity.this,
 							AddCardActivity.class));
 				}
 
 			} else {
-				UtilInList.validateDialog(ReservedEventDetailsActivity.this, result
-						.getJSONArray("errors").getString(0),
+				UtilInList.validateDialog(ReservedEventDetailsActivity.this,
+						result.getJSONArray("errors").getString(0),
 						Constant.ERRORS.OOPS);
 			}
 		} catch (Exception e) {
@@ -671,94 +575,4 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 	}
 
-	private void actionBarAndButtonActions() {
-		ActionBar actionBar = getActionBar();
-		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.login_custome_action_bar);
-
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-				| ActionBar.DISPLAY_SHOW_HOME);
-
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
-		ImageButton action_button = (ImageButton) actionBar.getCustomView()
-				.findViewById(R.id.btn_action_bar);
-
-		// action_button.setBackgroundResource(R.drawable.ev)
-
-		action_button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_EVENT_ID,
-						"" + map.get("event_id"));
-				UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_YOUR_MINIMUM,
-						"" + map.get("event_min_price"));
-				UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_PRICE_POSITION,
-						"" + spinnerTable.getSelectedItemPosition());
-
-				if (UtilInList.ReadSharePrefrence(ReservedEventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-
-					if (UtilInList
-							.isInternetConnectionExist(getApplicationContext())) {
-
-						String strCapacity = ""
-								+ InListApplication
-										.getPricing()
-										.get(Integer
-												.parseInt(UtilInList
-														.ReadSharePrefrence(
-																ReservedEventDetailsActivity.this,
-																Constant.SHRED_PR.KEY_PRICE_POSITION)
-														.toString()))
-										.get("table_capacity");
-
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-						params.add(new BasicNameValuePair("event_id", ""
-								+ map.get("event_id")));
-						params.add(new BasicNameValuePair("capacity", ""
-								+ strCapacity));
-						params.add(new BasicNameValuePair("device_type",
-								"android"));
-						params.add(new BasicNameValuePair("PHPSESSIONID", ""
-								+ UtilInList.ReadSharePrefrence(
-										ReservedEventDetailsActivity.this,
-										Constant.SHRED_PR.KEY_SESSIONID)));
-
-						new WebServiceDataPosterAsyncTask(
-								ReservedEventDetailsActivity.this, params, Constant.API
-										+ Constant.ACTIONS.GET_EVENT_TABLE)
-								.execute();
-
-					} else {
-						UtilInList.validateDialog(ReservedEventDetailsActivity.this, ""
-								+ "" + Constant.network_error,
-								Constant.ERRORS.OOPS);
-
-					}
-
-				} else {
-					UtilInList.WriteSharePrefrence(ReservedEventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
-
-					startActivity(new Intent(ReservedEventDetailsActivity.this,
-							LoginActivity.class));
-				}
-			}
-		});
-
-		if (UtilInList.ReadSharePrefrence(ReservedEventDetailsActivity.this,
-				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-			action_button.setBackgroundResource(R.drawable.purchanse_onclick);
-		} else {
-			action_button.setBackgroundResource(R.drawable.login_onclick);
-		}
-
-	}
 }
