@@ -52,8 +52,6 @@ public class PurchaseSummaryActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_purchase_summary);
 
-		// UtilInList.makeActionBarGradiant(PurchaseSummaryActivity.this);
-
 		init();
 
 		actionBarAndButtonActions();
@@ -117,6 +115,15 @@ public class PurchaseSummaryActivity extends Activity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		EventDetailsActivity.edObj.finish();
+		CompletePurchaseActivity.cpObj.finish();
+		finish();
 	}
 
 	@Override

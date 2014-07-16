@@ -1,7 +1,6 @@
 package co.inlist.activities;
 
 import android.app.ActionBar;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,14 +20,6 @@ public class VipMembershipReview extends Activity implements
 		actionBarAndButtonActions();
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_vip_membership_review_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -36,13 +27,6 @@ public class VipMembershipReview extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_check:
-
-			ProfileActivity.profObj.finish();
-			VipMemberShipActivity.vmaObj.finish();
-			finish();
-
-			return true;
 
 		case android.R.id.home:
 			ProfileActivity.profObj.finish();

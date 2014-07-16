@@ -125,55 +125,6 @@ public class CompletePurchaseActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.complete_purchase:
-
-			// String strCapacity = ""
-			// + InListApplication
-			// .getPricing()
-			// .get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-			// CompletePurchaseActivity.this,
-			// Constant.SHRED_PR.KEY_PRICE_POSITION)
-			// .toString())).get("table_capacity");
-			// String strPriceId = ""
-			// + InListApplication
-			// .getPricing()
-			// .get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-			// CompletePurchaseActivity.this,
-			// Constant.SHRED_PR.KEY_PRICE_POSITION)
-			// .toString())).get("event_pricing_id");
-			//
-			// String strCardId = ""
-			// + UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
-			// Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
-			//
-			// List<NameValuePair> params = new ArrayList<NameValuePair>();
-			//
-			// params.add(new BasicNameValuePair("event_id",
-			// ""+UtilInList.ReadSharePrefrence(
-			// CompletePurchaseActivity.this,
-			// Constant.SHRED_PR.KEY_EVENT_ID)
-			// .toString()));
-			// params.add(new BasicNameValuePair("party_size", "" +
-			// strCapacity));
-			// params.add(new BasicNameValuePair("bookingItem", "event"));
-			// params.add(new BasicNameValuePair("event_pricing_id", "" +
-			// strPriceId));
-			// params.add(new BasicNameValuePair("user_card_id", ""+strCardId
-			// ));
-			// params.add(new BasicNameValuePair("device_type", "android"));
-			// params.add(new BasicNameValuePair("PHPSESSIONID", ""
-			// + UtilInList.ReadSharePrefrence(
-			// CompletePurchaseActivity.this,
-			// Constant.SHRED_PR.KEY_SESSIONID)));
-			//
-			// new WebServiceDataPosterAsyncTask(CompletePurchaseActivity.this,
-			// params, Constant.API + Constant.ACTIONS.BOOK_EVENT_TABLE)
-			// .execute();
-
-			startActivity(new Intent(CompletePurchaseActivity.this,
-					PurchaseSummaryActivity.class));
-
-			return true;
 
 		case android.R.id.home:
 			finish();
@@ -208,7 +159,6 @@ public class CompletePurchaseActivity extends Activity implements
 
 	}
 
-<<<<<<< .mine
 	private void actionBarAndButtonActions() {
 
 		ActionBar actionBar = getActionBar();
@@ -284,6 +234,4 @@ public class CompletePurchaseActivity extends Activity implements
 		});
 	}
 
-=======
->>>>>>> .r72
 }
