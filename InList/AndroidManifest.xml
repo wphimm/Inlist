@@ -52,7 +52,6 @@
         <!-- Login activity -->
         <activity
             android:name="co.inlist.activities.LoginActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.HomeScreenActivity" >
 
@@ -65,7 +64,6 @@
         <!-- Sign Up activity -->
         <activity
             android:name="co.inlist.activities.SignUpActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.HomeScreenActivity" >
 
@@ -78,8 +76,6 @@
         <!-- Event Detail activity -->
         <activity
             android:name="co.inlist.activities.EventDetailsActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
-            android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.HomeScreenActivity"
             android:screenOrientation="portrait" >
 
@@ -92,7 +88,6 @@
         <!-- PurchaseSummary Activity -->
         <activity
             android:name="co.inlist.activities.PurchaseSummaryActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.EventDetailsActivity"
             android:screenOrientation="portrait" >
@@ -110,7 +105,6 @@
         <!-- Setting Account Activity -->
         <activity
             android:name="co.inlist.activities.SettingAccountListActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.HomeScreenActivity"
             android:screenOrientation="portrait" >
@@ -124,7 +118,6 @@
         <!-- Change Password Activity -->
         <activity
             android:name="co.inlist.activities.ChangePasswordActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -139,7 +132,6 @@
 
         <activity
             android:name="co.inlist.activities.InviteActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -154,7 +146,6 @@
 
         <activity
             android:name="co.inlist.activities.NoCardActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -169,7 +160,6 @@
 
         <activity
             android:name="co.inlist.activities.NotificationsSettingsActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -184,7 +174,6 @@
 
         <activity
             android:name="co.inlist.activities.TermsConditionsActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -198,7 +187,6 @@
         <!-- Add a Card Activity -->
         <activity
             android:name="co.inlist.activities.AddCardActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SettingAccountListActivity"
             android:screenOrientation="portrait" >
@@ -212,7 +200,6 @@
         <!-- Forgot Password Activity -->
         <activity
             android:name="co.inlist.activities.ForgotPassworActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.LoginActivity"
             android:screenOrientation="portrait" >
@@ -226,7 +213,6 @@
         <!-- VipMemberShip Activity -->
         <activity
             android:name="co.inlist.activities.VipMemberShipActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.SignUpActivity"
             android:screenOrientation="portrait" >
@@ -240,7 +226,6 @@
         <!-- VipMemberShip Review Activity -->
         <activity
             android:name="co.inlist.activities.VipMembershipReview"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.VipMemberShipActivity"
             android:screenOrientation="portrait" >
@@ -254,7 +239,6 @@
         <!-- GalleryActivity Activity -->
         <activity
             android:name="co.inlist.activities.GalleryActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.EventDetailsActivity"
             android:screenOrientation="portrait" >
@@ -268,7 +252,6 @@
         <!-- CompletePurchase Activity -->
         <activity
             android:name="co.inlist.activities.CompletePurchaseActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.EventDetailsActivity"
             android:screenOrientation="portrait" >
@@ -282,7 +265,6 @@
         <!-- Profile Activity -->
         <activity
             android:name="co.inlist.activities.ProfileActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.HomeScreenActivity"
             android:screenOrientation="portrait" >
@@ -296,7 +278,6 @@
         <!-- Edit Profile Activity -->
         <activity
             android:name="co.inlist.activities.EditProfileActivity"
-            android:icon="@drawable/logotype_icon_actionbar"
             android:label="@string/activity_login"
             android:parentActivityName="co.inlist.activities.ProfileActivity"
             android:screenOrientation="portrait" >
