@@ -150,13 +150,6 @@ public class ProfileActivity extends Activity implements
 		lst = (ListView) findViewById(R.id.lst);
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_profile_actions, menu);
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -164,11 +157,6 @@ public class ProfileActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_edit:
-			startActivity(new Intent(ProfileActivity.this,
-					EditProfileActivity.class));
-			return true;
-
 		case android.R.id.home:
 			finish();
 			return true;
@@ -216,13 +204,6 @@ public class ProfileActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	private void actionBarAndButtonActions() {

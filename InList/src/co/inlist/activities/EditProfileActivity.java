@@ -41,11 +41,10 @@ public class EditProfileActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_profile);
 
-		// UtilInList.makeActionBarGradiant(ProfileActivity.this);
-
 		init();
 
 		actionBarAndButtonActions();
+		
 		editFirst.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_FIRSTNAME));
@@ -116,13 +115,6 @@ public class EditProfileActivity extends Activity implements
 		btnUpdate = (Button) findViewById(R.id.btnUpdate);
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_editprofile_actions, menu);
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -130,54 +122,6 @@ public class EditProfileActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_logout:
-			// search action
-			AlertDialog.Builder alert = new AlertDialog.Builder(
-					EditProfileActivity.this);
-			alert.setTitle(Constant.AppName);
-			alert.setMessage("Are you sure you want to logout?");
-			alert.setPositiveButton("YES",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							if (UtilInList
-									.isInternetConnectionExist(getApplicationContext())) {
-
-								UtilInList.WriteSharePrefrence(
-										EditProfileActivity.this,
-										Constant.SHRED_PR.KEY_LOGIN_STATUS,
-										"false");
-
-								UtilInList.WriteSharePrefrence(
-										EditProfileActivity.this,
-										Constant.SHRED_PR.KEY_USER_CARD_ADDED,
-										"0");
-
-								ProfileActivity.profObj.finish();
-								finish();
-							} else {
-								UtilInList.validateDialog(
-										EditProfileActivity.this, ""
-												+ Constant.network_error,
-										Constant.AppName);
-							}
-
-						}
-					});
-			alert.setNegativeButton("NO",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							dialog.cancel();
-						}
-					});
-			alert.create();
-			alert.show();
-
-			return true;
 
 		case android.R.id.home:
 			finish();
@@ -298,13 +242,6 @@ public class EditProfileActivity extends Activity implements
 	public boolean onNavigationItemSelected(int arg0, long arg1) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	@Override

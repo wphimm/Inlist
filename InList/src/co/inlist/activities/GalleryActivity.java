@@ -6,9 +6,7 @@ import java.util.HashMap;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -18,13 +16,9 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import co.inlist.util.Constant;
-import co.inlist.util.UtilInList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -46,8 +40,6 @@ public class GalleryActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gallary);
-
-		// UtilInList.makeActionBarGradiant(GalleryActivity.this);
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
@@ -194,13 +186,6 @@ public class GalleryActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	private void actionBarAndButtonActions() {

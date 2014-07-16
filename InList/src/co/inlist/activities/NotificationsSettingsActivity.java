@@ -35,8 +35,6 @@ public class NotificationsSettingsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_settings_screen);
 
-		// UtilInList.makeActionBarFullBlack(NotificationsSettingsActivity.this);
-
 		init();
 
 		actionBarAndButtonActions();
@@ -392,14 +390,6 @@ public class NotificationsSettingsActivity extends Activity implements
 
 	}
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
-	}
-	
-	
 	private void actionBarAndButtonActions() {
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar

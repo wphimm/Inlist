@@ -17,8 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +32,6 @@ import co.inlist.facebook.android.Facebook;
 import co.inlist.facebook.android.Facebook.DialogListener;
 import co.inlist.facebook.android.FacebookError;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
@@ -66,8 +63,6 @@ public class SignUpActivity extends Activity implements
 
 		actionBarAndButtonActions();
 
-		// UtilInList.makeActionBarGradiant(SignUpActivity.this);
-
 		txt_su_que.setText(getQuestion());
 
 		rl_fb.setOnClickListener(new OnClickListener() {
@@ -89,14 +84,6 @@ public class SignUpActivity extends Activity implements
 			}
 		});
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_signup_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
 
 	public void loginToFacebook() {
 
@@ -237,89 +224,6 @@ public class SignUpActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_sign:
-			// search action
-
-			if (edt_su_fname.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
-			} else if (edt_su_lname.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
-			} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
-			} else if (edt_su_pwd.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
-			} else if (edt_su_phno.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_CONTACT_NO, Constant.ERRORS.OOPS);
-			} else if (edt_su_ans.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(SignUpActivity.this,
-						Constant.ERRORS.PLZ_ANS, Constant.ERRORS.OOPS);
-
-			} else {
-
-				if (fb_regiter_flag) {
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("device_id", UtilInList
-							.getDeviceId(SignUpActivity.this)));
-					params.add(new BasicNameValuePair("email", edt_su_e_mail
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", edt_su_pwd
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("first_name",
-							edt_su_fname.getText().toString().trim()));
-					params.add(new BasicNameValuePair("last_name", edt_su_lname
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("phone", edt_su_phno
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("membership_question_id",
-							question_id));
-					params.add(new BasicNameValuePair(
-							"membership_question_answer", edt_su_ans.getText()
-									.toString().trim().replace(" ", "%20")));
-					params.add(new BasicNameValuePair("access_token", ""
-							+ facebook.getAccessToken().toString().trim()));
-
-					new WebServiceDataPosterAsyncTask(SignUpActivity.this,
-							params, Constant.API + Constant.ACTIONS.REGISTER_FB)
-							.execute();
-
-				} else {
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("device_id", UtilInList
-							.getDeviceId(SignUpActivity.this)));
-					params.add(new BasicNameValuePair("email", edt_su_e_mail
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", edt_su_pwd
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("first_name",
-							edt_su_fname.getText().toString().trim()));
-					params.add(new BasicNameValuePair("last_name", edt_su_lname
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("phone", edt_su_phno
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("membership_question_id",
-							question_id));
-					params.add(new BasicNameValuePair(
-							"membership_question_answer", edt_su_ans.getText()
-									.toString().trim().replace(" ", "%20")));
-
-					new WebServiceDataPosterAsyncTask(SignUpActivity.this,
-							params, Constant.API
-									+ Constant.ACTIONS.REGISTRATION).execute();
-
-				}
-
-			}
-
-			return true;
 		case android.R.id.home:
 			finish();
 			return true;

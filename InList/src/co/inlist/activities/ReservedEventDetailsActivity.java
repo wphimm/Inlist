@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +36,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
 import co.inlist.util.MyProgressbar;
@@ -97,7 +95,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		actionBarAndButtonActions();
 		edObj = this;
-		// UtilInList.makeActionBarGradiant(ReservedEventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {

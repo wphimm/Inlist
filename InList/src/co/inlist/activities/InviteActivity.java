@@ -13,8 +13,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,8 +32,6 @@ public class InviteActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.invite_person_screen);
-
-		// UtilInList.makeActionBarFullBlack(InviteActivity.this);
 
 		init();
 
@@ -61,38 +57,19 @@ public class InviteActivity extends Activity implements
 	/**
 	 * On selecting action bar icons
 	 * */
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// // Take appropriate action for each action item click
-	// switch (item.getItemId()) {
-	// case R.id.action_send:
-	//
-	// InputMethodManager imm = (InputMethodManager)
-	// getSystemService(Context.INPUT_METHOD_SERVICE);
-	// imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
-	// imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
-	// imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
-	//
-	// if (isValid()) {
-	// if (UtilInList
-	// .isInternetConnectionExist(getApplicationContext())) {
-	// new InviteAsyncTask(InviteActivity.this).execute("");
-	// } else {
-	// UtilInList.validateDialog(InviteActivity.this, "" + ""
-	// + Constant.network_error, Constant.ERRORS.OOPS);
-	//
-	// }
-	// }
-	// return true;
-	//
-	// case android.R.id.home:
-	// finish();
-	// return true;
-	//
-	// default:
-	// return super.onOptionsItemSelected(item);
-	// }
-	// }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Take appropriate action for each action item click
+		switch (item.getItemId()) {
+
+		case android.R.id.home:
+			finish();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	public class InviteAsyncTask extends AsyncTask<String, String, String> {
 

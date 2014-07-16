@@ -52,8 +52,6 @@ public class AddCardActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_card_screen);
 
-		// UtilInList.makeActionBarFullBlack(AddCardActivity.this);
-
 		init();
 
 		actionBarAndButtonActions();
@@ -242,29 +240,6 @@ public class AddCardActivity extends Activity implements
 
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_add_card_actions, menu);
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// // TODO Auto-generated method stub
-	//
-	// if (UtilInList
-	// .ReadSharePrefrence(AddCardActivity.this,
-	// Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
-	// .equals("1")) {
-	// menu.getItem(0).setIcon(R.drawable.btn_delete);
-	// } else {
-	// menu.getItem(0).setIcon(R.drawable.btn_save);
-	// }
-	//
-	// return super.onPrepareOptionsMenu(menu);
-	// }
-
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -272,78 +247,6 @@ public class AddCardActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_save:
-
-			if (UtilInList
-					.ReadSharePrefrence(AddCardActivity.this,
-							Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
-					.equals("1")) {
-
-				flagCardDelete = true;
-
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-				params.add(new BasicNameValuePair("user_card_id", ""
-						+ UtilInList.ReadSharePrefrence(AddCardActivity.this,
-								Constant.SHRED_PR.KEY_USER_CARD_ID).toString()));
-				params.add(new BasicNameValuePair("PHPSESSIONID", ""
-						+ UtilInList.ReadSharePrefrence(AddCardActivity.this,
-								Constant.SHRED_PR.KEY_SESSIONID)));
-
-				new WebServiceDataPosterAsyncTask(AddCardActivity.this, params,
-						Constant.API + Constant.ACTIONS.REMOVE_CARD).execute();
-
-			} else {
-
-				if (edt_card_num.getText().toString().equals("")) {
-
-					UtilInList.validateDialog(AddCardActivity.this,
-							Constant.ERRORS.PLZ_CARD_NUMBER,
-							Constant.ERRORS.OOPS);
-				} else if (edt_card_name.getText().toString().equals("")) {
-					UtilInList
-							.validateDialog(AddCardActivity.this,
-									Constant.ERRORS.PLZ_CARD_NAME,
-									Constant.ERRORS.OOPS);
-				} else if (selected_month.equals("Month")) {
-					UtilInList.validateDialog(AddCardActivity.this,
-							Constant.ERRORS.PLZ_CARD_MONTH,
-							Constant.ERRORS.OOPS);
-				} else if (selected_year.equals("Year")) {
-					UtilInList
-							.validateDialog(AddCardActivity.this,
-									Constant.ERRORS.PLZ_CARD_YEAR,
-									Constant.ERRORS.OOPS);
-				} else {
-
-					flagCardDelete = false;
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("user_card_id", "0"));
-					params.add(new BasicNameValuePair("card_type", "visa"));
-					params.add(new BasicNameValuePair("card_number",
-							edt_card_num.getText().toString().trim()));
-					params.add(new BasicNameValuePair("card_name",
-							edt_card_name.getText().toString().trim()));
-					params.add(new BasicNameValuePair("card_exp_year",
-							selected_year));
-					params.add(new BasicNameValuePair("card_exp_month",
-							selected_month));
-					params.add(new BasicNameValuePair("set_default", "1"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(
-									AddCardActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					new WebServiceDataPosterAsyncTask(AddCardActivity.this,
-							params, Constant.API + Constant.ACTIONS.ADD_CARD)
-							.execute();
-
-				}
-			}
-
-			return true;
 
 		case android.R.id.home:
 			finish();
@@ -530,7 +433,8 @@ public class AddCardActivity extends Activity implements
 						params.add(new BasicNameValuePair("user_card_id", "0"));
 						params.add(new BasicNameValuePair("card_type", "visa"));
 						params.add(new BasicNameValuePair("card_number",
-								edt_card_num.getText().toString().trim().replace(" ","")));
+								edt_card_num.getText().toString().trim()
+										.replace(" ", "")));
 						params.add(new BasicNameValuePair("card_name",
 								edt_card_name.getText().toString().trim()));
 						params.add(new BasicNameValuePair("card_exp_year",
@@ -554,5 +458,4 @@ public class AddCardActivity extends Activity implements
 		});
 
 	}
-
 }

@@ -15,7 +15,6 @@ public class TermsConditionsActivity extends Activity implements
 		setContentView(R.layout.terms_conditions);
 
 		actionBarAndButtonActions();
-		// UtilInList.makeActionBarFullBlack(TermsConditionsActivity.this);
 	}
 
 	/**
@@ -39,13 +38,6 @@ public class TermsConditionsActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	private void actionBarAndButtonActions() {

@@ -216,13 +216,6 @@ public class LoginActivity extends Activity implements
 		});
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_login_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
 
 	private void init() {
 		edt_lgn_e_mail = (EditText) findViewById(R.id.edt_lgn_e_mail);
@@ -239,34 +232,6 @@ public class LoginActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_sign:
-			// search action
-
-			if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(LoginActivity.this, "" + ""
-						+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
-
-			} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-				UtilInList.validateDialog(LoginActivity.this, "" + ""
-						+ Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
-			} else {
-
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-				params.add(new BasicNameValuePair("device_id", UtilInList
-						.getDeviceId(LoginActivity.this)));
-				params.add(new BasicNameValuePair("login", ""
-						+ edt_lgn_e_mail.getText().toString().trim()));
-				params.add(new BasicNameValuePair("password", edt_lgn_pwd
-						.getText().toString().trim()));
-
-				flagCard = false;
-				new WebServiceDataPosterAsyncTask(LoginActivity.this, params,
-						Constant.API + Constant.ACTIONS.LOGIN).execute();
-
-			}
-
-			return true;
 
 		case android.R.id.home:
 			finish();

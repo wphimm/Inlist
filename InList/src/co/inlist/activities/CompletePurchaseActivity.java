@@ -199,11 +199,4 @@ public class CompletePurchaseActivity extends Activity implements
 
 	}
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
-	}
-
 }

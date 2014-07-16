@@ -5,19 +5,15 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -26,7 +22,6 @@ import android.widget.ListView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
-import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class SettingAccountListActivity extends Activity implements
@@ -37,8 +32,6 @@ public class SettingAccountListActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settting_list_screen);
-		//
-		// UtilInList.makeActionBarFullBlack(SettingAccountListActivity.this);
 
 		listView = (ListView) findViewById(R.id.lst_setting);
 
@@ -153,13 +146,6 @@ public class SettingAccountListActivity extends Activity implements
 	public boolean onNavigationItemSelected(int arg0, long arg1) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	private void actionBarAndButtonActions() {

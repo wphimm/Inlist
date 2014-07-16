@@ -98,7 +98,6 @@ public class EventDetailsActivity extends Activity implements
 		init();
 
 		edObj = this;
-		// UtilInList.makeActionBarGradiant(EventDetailsActivity.this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -413,27 +412,6 @@ public class EventDetailsActivity extends Activity implements
 		actionBarAndButtonActions();
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_event_details_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
-	//
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// // TODO Auto-generated method stub
-	//
-	// if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
-	// Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-	// menu.getItem(0).setIcon(R.drawable.btn_purchase);
-	// } else {
-	// menu.getItem(0).setIcon(R.drawable.btn_login);
-	// }
-	//
-	// return super.onPrepareOptionsMenu(menu);
-	// }
 
 	/**
 	 * On selecting action bar icons
@@ -442,69 +420,6 @@ public class EventDetailsActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-
-		case R.id.action_sign:
-
-			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_EVENT_ID, "" + map.get("event_id"));
-			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_YOUR_MINIMUM,
-					"" + map.get("event_min_price"));
-			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_PRICE_POSITION,
-					"" + spinnerTable.getSelectedItemPosition());
-
-			if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
-					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-
-				if (UtilInList
-						.isInternetConnectionExist(getApplicationContext())) {
-
-					String strCapacity = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															EventDetailsActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("table_capacity");
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("event_id", ""
-							+ map.get("event_id")));
-					params.add(new BasicNameValuePair("capacity", ""
-							+ strCapacity));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(
-									EventDetailsActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					new WebServiceDataPosterAsyncTask(
-							EventDetailsActivity.this, params, Constant.API
-									+ Constant.ACTIONS.GET_EVENT_TABLE)
-							.execute();
-
-				} else {
-					UtilInList
-							.validateDialog(EventDetailsActivity.this, "" + ""
-									+ Constant.network_error,
-									Constant.ERRORS.OOPS);
-
-				}
-
-			} else {
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
-
-				startActivity(new Intent(EventDetailsActivity.this,
-						LoginActivity.class));
-			}
-
-			return true;
 
 		case android.R.id.home:
 			if (relative_zoom_map.getVisibility() == View.VISIBLE) {

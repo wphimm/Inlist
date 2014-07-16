@@ -40,8 +40,6 @@ public class ChangePasswordActivity extends Activity implements
 
 		actionBarAndButtonActions();
 
-		// UtilInList.makeActionBarFullBlack(ChangePasswordActivity.this);
-
 		txt_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
 	}
@@ -55,14 +53,6 @@ public class ChangePasswordActivity extends Activity implements
 		editConfirmPassword = (EditText) findViewById(R.id.edt_confirm_pwd);
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_add_card_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
-	//
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -70,47 +60,6 @@ public class ChangePasswordActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Take appropriate action for each action item click
 		switch (item.getItemId()) {
-		case R.id.action_save:
-
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(editCurrentPassword.getWindowToken(), 0);
-			imm.hideSoftInputFromWindow(editNewPassword.getWindowToken(), 0);
-			imm.hideSoftInputFromWindow(editConfirmPassword.getWindowToken(), 0);
-
-			if (isValidate()) {
-				if (UtilInList
-						.isInternetConnectionExist(getApplicationContext())) {
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("current_password", ""
-							+ editCurrentPassword.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", ""
-							+ editNewPassword.getText().toString().trim()));
-					params.add(new BasicNameValuePair("confirm_password", ""
-							+ editConfirmPassword.getText().toString().trim()));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(
-									ChangePasswordActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					new WebServiceDataPosterAsyncTask(
-							ChangePasswordActivity.this, params, Constant.API
-									+Constant.ACTIONS.CHANGE_PASSWORD)
-							.execute();
-
-				} else {
-					UtilInList
-							.validateDialog(ChangePasswordActivity.this, ""
-									+ "" + Constant.network_error,
-									Constant.ERRORS.OOPS);
-
-				}
-			}
-
-			return true;
-
 		case android.R.id.home:
 			finish();
 			return true;
@@ -178,13 +127,6 @@ public class ChangePasswordActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		finish();
 	}
 
 	private void actionBarAndButtonActions() {
