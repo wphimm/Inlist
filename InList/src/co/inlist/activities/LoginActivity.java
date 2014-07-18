@@ -309,12 +309,7 @@ public class LoginActivity extends Activity implements
 									"" + strYear);
 						}
 					}
-
-				} else {
-					UtilInList.validateDialog(LoginActivity.this, result
-							.getJSONArray("errors").getString(0),
-							Constant.ERRORS.OOPS);
-				}
+				} 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

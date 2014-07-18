@@ -196,15 +196,12 @@ public class AddCardActivity extends Activity implements
 							public boolean onKey(View v, int keyCode,
 									KeyEvent event) {
 
-								Log.e("keyCode",">>"+keyCode+">>"+KeyEvent.KEYCODE_DEL);
 								if (keyCode == KeyEvent.KEYCODE_DEL)
 									keyDel = 1;
 								return false;
 							}
 						});
-				
 
-						Log.e("keyDel", ""+keyDel);
 						if (keyDel == 0) {
 
 							if (((edt_card_num.getText().length() + 1) % 5) == 0) {
@@ -234,7 +231,6 @@ public class AddCardActivity extends Activity implements
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -272,7 +268,7 @@ public class AddCardActivity extends Activity implements
 
 		// customize these values to suit your needs.
 		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false); // default:
-																		// true
+																			// true
 		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default:
 																		// false
 		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default:
@@ -312,7 +308,7 @@ public class AddCardActivity extends Activity implements
 					if (i != 0 && i % 4 == 0) {
 						newCardNum += " ";
 					}
-					newCardNum += strCardNum.substring(i, i+1);
+					newCardNum += strCardNum.substring(i, i + 1);
 				}
 				edt_card_num.setText("" + newCardNum);
 			} catch (Exception e) {
@@ -336,7 +332,8 @@ public class AddCardActivity extends Activity implements
 
 				int yearPos = 0;
 				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).toString().equals(""+scanResult.expiryYear)) {
+					if (list.get(i).toString()
+							.equals("" + scanResult.expiryYear)) {
 						yearPos = i;
 					}
 				}

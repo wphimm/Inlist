@@ -1,5 +1,10 @@
 package co.inlist.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
@@ -71,12 +77,24 @@ public class ForgotPassworActivity extends FragmentActivity implements
 										Constant.ERRORS.PLZ_EMAIL,
 										Constant.ERRORS.OOPS);
 					} else {
-						new WebServiceDataCollectorAsyncTask(Constant.API
-								+ String.format(
-										Constant.ACTIONS.FORGOT_PASSWORD,
-										"VIP", "true", edt_frg_e_mail.getText()
-												.toString().trim()),
-								getActivity()).execute();
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("email", ""
+								+ edt_frg_e_mail.getText().toString().trim()));
+
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(getActivity(),
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								getActivity(),
+								params,
+								Constant.API
+										+ "request_password_reset/?apiMode=VIP&json=true")
+								.execute();
 					}
 
 				}
@@ -87,7 +105,6 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		public PlaceholderFragment_Enter_Email() {
 
 		}
-
 
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
@@ -159,7 +176,7 @@ public class ForgotPassworActivity extends FragmentActivity implements
 							.commit();
 				} else {
 					UtilInList.validateDialog(ForgotPassworActivity.this,
-							Constant.ERRORS.SOMETHING_GOES_WRONG,
+							result.getJSONArray("errors").getString(0),
 							Constant.ERRORS.OOPS);
 				}
 

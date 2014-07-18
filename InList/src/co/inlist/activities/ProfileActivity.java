@@ -67,8 +67,8 @@ public class ProfileActivity extends Activity implements
 		adapterReservedEvents = new ReservedEventsAdapter(
 				InListApplication.getListReservedEvents(), ProfileActivity.this);
 		
-		lst.setAdapter(new ReservedEventsAdapter(InListApplication
-				.getListEvents(), ProfileActivity.this));
+		/*lst.setAdapter(new ReservedEventsAdapter(InListApplication
+				.getListEvents(), ProfileActivity.this));*/
 
 		Handler hn = new Handler();
 		hn.postDelayed(new Runnable() {

@@ -93,7 +93,7 @@ public class EditProfileActivity extends Activity implements
 								EditProfileActivity.this,
 								params,
 								Constant.API
-										+ "user/small_details/save/?apiMode=VIP&json=true")
+										+ "user/details/save/?apiMode=VIP&json=true")
 								.execute();
 
 					} else {
