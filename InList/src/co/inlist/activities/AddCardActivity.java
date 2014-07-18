@@ -48,7 +48,7 @@ public class AddCardActivity extends Activity implements
 	private Spinner sp_month;
 	private Spinner sp_year;
 	private String selected_month, selected_year;
-	LinearLayout linearScan;
+	private LinearLayout linearScan;
 	RelativeLayout relativeScanYourCard;
 	boolean flagCardDelete = false;
 
