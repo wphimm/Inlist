@@ -48,8 +48,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
+                            android:clickable="false"
                             android:textColor="@color/light_yellow"
-                            android:textIsSelectable="true"
                             android:textSize="36sp"
                             android:textStyle="bold" />
 
@@ -59,7 +59,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/event_title"
                             android:textColor="#fff"
-                            android:textIsSelectable="true"
+                            android:clickable="false"
                             android:textSize="25sp" />
                     </RelativeLayout>
                 </RelativeLayout>

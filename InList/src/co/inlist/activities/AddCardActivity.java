@@ -1,5 +1,8 @@
 package co.inlist.activities;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -35,6 +39,9 @@ import co.inlist.util.UtilInList;
 public class AddCardActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
+	private static final String MY_CARDIO_APP_TOKEN = "4737eb3d1b954baf9c99f071722830a3";
+	private int MY_SCAN_REQUEST_CODE = 100; // arbitrary int
+
 	private EditText edt_card_num;
 	private EditText edt_card_name;
 	private EditText edt_card_num_cvv;
@@ -42,6 +49,7 @@ public class AddCardActivity extends Activity implements
 	private Spinner sp_year;
 	private String selected_month, selected_year;
 	LinearLayout linearScan;
+	RelativeLayout relativeScanYourCard;
 	boolean flagCardDelete = false;
 
 	String strTemp;
@@ -61,8 +69,7 @@ public class AddCardActivity extends Activity implements
 		List<String> list = new ArrayList<String>();
 
 		list.add(0, "Year");
-		for (int i = 1; i < 15; i++) {
-
+		for (int i = 0; i < 15; i++) {
 			list.add(String.valueOf(year + i));
 		}
 
@@ -125,6 +132,15 @@ public class AddCardActivity extends Activity implements
 			linearScan.setVisibility(View.VISIBLE);
 		}
 
+		relativeScanYourCard.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onScanPress();
+			}
+		});
+
 		sp_month.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -180,18 +196,21 @@ public class AddCardActivity extends Activity implements
 							public boolean onKey(View v, int keyCode,
 									KeyEvent event) {
 
+								Log.e("keyCode",">>"+keyCode+">>"+KeyEvent.KEYCODE_DEL);
 								if (keyCode == KeyEvent.KEYCODE_DEL)
 									keyDel = 1;
 								return false;
 							}
 						});
+				
 
+						Log.e("keyDel", ""+keyDel);
 						if (keyDel == 0) {
 
 							if (((edt_card_num.getText().length() + 1) % 5) == 0) {
 
 								if (edt_card_num.getText().toString()
-										.split("-").length <= 3) {
+										.split(" ").length <= 3) {
 									edt_card_num.setText(edt_card_num.getText()
 											+ " ");
 									edt_card_num.setSelection(edt_card_num
@@ -231,12 +250,109 @@ public class AddCardActivity extends Activity implements
 	private void init() {
 
 		linearScan = (LinearLayout) findViewById(R.id.linearScan);
+		relativeScanYourCard = (RelativeLayout) findViewById(R.id.rl_scan_card);
 
 		edt_card_num = (EditText) findViewById(R.id.edt_card_num);
 		edt_card_num_cvv = (EditText) findViewById(R.id.edt_card_num_cvv);
 		edt_card_name = (EditText) findViewById(R.id.edt_card_name);
 		sp_month = (Spinner) findViewById(R.id.sp_month);
 		sp_year = (Spinner) findViewById(R.id.sp_year);
+
+	}
+
+	public void onScanPress() {
+		// This method is set up as an onClick handler in the layout xml
+		// e.g. android:onClick="onScanPress"
+
+		Intent scanIntent = new Intent(this, CardIOActivity.class);
+
+		// required for authentication with card.io
+		scanIntent
+				.putExtra(CardIOActivity.EXTRA_APP_TOKEN, MY_CARDIO_APP_TOKEN);
+
+		// customize these values to suit your needs.
+		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false); // default:
+																		// true
+		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default:
+																		// false
+		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default:
+																				// false
+
+		// hides the manual entry button
+		// if set, developers should provide their own manual entry mechanism in
+		// the app
+		scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, false); // default:
+																				// false
+
+		// MY_SCAN_REQUEST_CODE is arbitrary and is only used within this
+		// activity.
+		startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		String resultStr;
+		if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+			CreditCard scanResult = data
+					.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+
+			resultStr = "Card Number: " + scanResult.getRedactedCardNumber()
+					+ "\n";
+
+			edt_card_num.setText("" + scanResult.getRedactedCardNumber());
+
+			String strCardNum = "" + scanResult.cardNumber;
+			edt_card_num.setText("" + strCardNum);
+
+			try {
+				String newCardNum = "";
+				for (int i = 0; i < strCardNum.length(); i++) {
+					if (i != 0 && i % 4 == 0) {
+						newCardNum += " ";
+					}
+					newCardNum += strCardNum.substring(i, i+1);
+				}
+				edt_card_num.setText("" + newCardNum);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			if (scanResult.isExpiryValid()) {
+				resultStr += "Expiration Date: " + scanResult.expiryMonth + "/"
+						+ scanResult.expiryYear + "\n";
+
+				sp_month.setSelection(scanResult.expiryMonth);
+
+				Calendar calendar = Calendar.getInstance();
+				int year = calendar.get(Calendar.YEAR);
+				List<String> list = new ArrayList<String>();
+
+				list.add(0, "Year");
+				for (int i = 0; i < 15; i++) {
+					list.add(String.valueOf(year + i));
+				}
+
+				int yearPos = 0;
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i).toString().equals(""+scanResult.expiryYear)) {
+						yearPos = i;
+					}
+				}
+				sp_year.setSelection(yearPos);
+
+			}
+
+			if (scanResult.cvv != null) {
+				edt_card_num_cvv.setText("" + scanResult.cvv);
+			}
+
+		} else {
+			resultStr = "Scan was canceled.";
+		}
+
+		Log.i("" + Constant.AppName, "" + resultStr);
 
 	}
 
@@ -275,6 +391,8 @@ public class AddCardActivity extends Activity implements
 					edt_card_name.setText("");
 					edt_card_num.setText("");
 					edt_card_num_cvv.setText("");
+					sp_month.setSelection(0);
+					sp_year.setSelection(0);
 
 					UtilInList.WriteSharePrefrence(AddCardActivity.this,
 							Constant.SHRED_PR.KEY_USER_CARD_ID, "0");
@@ -286,7 +404,7 @@ public class AddCardActivity extends Activity implements
 							.getJSONArray("messages").getString(0),
 							Constant.ERRORS.OOPS);
 
-					invalidateOptionsMenu();
+					actionBarAndButtonActions();
 
 				} else {
 					UtilInList.validateDialog(AddCardActivity.this, result
@@ -309,7 +427,8 @@ public class AddCardActivity extends Activity implements
 									"user_card_id"));
 					UtilInList.WriteSharePrefrence(AddCardActivity.this,
 							Constant.SHRED_PR.KEY_USER_CARD_NUMBER, ""
-									+ edt_card_num.getText().toString().trim());
+									+ edt_card_num.getText().toString().trim()
+											.replace(" ", ""));
 					UtilInList.WriteSharePrefrence(AddCardActivity.this,
 							Constant.SHRED_PR.KEY_USER_CARD_CVV, ""
 									+ edt_card_num_cvv.getText().toString()
@@ -346,7 +465,7 @@ public class AddCardActivity extends Activity implements
 								.getJSONArray("messages").getString(0),
 								Constant.AppName);
 
-						invalidateOptionsMenu();
+						actionBarAndButtonActions();
 					}
 
 				} else {
@@ -374,7 +493,14 @@ public class AddCardActivity extends Activity implements
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
-		action_button.setBackgroundResource(R.drawable.delete_card_onclick);
+		if (UtilInList
+				.ReadSharePrefrence(AddCardActivity.this,
+						Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
+				.equals("1")) {
+			action_button.setBackgroundResource(R.drawable.delete_card_onclick);
+		} else {
+			action_button.setBackgroundResource(R.drawable.btn_save);
+		}
 
 		action_button.setOnClickListener(new OnClickListener() {
 
