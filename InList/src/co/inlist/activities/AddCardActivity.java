@@ -196,12 +196,15 @@ public class AddCardActivity extends Activity implements
 							public boolean onKey(View v, int keyCode,
 									KeyEvent event) {
 
+								Log.e("keyCode", ">>" + keyCode + ">>"
+										+ KeyEvent.KEYCODE_DEL);
 								if (keyCode == KeyEvent.KEYCODE_DEL)
 									keyDel = 1;
 								return false;
 							}
 						});
 
+						Log.e("keyDel", "" + keyDel);
 						if (keyDel == 0) {
 
 							if (((edt_card_num.getText().length() + 1) % 5) == 0) {

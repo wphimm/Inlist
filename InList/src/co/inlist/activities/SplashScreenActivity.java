@@ -76,12 +76,12 @@ public class SplashScreenActivity extends Activity implements
 							HomeScreenActivity.class));
 				} else {
 					startActivity(new Intent(SplashScreenActivity.this,
-							LeadingActivity.class));
+							HomeScreenActivity.class));
 				}
 			} else {
 
 				startActivity(new Intent(SplashScreenActivity.this,
-						LeadingActivity.class));
+						HomeScreenActivity.class));
 
 			}
 			finish();

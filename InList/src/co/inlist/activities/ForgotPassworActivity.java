@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
@@ -143,12 +142,41 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 		}
 
+		private void actionBarAndButtonActions() {
+			ActionBar actionBar = getActivity().getActionBar();
+			// add the custom view to the action bar
+			actionBar.setCustomView(R.layout.custome_action_bar);
+
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+					| ActionBar.DISPLAY_SHOW_HOME);
+
+			actionBar.setDisplayHomeAsUpEnabled(true);
+
+			ImageButton action_button = (ImageButton) actionBar.getCustomView()
+					.findViewById(R.id.btn_action_bar);
+
+			action_button.setBackgroundResource(R.drawable.done_btn_action_bar);
+
+			action_button.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					getActivity().finish();
+
+				}
+			});
+
+		}
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater
 					.inflate(R.layout.forgot_password_screen_send_link,
 							container, false);
+
+			actionBarAndButtonActions();
 
 			return rootView;
 		}

@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -35,9 +36,14 @@ public class ProfileActivity extends Activity implements
 	TextView txtName, txtEmail, txtPhone;
 	public static ProfileActivity profObj;
 	RelativeLayout relativeCategories, relativeArchive, relativeVip;
+	private TextView txt_vip_membership_req;
+
 	View viewCategories, viewArchive;
 	ListView lst;
 	ReservedEventsAdapter adapterReservedEvents;
+
+	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
+			typeLeaguegothic_condensedregular;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,11 @@ public class ProfileActivity extends Activity implements
 		init();
 
 		actionBarAndButtonActions();
+
+		txtName.setTypeface(typeAkzidgrobemedex);
+		txtEmail.setTypeface(typeAkzidgrobemedex);
+		txtPhone.setTypeface(typeAkzidgrobemedex);
+		txt_vip_membership_req.setTypeface(typeAkzidgrobemedex);
 
 		txtName.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
@@ -66,7 +77,7 @@ public class ProfileActivity extends Activity implements
 
 		adapterReservedEvents = new ReservedEventsAdapter(
 				InListApplication.getListReservedEvents(), ProfileActivity.this);
-		
+
 		/*lst.setAdapter(new ReservedEventsAdapter(InListApplication
 				.getListEvents(), ProfileActivity.this));*/
 
@@ -148,6 +159,17 @@ public class ProfileActivity extends Activity implements
 		viewCategories = (View) findViewById(R.id.viewCategories);
 		viewArchive = (View) findViewById(R.id.viewArchive);
 		lst = (ListView) findViewById(R.id.lst);
+
+		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(),
+				"akzidgrobeligex.ttf");
+		typeAkzidgrobemedex = Typeface.createFromAsset(getAssets(),
+				"helve_unbold.ttf");
+		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
+				getAssets(), "leaguegothic_condensedregular.otf");
+		typeAvenir = Typeface.createFromAsset(getAssets(), "avenir.ttc");
+
+		txt_vip_membership_req = (TextView) findViewById(R.id.txt_vip_membership_req);
+
 	}
 
 	/**
@@ -185,7 +207,8 @@ public class ProfileActivity extends Activity implements
 					InListApplication.getListReservedEvents().add(map);
 				}
 
-				Log.i("size:", "" + InListApplication.getListReservedEvents().size());
+				Log.i("size:", ""
+						+ InListApplication.getListReservedEvents().size());
 			} else {
 
 				UtilInList.validateDialog(ProfileActivity.this, jObject

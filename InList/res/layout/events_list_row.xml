@@ -5,6 +5,12 @@
     android:background="@color/black"
     android:orientation="horizontal" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/event_details_separator" />
+
     <RelativeLayout
         android:id="@+id/event"
         android:layout_width="match_parent"
@@ -74,5 +80,11 @@
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/event_details_separator" />
 
 </RelativeLayout>
