@@ -87,23 +87,27 @@
                     android:layout_centerInParent="true" >
 
                     <TextView
+                        android:id="@+id/txtIncome1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/income1" />
 
                     <TextView
+                        android:id="@+id/txtIncome2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="70dp"
                         android:text="@string/income2" />
 
                     <TextView
+                        android:id="@+id/txtIncome3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="170dp"
                         android:text="@string/income3" />
 
                     <TextView
+                        android:id="@+id/txtIncome4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="270dp"
@@ -217,7 +221,6 @@
                 android:layout_marginTop="20dp"
                 android:hint="@string/invitecode"
                 android:singleLine="true"
-                android:textColor="@color/light"
                 android:textSize="20sp" />
 
             <EditText
@@ -230,7 +233,6 @@
                 android:layout_marginTop="20dp"
                 android:hint="@string/occupation"
                 android:singleLine="true"
-                android:textColor="@color/light"
                 android:textSize="20sp" />
 
             <EditText
@@ -243,7 +245,6 @@
                 android:layout_marginTop="20dp"
                 android:hint="@string/mfc"
                 android:singleLine="true"
-                android:textColor="@color/light"
                 android:textSize="20sp" />
 
             <EditText
@@ -256,7 +257,6 @@
                 android:layout_marginTop="20dp"
                 android:hint="@string/ocm"
                 android:singleLine="true"
-                android:textColor="@color/light"
                 android:textSize="20sp" />
 
             <View

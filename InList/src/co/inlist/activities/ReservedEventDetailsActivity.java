@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
 import co.inlist.util.MyProgressbar;
@@ -56,7 +55,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 @SuppressLint("SimpleDateFormat")
 public class ReservedEventDetailsActivity extends Activity implements
-		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
+		ActionBar.OnNavigationListener {
 
 	public static ReservedEventDetailsActivity edObj;
 	private ScrollView scrollMain;
@@ -76,6 +75,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 	private TextView txt_music;
 	private TextView txtaddress;
 	private TextView txtcity, txtPoints;
+	private ImageButton imgReservation;
+	String strAction = "";
 
 	private GoogleMap googleMap, zoomMap;
 	int position;
@@ -107,7 +108,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
 		txtPoints.setText(Html.fromHtml(strHTML));
 
-		map = InListApplication.getListEvents().get(position);
+		map = InListApplication.getListReservedEvents().get(position);
 
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.event_details_overlay)
@@ -302,6 +303,28 @@ public class ReservedEventDetailsActivity extends Activity implements
 				if (InListApplication.getGallery().size() > 0) {
 					startActivity(new Intent(ReservedEventDetailsActivity.this,
 							GalleryActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
+				}
+			}
+		});
+
+		imgReservation.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-enerated method stub
+				if (strAction.equals("confirmation_required")) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+						new ConfirmReservationAsyncTask(
+								ReservedEventDetailsActivity.this).execute("");
+					} else {
+						UtilInList.validateDialog(
+								ReservedEventDetailsActivity.this, "" + ""
+										+ Constant.network_error,
+								Constant.ERRORS.OOPS);
+					}
 				}
 			}
 		});
@@ -314,7 +337,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 				// TODO Auto-generated method stub
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					new EventEntryAsyncTask1(ReservedEventDetailsActivity.this)
+					new GetStatusAsyncTask(ReservedEventDetailsActivity.this)
 							.execute("");
 				} else {
 					UtilInList.validateDialog(
@@ -323,8 +346,15 @@ public class ReservedEventDetailsActivity extends Activity implements
 							Constant.ERRORS.OOPS);
 				}
 			}
-		}, 100);
+		}, 500);
 
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		actionBarAndButtonActions();
 	}
 
 	private void init() {
@@ -340,6 +370,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 		txt_date_time = (TextView) findViewById(R.id.txt_date_time);
 		txt_details = (TextView) findViewById(R.id.txt_details);
 		btnDirection = (ImageButton) findViewById(R.id.btnDirection);
+		imgReservation = (ImageButton) findViewById(R.id.img_reservation);
 
 		txt_atmosphere = (TextView) findViewById(R.id.txt_atmosphere);
 		txt_music = (TextView) findViewById(R.id.txt_music);
@@ -400,6 +431,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 				relative_google_map.setVisibility(View.VISIBLE);
 			} else {
 				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			}
 			return true;
 
@@ -418,6 +450,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 		} else {
 			super.onBackPressed();
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 		}
 	}
 
@@ -427,11 +460,13 @@ public class ReservedEventDetailsActivity extends Activity implements
 		return false;
 	}
 
-	public class EventEntryAsyncTask1 extends AsyncTask<String, String, String> {
+	public class ConfirmReservationAsyncTask extends
+
+	AsyncTask<String, String, String> {
 
 		private MyProgressbar dialog;
 
-		public EventEntryAsyncTask1(Context context) {
+		public ConfirmReservationAsyncTask(Context context) {
 			dialog = new MyProgressbar(context);
 		}
 
@@ -453,10 +488,11 @@ public class ReservedEventDetailsActivity extends Activity implements
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
-							+ Constant.API_LIVE
-							+ "event/"
-							+ map.get("event_id")
+							+ Constant.API
+							+ "reservation/confirm"
 							+ "/?apiMode=VIP&json=true"
+							+ "&reservation_id="
+							+ map.get("order_id")
 							+ "&PHPSESSIONID="
 							+ UtilInList.ReadSharePrefrence(
 									ReservedEventDetailsActivity.this,
@@ -477,98 +513,138 @@ public class ReservedEventDetailsActivity extends Activity implements
 						dialog.dismiss();
 					}
 				}
+
+				if (result != null) {
+					try {
+						JSONObject jObject = new JSONObject(result);
+						String str_temp = jObject.getString("status");
+						if (str_temp.equals("success")) {
+							UtilInList
+									.validateDialog(
+											ReservedEventDetailsActivity.this,
+											jObject.getJSONArray("messages")
+													.getString(0),
+											Constant.ERRORS.OOPS);
+						} else {
+
+							UtilInList
+									.validateDialog(
+											ReservedEventDetailsActivity.this,
+											jObject.getJSONArray("errors")
+													.getString(0),
+											Constant.ERRORS.OOPS);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
 
-			InListApplication.getGallery().clear();
-			InListApplication.getPricing().clear();
-
-			try {
-				JSONObject jObject = new JSONObject(result);
-				String str_temp = jObject.getString("status");
-				if (str_temp.equals("success")) {
-					JSONObject jObjectData = new JSONObject(
-							jObject.getString("data"));
-					JSONArray data = jObjectData.getJSONArray("gallery");
-					Log.e("Length of json array ----->", "" + data.length());
-
-					for (int i = 0; i < data.length(); i++) {
-						JSONObject obj = data.getJSONObject(i);
-						HashMap<String, String> map = new HashMap<String, String>();
-						map.put("thumbnail", "" + obj.getString("thumbnail"));
-						map.put("source", "" + obj.getString("source"));
-						map.put("description",
-								"" + obj.getString("description"));
-
-						InListApplication.getGallery().add(map);
-					}
-
-					JSONArray data1 = jObjectData.getJSONArray("pricing");
-					Log.e("Length of json array ----->", "" + data1.length());
-
-					for (int i = 0; i < data1.length(); i++) {
-						JSONObject obj = data1.getJSONObject(i);
-						HashMap<String, String> map = new HashMap<String, String>();
-						map.put("event_pricing_id",
-								"" + obj.getString("event_pricing_id"));
-						map.put("club_section_name",
-								"" + obj.getString("club_section_name"));
-						map.put("club_section_id",
-								"" + obj.getString("club_section_id"));
-						map.put("table_capacity",
-								"" + obj.getString("table_capacity"));
-						map.put("net_price", "" + obj.getString("net_price"));
-						map.put("tax", "" + obj.getString("tax"));
-						map.put("gratuity", "" + obj.getString("gratuity"));
-						map.put("payment_type",
-								"" + obj.getString("payment_type"));
-						map.put("commission", "" + obj.getString("commission"));
-						map.put("price", "" + obj.getString("price"));
-						map.put("total_price",
-								"" + obj.getString("total_price"));
-						map.put("to_pay_in_app",
-								"" + obj.getString("to_pay_in_app"));
-
-						InListApplication.getPricing().add(map);
-					}
-
-				}
-
-			} catch (JSONException e) { // TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 	}
 
-	@Override
-	public void onTaskComplete(JSONObject result) {
-		// TODO Auto-generated method stub
-		try {
-			if (result.getString("success").equals("true")) {
+	public class GetStatusAsyncTask extends AsyncTask<String, String, String> {
 
-				if (UtilInList
-						.ReadSharePrefrence(ReservedEventDetailsActivity.this,
-								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-						.toString().equals("1")) {
-					startActivity(new Intent(ReservedEventDetailsActivity.this,
-							CompletePurchaseActivity.class));
-				} else {
-					UtilInList.WriteSharePrefrence(
-							ReservedEventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
-					startActivity(new Intent(ReservedEventDetailsActivity.this,
-							AddCardActivity.class));
+		private MyProgressbar dialog;
+
+		public GetStatusAsyncTask(Context context) {
+			dialog = new MyProgressbar(context);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			Log.e("Name Value Pair", nameValuePairs.toString());
+			String response = UtilInList.postData(
+					nameValuePairs,
+					""
+							+ Constant.API
+							+ "reservation/status"
+							+ "/?apiMode=VIP&json=true"
+							+ "&reservation_id="
+							+ map.get("order_id")
+							+ "&PHPSESSIONID="
+							+ UtilInList.ReadSharePrefrence(
+									ReservedEventDetailsActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID));
+			Log.e("Response In Activity-->", response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			// fragment_addconnection_search
+
+			try {
+				if (dialog != null) {
+					if (dialog.isShowing()) {
+						dialog.dismiss();
+					}
 				}
 
-			} else {
-				UtilInList.validateDialog(ReservedEventDetailsActivity.this,
-						result.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
+				if (result != null) {
+					try {
+						JSONObject jObject = new JSONObject(result);
+						String str_temp = jObject.getString("status");
+						if (str_temp.equals("success")) {
+							JSONObject jObjectData = new JSONObject(
+									jObject.getString("data"));
+							strAction = jObjectData.getString("action");
+							if (strAction.equals("show_text")) {
+								imgReservation
+										.setBackgroundResource(R.drawable.purchase_history_reservation_confirmed);
+							} else {
+								imgReservation
+										.setBackgroundResource(R.drawable.purchase_history_reservation_pending);
+							}
+
+							AlertDialog.Builder alert = new AlertDialog.Builder(
+									ReservedEventDetailsActivity.this);
+							alert.setTitle(Constant.AppName);
+							alert.setMessage("" + jObjectData.getString("text"));
+							alert.setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.cancel();
+										}
+									});
+
+							alert.create();
+							alert.show();
+
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
-		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
+
+			actionBarAndButtonActions();
+
 		}
 
 	}
@@ -577,19 +653,165 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.custome_action_bar);
+		actionBar.setCustomView(R.layout.custom_actionbar_two_buttons);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		ImageButton action_button = (ImageButton) actionBar.getCustomView()
-				.findViewById(R.id.btn_action_bar);
+		ImageButton btnHide = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar_hide);
+		ImageButton btnConfirm = (ImageButton) actionBar.getCustomView()
+				.findViewById(R.id.btn_action_bar_confirm);
 
-		action_button.setBackgroundResource(R.drawable.delete_card_onclick);
+		if (strAction.equals("confirmation_required")) {
+			btnConfirm.setVisibility(View.VISIBLE);
+		} else {
+			btnConfirm.setVisibility(View.GONE);
+		}
 
-		action_button.setVisibility(View.INVISIBLE);
+		btnHide.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						ReservedEventDetailsActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to hide this reservation?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(context)) {
+
+									new HideReservationAsyncTask(
+											ReservedEventDetailsActivity.this)
+											.execute("");
+
+								} else {
+									UtilInList.validateDialog(
+											ReservedEventDetailsActivity.this,
+											"" + Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+			}
+		});
+
+		btnConfirm.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					new ConfirmReservationAsyncTask(
+							ReservedEventDetailsActivity.this).execute("");
+				} else {
+					UtilInList.validateDialog(
+							ReservedEventDetailsActivity.this, "" + ""
+									+ Constant.network_error,
+							Constant.ERRORS.OOPS);
+				}
+			}
+		});
+
+	}
+
+	public class HideReservationAsyncTask extends
+			AsyncTask<String, String, String> {
+
+		private MyProgressbar dialog;
+
+		public HideReservationAsyncTask(Context context) {
+			dialog = new MyProgressbar(context);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			Log.e("Name Value Pair", nameValuePairs.toString());
+			String response = UtilInList.postData(
+					nameValuePairs,
+					""
+							+ Constant.API
+							+ "reservation/hide"
+							+ "/?apiMode=VIP&json=true"
+							+ "&reservation_id="
+							+ map.get("order_id")
+							+ "&PHPSESSIONID="
+							+ UtilInList.ReadSharePrefrence(
+									ReservedEventDetailsActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID));
+			Log.e("Response In Activity-->", response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			// fragment_addconnection_search
+
+			try {
+				if (dialog != null) {
+					if (dialog.isShowing()) {
+						dialog.dismiss();
+					}
+				}
+
+				if (result != null) {
+					try {
+						JSONObject jObject = new JSONObject(result);
+						String str_temp = jObject.getString("status");
+						if (str_temp.equals("success")) {
+							InListApplication.getListReservedEvents().remove(
+									position);
+							finish();
+							overridePendingTransition(R.anim.hold_top,
+									R.anim.exit_in_left);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+		}
+
 	}
 
 }

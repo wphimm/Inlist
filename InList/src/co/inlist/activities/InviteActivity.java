@@ -64,6 +64,7 @@ public class InviteActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -237,6 +238,14 @@ public class InviteActivity extends Activity implements
 			}
 		});
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 
 }

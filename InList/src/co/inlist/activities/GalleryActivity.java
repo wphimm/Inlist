@@ -2,6 +2,8 @@ package co.inlist.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -9,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -175,6 +178,7 @@ public class GalleryActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -207,4 +211,11 @@ public class GalleryActivity extends Activity implements
 		action_button.setVisibility(View.INVISIBLE);
 	}
 
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+	}
 }

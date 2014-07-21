@@ -112,6 +112,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 			case android.R.id.home:
 				getActivity().finish();
+				getActivity().overridePendingTransition(R.anim.hold_top,
+						R.anim.exit_in_left);
 				return true;
 
 			default:
@@ -163,7 +165,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					getActivity().finish();
-
+					getActivity().overridePendingTransition(R.anim.hold_top,
+							R.anim.exit_in_left);
 				}
 			});
 
@@ -224,4 +227,11 @@ public class ForgotPassworActivity extends FragmentActivity implements
 		return false;
 	}
 
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+	}
 }

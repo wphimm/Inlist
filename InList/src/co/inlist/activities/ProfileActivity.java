@@ -76,10 +76,10 @@ public class ProfileActivity extends Activity implements
 						Constant.SHRED_PR.KEY_PHONE));
 
 		adapterReservedEvents = new ReservedEventsAdapter(
-				InListApplication.getListReservedEvents(), ProfileActivity.this);
+				InListApplication.getListReservedEvents(),
+				ProfileActivity.this, ProfileActivity.this);
 
-		/*lst.setAdapter(new ReservedEventsAdapter(InListApplication
-				.getListEvents(), ProfileActivity.this));*/
+		lst.setAdapter(adapterReservedEvents);
 
 		Handler hn = new Handler();
 		hn.postDelayed(new Runnable() {
@@ -143,11 +143,20 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				startActivity(new Intent(ProfileActivity.this,
 						VipMemberShipActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
 			}
 		});
 
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adapterReservedEvents.notifyDataSetChanged();
+	}
+	
 	private void init() {
 		// TODO Auto-generated method stub
 		txtName = (TextView) findViewById(R.id.txtName);
@@ -181,6 +190,7 @@ public class ProfileActivity extends Activity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -191,6 +201,8 @@ public class ProfileActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject jObject) {
 		// TODO Auto-generated method stub
+
+		InListApplication.getListReservedEvents().clear();
 		try {
 			String str_temp = jObject.getString("status");
 			if (str_temp.equals("success")) {
@@ -201,8 +213,51 @@ public class ProfileActivity extends Activity implements
 				for (int i = 0; i < data.length(); i++) {
 					JSONObject obj = data.getJSONObject(i);
 					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("order_id", "" + obj.getString("order_id"));
 					map.put("event_id", "" + obj.getString("event_id"));
 					map.put("event_title", "" + obj.getString("event_title"));
+					map.put("event_start_date",
+							"" + obj.getString("event_start_date"));
+					map.put("event_start_time",
+							"" + obj.getString("event_start_time"));
+					map.put("event_min_price",
+							"" + obj.getString("event_min_price"));
+					map.put("event_description",
+							"" + obj.getString("event_description"));
+
+					map.put("event_location_address",
+							"" + obj.getString("event_location_address"));
+					map.put("event_location_city",
+							"" + obj.getString("event_location_city"));
+					map.put("event_location_state",
+							"" + obj.getString("event_location_state"));
+					map.put("event_location_zip",
+							"" + obj.getString("event_location_zip"));
+					map.put("event_location_latitude",
+							"" + obj.getString("event_location_latitude"));
+					map.put("event_location_longitude",
+							"" + obj.getString("event_location_longitude"));
+					map.put("event_location_club",
+							"" + obj.getString("event_location_club"));
+					try {
+						map.put("event_end_time",
+								"" + obj.getString("event_end_time"));
+						map.put("tables_total",
+								"" + obj.getString("tables_total"));
+						map.put("tables_available",
+								"" + obj.getString("tables_available"));
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+
+					map.put("tax", "" + obj.getString("tax"));
+					map.put("gratuity", "" + obj.getString("gratuity"));
+
+					map.put("event_poster_url",
+							"" + obj.getString("event_poster_url"));
+
+					map.put("atmosphere", "" + obj.getString("atmosphere"));
+					map.put("music_type", "" + obj.getString("music_type"));
 
 					InListApplication.getListReservedEvents().add(map);
 				}
@@ -252,8 +307,18 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				startActivity(new Intent(ProfileActivity.this,
 						EditProfileActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
 			}
 		});
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 }

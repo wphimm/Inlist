@@ -98,7 +98,7 @@ public class HomeScreenActivity extends Activity implements
 
 		HomeScreenObj = this;
 		adapterEvents = new EventsAdapter(InListApplication.getListEvents(),
-				this);
+				this, HomeScreenActivity.this);
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
@@ -143,6 +143,8 @@ public class HomeScreenActivity extends Activity implements
 
 				startActivity(new Intent(HomeScreenActivity.this,
 						ProfileActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 
 			} else {
 				makeAlert();
@@ -157,6 +159,8 @@ public class HomeScreenActivity extends Activity implements
 
 				startActivity(new Intent(HomeScreenActivity.this,
 						SettingAccountListActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 
 			} else {
 				makeAlert();
@@ -331,7 +335,7 @@ public class HomeScreenActivity extends Activity implements
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
-							+ Constant.API_LIVE
+							+ Constant.API
 							+ Constant.ACTIONS.PARTY_AREA_SET
 							+ "?apiMode=VIP&json=true"
 							+ "&party_area_id="
@@ -425,9 +429,13 @@ public class HomeScreenActivity extends Activity implements
 							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
 					startActivity(new Intent(HomeScreenActivity.this,
 							LoginActivity.class));
+					overridePendingTransition(R.anim.enter_from_bottom,
+							R.anim.hold_bottom);
 				} else {
 					startActivity(new Intent(HomeScreenActivity.this,
 							SignUpActivity.class));
+					overridePendingTransition(R.anim.enter_from_bottom,
+							R.anim.hold_bottom);
 				}
 			}
 		});
@@ -462,7 +470,7 @@ public class HomeScreenActivity extends Activity implements
 					viewGroup.getContext());
 
 			// We can now setup the PullToRefreshLayout
-		
+
 			ActionBarPullToRefresh
 					.from(getActivity())
 					// We need to insert the PullToRefreshLayout into the
@@ -540,7 +548,7 @@ public class HomeScreenActivity extends Activity implements
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
-							+ Constant.API_LIVE
+							+ Constant.API
 							+ Constant.ACTIONS.EVENTS
 							+ pageNo
 							+ "/?apiMode=VIP&json=true"
@@ -667,6 +675,12 @@ public class HomeScreenActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		finish();
+		if (UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+		} else {
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		}
 	}
 
 }

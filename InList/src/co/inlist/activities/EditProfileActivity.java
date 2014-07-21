@@ -44,7 +44,7 @@ public class EditProfileActivity extends Activity implements
 		init();
 
 		actionBarAndButtonActions();
-		
+
 		editFirst.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_FIRSTNAME));
@@ -125,6 +125,7 @@ public class EditProfileActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -317,6 +318,7 @@ public class EditProfileActivity extends Activity implements
 
 									ProfileActivity.profObj.finish();
 									finish();
+									overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 								} else {
 									UtilInList.validateDialog(
 											EditProfileActivity.this, ""
@@ -341,6 +343,14 @@ public class EditProfileActivity extends Activity implements
 			}
 		});
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 
 }

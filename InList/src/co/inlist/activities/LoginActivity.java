@@ -81,6 +81,8 @@ public class LoginActivity extends Activity implements
 				// TODO Auto-generated method stub
 				startActivity(new Intent(LoginActivity.this,
 						ForgotPassworActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
 			}
 		});
 
@@ -216,7 +218,6 @@ public class LoginActivity extends Activity implements
 		});
 	}
 
-
 	private void init() {
 		edt_lgn_e_mail = (EditText) findViewById(R.id.edt_lgn_e_mail);
 		edt_lgn_pwd = (EditText) findViewById(R.id.edt_lgn_pwd);
@@ -235,6 +236,7 @@ public class LoginActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 			return true;
 
 		default:
@@ -309,7 +311,7 @@ public class LoginActivity extends Activity implements
 									"" + strYear);
 						}
 					}
-				} 
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -322,6 +324,8 @@ public class LoginActivity extends Activity implements
 						HomeScreenActivity.class));
 				LeadingActivity.laObj.finish();
 				finish();
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			}
 
 		} else {
@@ -432,6 +436,14 @@ public class LoginActivity extends Activity implements
 			}
 		});
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
 	}
 
 }

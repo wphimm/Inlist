@@ -110,6 +110,7 @@ public class PurchaseSummaryActivity extends Activity implements
 			EventDetailsActivity.edObj.finish();
 			CompletePurchaseActivity.cpObj.finish();
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -124,6 +125,7 @@ public class PurchaseSummaryActivity extends Activity implements
 		EventDetailsActivity.edObj.finish();
 		CompletePurchaseActivity.cpObj.finish();
 		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 
 	@Override

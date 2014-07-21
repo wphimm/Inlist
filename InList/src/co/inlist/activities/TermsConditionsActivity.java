@@ -27,6 +27,7 @@ public class TermsConditionsActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -56,6 +57,14 @@ public class TermsConditionsActivity extends Activity implements
 		action_button.setBackgroundResource(R.drawable.sign_up_action_bar);
 		action_button.setVisibility(View.INVISIBLE);
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 
 }

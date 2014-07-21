@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,6 +18,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -37,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import co.inlist.adapter.HorizontalListAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -48,6 +51,7 @@ public class VipMemberShipActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
 	ImageView img1, img2, img3, img4, imgProfile;
+	TextView txtIncome1, txtIncome2, txtIncome3, txtIncome4;
 	int height, width;
 	HorizontalListView horizontalList;
 	EditText editInviteCode, editOccupation, editMostFrequentedClubs,
@@ -129,6 +133,13 @@ public class VipMemberShipActivity extends Activity implements
 				img3.getLayoutParams().height = height;
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
+
+				txtIncome1.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome2.setTextColor(getResources().getColor(R.color.black));
+				txtIncome3.setTextColor(getResources().getColor(R.color.black));
+				txtIncome4.setTextColor(getResources().getColor(R.color.black));
+
+				resetText();
 			}
 		});
 
@@ -152,6 +163,13 @@ public class VipMemberShipActivity extends Activity implements
 				img3.getLayoutParams().height = height;
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
+				
+				txtIncome1.setTextColor(getResources().getColor(R.color.black));
+				txtIncome2.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome3.setTextColor(getResources().getColor(R.color.black));
+				txtIncome4.setTextColor(getResources().getColor(R.color.black));
+
+				resetText();
 			}
 		});
 		img3.setOnClickListener(new OnClickListener() {
@@ -174,6 +192,13 @@ public class VipMemberShipActivity extends Activity implements
 				img1.getLayoutParams().height = height;
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
+				
+				txtIncome1.setTextColor(getResources().getColor(R.color.black));
+				txtIncome2.setTextColor(getResources().getColor(R.color.black));
+				txtIncome3.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome4.setTextColor(getResources().getColor(R.color.black));
+
+				resetText();
 			}
 		});
 		img4.setOnClickListener(new OnClickListener() {
@@ -196,6 +221,13 @@ public class VipMemberShipActivity extends Activity implements
 				img3.getLayoutParams().height = height;
 				img1.getLayoutParams().width = width;
 				img1.getLayoutParams().height = height;
+				
+				txtIncome1.setTextColor(getResources().getColor(R.color.black));
+				txtIncome2.setTextColor(getResources().getColor(R.color.black));
+				txtIncome3.setTextColor(getResources().getColor(R.color.black));
+				txtIncome4.setTextColor(getResources().getColor(R.color.light_yellow));
+
+				resetText();
 			}
 		});
 
@@ -211,6 +243,14 @@ public class VipMemberShipActivity extends Activity implements
 
 	}
 
+	protected void resetText() {
+		// TODO Auto-generated method stub
+		txtIncome1.setText(getResources().getString(R.string.income1));
+		txtIncome2.setText(getResources().getString(R.string.income2));
+		txtIncome3.setText(getResources().getString(R.string.income3));
+		txtIncome4.setText(getResources().getString(R.string.income4));
+	}
+
 	private void init() {
 		// TODO Auto-generated method stub
 		imgProfile = (ImageView) findViewById(R.id.imgprofile);
@@ -218,6 +258,10 @@ public class VipMemberShipActivity extends Activity implements
 		img2 = (ImageView) findViewById(R.id.img2);
 		img3 = (ImageView) findViewById(R.id.img3);
 		img4 = (ImageView) findViewById(R.id.img4);
+		txtIncome1 = (TextView) findViewById(R.id.txtIncome1);
+		txtIncome2 = (TextView) findViewById(R.id.txtIncome2);
+		txtIncome3 = (TextView) findViewById(R.id.txtIncome3);
+		txtIncome4 = (TextView) findViewById(R.id.txtIncome4);
 
 		editInviteCode = (EditText) findViewById(R.id.editInviteCode);
 		editMostFrequentedClubs = (EditText) findViewById(R.id.editMostFrequentedClubs);
@@ -506,6 +550,7 @@ public class VipMemberShipActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -521,6 +566,8 @@ public class VipMemberShipActivity extends Activity implements
 
 				startActivity(new Intent(VipMemberShipActivity.this,
 						VipMembershipReview.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
 
 			} else {
 
@@ -642,6 +689,14 @@ public class VipMemberShipActivity extends Activity implements
 
 			}
 		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 	}
 
 }

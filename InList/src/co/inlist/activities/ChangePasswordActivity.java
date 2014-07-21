@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -42,6 +43,18 @@ public class ChangePasswordActivity extends Activity implements
 
 		txt_forgot_pwd.setText(Html.fromHtml("<p><u>"
 				+ getString(R.string.forgot_pwd) + "</u></p>"));
+
+		txt_forgot_pwd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(ChangePasswordActivity.this,
+						ForgotPassworActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
+			}
+		});
 	}
 
 	private void init() {
@@ -62,6 +75,7 @@ public class ChangePasswordActivity extends Activity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
 
 		default:
@@ -200,4 +214,11 @@ public class ChangePasswordActivity extends Activity implements
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+	}
 }

@@ -5,7 +5,7 @@ public class Constant {
 	public static final String BLANK = "";
 
 	public static final String API = "http://www.inlistdev.com/";
-	public static final String API_LIVE = "http://www.inlist.com/";
+	//public static final String API_LIVE = "http://www.inlist.com/";
 	public static final String STATUS = "status";
 	public static final String SUCCESS = "1";
 	public static final String FAIL = "0";

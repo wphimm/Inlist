@@ -1,5 +1,8 @@
 package co.inlist.activities;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -24,15 +27,20 @@ import co.inlist.util.UtilInList;
 public class LeadingActivity extends FragmentActivity {
 	// ...
 	FragmentPagerAdapter adapterViewPager;
-	private TextView txtSkip,txtLogin,txtSignUp;
+	private TextView txtSkip, txtLogin, txtSignUp;
 	private LinearLayout rl_btn_register;
 	private LinearLayout rl_btn_login;
 
+	ViewPager vpPager;
+	int pagerPosition = 0;
+	Timer timer;
+	MyTimerTask myTimerTask;
 	private ImageView img1;
 	private ImageView img2;
 	private ImageView img3;
 	private ImageView img4;
-	Typeface typeAkzidgrobeligex,typeAvenir,typeLeaguegothic_condensedregular;
+	Typeface typeAkzidgrobeligex, typeAvenir,
+			typeLeaguegothic_condensedregular;
 
 	public static GPSTracker gps;
 	public static LeadingActivity laObj;
@@ -44,8 +52,8 @@ public class LeadingActivity extends FragmentActivity {
 		setContentView(R.layout.activity_intro);
 
 		init();
-		
-		laObj=this;
+
+		laObj = this;
 
 		rl_btn_register.setOnClickListener(new OnClickListener() {
 
@@ -54,6 +62,8 @@ public class LeadingActivity extends FragmentActivity {
 				// TODO Auto-generated method stub
 				startActivity(new Intent(LeadingActivity.this,
 						SignUpActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			}
 		});
 
@@ -66,12 +76,15 @@ public class LeadingActivity extends FragmentActivity {
 						Constant.SHRED_PR.KEY_LOGIN_FROM, "0");
 				startActivity(new Intent(LeadingActivity.this,
 						LoginActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			}
 		});
 
-		txtSkip.setText(Html.fromHtml("<p><font color=\"#DFBB6A\"><u>Skip for now</u></font></p>"));
+		txtSkip.setText(Html
+				.fromHtml("<p><font color=\"#DFBB6A\"><u>Skip for now</u></font></p>"));
 
-		ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+		vpPager = (ViewPager) findViewById(R.id.vpPager);
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
 		vpPager.setAdapter(adapterViewPager);
 
@@ -135,6 +148,8 @@ public class LeadingActivity extends FragmentActivity {
 				// TODO Auto-generated method stub
 				startActivity(new Intent(LeadingActivity.this,
 						HomeScreenActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			}
 		});
 
@@ -153,10 +168,12 @@ public class LeadingActivity extends FragmentActivity {
 		img3 = (ImageView) findViewById(R.id.img3);
 		img4 = (ImageView) findViewById(R.id.img4);
 
-		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(), "akzidgrobeligex.ttf");
-		typeLeaguegothic_condensedregular = Typeface.createFromAsset(getAssets(), "leaguegothic_condensedregular.otf");
+		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(),
+				"akzidgrobeligex.ttf");
+		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
+				getAssets(), "leaguegothic_condensedregular.otf");
 		typeAvenir = Typeface.createFromAsset(getAssets(), "avenir.ttc");
-		
+
 		txtLogin.setTypeface(typeAvenir);
 		txtSignUp.setTypeface(typeAvenir);
 		txtSkip.setTypeface(typeAvenir);
@@ -202,6 +219,23 @@ public class LeadingActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		try {
+			if (timer != null) {
+				timer.cancel();
+			}
+
+			if (myTimerTask != null) {
+				myTimerTask.cancel();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
@@ -211,6 +245,27 @@ public class LeadingActivity extends FragmentActivity {
 
 		} else {
 			gps.showSettingsAlert();
+		}
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Timer();
+		myTimerTask = new MyTimerTask();
+		timer.schedule(myTimerTask, 2000, 2000);
+	}
+
+	class MyTimerTask extends TimerTask {
+
+		@Override
+		public void run() {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					pagerPosition++;
+					if (pagerPosition == 4)
+						pagerPosition = 0;
+					vpPager.setCurrentItem(pagerPosition);
+				}
+			});
 		}
 	}
 

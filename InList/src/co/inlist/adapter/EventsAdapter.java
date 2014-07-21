@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,24 +36,32 @@ public class EventsAdapter extends BaseAdapter {
 	Context context;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
-	Typeface typeAkzidgrobeligex,typeAkzidgrobemedex,typeAvenir,typeLeaguegothic_condensedregular;
+	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
+			typeLeaguegothic_condensedregular;
+	Activity objAct;
 
 	@SuppressWarnings("deprecation")
-	public EventsAdapter(ArrayList<HashMap<String, String>> list,Context context) {
+	public EventsAdapter(ArrayList<HashMap<String, String>> list,
+			Context context,Activity objAct) {
 		// TODO Auto-generated constructor stub
 		locallist = list;
-		this.context=context;
-		
+		this.context = context;
+		this.objAct=objAct;
+
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
-		
+
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-		
-		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(), "akzidgrobeligex.ttf");
-		typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(), "helve_unbold.ttf");
-		typeLeaguegothic_condensedregular = Typeface.createFromAsset(context.getAssets(), "leaguegothic_condensedregular.otf");
-		typeAvenir = Typeface.createFromAsset(context.getAssets(), "avenir.ttc");
+
+		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(),
+				"akzidgrobeligex.ttf");
+		typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(),
+				"helve_unbold.ttf");
+		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
+				context.getAssets(), "leaguegothic_condensedregular.otf");
+		typeAvenir = Typeface
+				.createFromAsset(context.getAssets(), "avenir.ttc");
 	}
 
 	@Override
@@ -77,8 +86,8 @@ public class EventsAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.events_list_row,
-					null);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.events_list_row, null);
 		}
 
 		RelativeLayout relativeHeader = (RelativeLayout) convertView
@@ -92,15 +101,16 @@ public class EventsAdapter extends BaseAdapter {
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
-//		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
-		txt_event_title.setText(locallist.get(position).get("event_title").toString().toUpperCase());
-		txt_event_location_city.setText(""+locallist.get(position).get(
-				"event_location_club")+", "+locallist.get(position).get(
-				"event_location_city"));
-		
+		// txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+		txt_event_title.setText(locallist.get(position).get("event_title")
+				.toString().toUpperCase());
+		txt_event_location_city.setText(""
+				+ locallist.get(position).get("event_location_club") + ", "
+				+ locallist.get(position).get("event_location_city"));
+
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
-		//txt_event_start_date.setTypeface(typeAvenir);
+		// txt_event_start_date.setTypeface(typeAvenir);
 
 		// ***** Date Format ************************************//
 		String strDate = "" + locallist.get(position).get("event_start_date");
@@ -148,11 +158,12 @@ public class EventsAdapter extends BaseAdapter {
 		imageLoader.displayImage(image_url, img_event_poster_url, options);
 
 		if (position == (getCount() - 1)) {
-			if (UtilInList.isInternetConnectionExist(context.getApplicationContext())) {
+			if (UtilInList.isInternetConnectionExist(context
+					.getApplicationContext())) {
 				HomeScreenActivity.flagReset = false;
 				HomeScreenActivity.flagIfProgress = false;
-				HomeScreenActivity.HomeScreenObj.new EventsAsyncTask(context.getApplicationContext())
-						.execute("");
+				HomeScreenActivity.HomeScreenObj.new EventsAsyncTask(
+						context.getApplicationContext()).execute("");
 			} else {
 				Toast.makeText(context.getApplicationContext(),
 						"" + Constant.network_error, Toast.LENGTH_SHORT).show();
@@ -164,10 +175,12 @@ public class EventsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(context,
-						EventDetailsActivity.class);
+				Activity a = null;
+				Intent i = new Intent(context, EventDetailsActivity.class);
 				i.putExtra("pos", position);
 				context.startActivity(i);
+				objAct.overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
 			}
 		});
 

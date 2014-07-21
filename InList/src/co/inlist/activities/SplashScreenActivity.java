@@ -37,7 +37,7 @@ public class SplashScreenActivity extends Activity implements
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 
-			new WebServiceDataCollectorAsyncTaskSplash(Constant.API_LIVE
+			new WebServiceDataCollectorAsyncTaskSplash(Constant.API
 					+ Constant.ACTIONS.PREPARE_REGISTER,
 					SplashScreenActivity.this).execute();
 
@@ -74,14 +74,17 @@ public class SplashScreenActivity extends Activity implements
 						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 					startActivity(new Intent(SplashScreenActivity.this,
 							HomeScreenActivity.class));
+					overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
 				} else {
 					startActivity(new Intent(SplashScreenActivity.this,
-							HomeScreenActivity.class));
+							LeadingActivity.class));
+					overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
 				}
 			} else {
 
 				startActivity(new Intent(SplashScreenActivity.this,
-						HomeScreenActivity.class));
+						LeadingActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
 
 			}
 			finish();
@@ -157,7 +160,7 @@ public class SplashScreenActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(nameValuePairs, ""
-					+ Constant.API_LIVE + Constant.ACTIONS.PARTY_AREA
+					+ Constant.API + Constant.ACTIONS.PARTY_AREA
 					+ "?apiMode=VIP&json=true");
 			Log.e("Response In Activity-->", response);
 			return response;

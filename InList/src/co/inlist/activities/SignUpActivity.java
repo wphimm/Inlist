@@ -226,6 +226,8 @@ public class SignUpActivity extends Activity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.enter_from_bottom,
+					R.anim.hold_bottom);
 			return true;
 
 		default:
@@ -270,6 +272,8 @@ public class SignUpActivity extends Activity implements
 				startActivity(i);
 
 				finish();
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 
 			} else {
 
@@ -419,6 +423,14 @@ public class SignUpActivity extends Activity implements
 			}
 		});
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
 	}
 
 }

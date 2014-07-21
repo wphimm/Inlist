@@ -11,6 +11,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,8 @@ public class SettingAccountListActivity extends Activity implements
 				if (position == 0) {
 					startActivity(new Intent(SettingAccountListActivity.this,
 							ChangePasswordActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
 				} else if (position == 1) {
 
 					UtilInList.WriteSharePrefrence(
@@ -68,40 +71,60 @@ public class SettingAccountListActivity extends Activity implements
 						startActivity(new Intent(
 								SettingAccountListActivity.this,
 								AddCardActivity.class));
+						overridePendingTransition(R.anim.enter_from_left,
+								R.anim.hold_bottom);
 					} else {
 						startActivity(new Intent(
 								SettingAccountListActivity.this,
 								NoCardActivity.class));
+						overridePendingTransition(R.anim.enter_from_left,
+								R.anim.hold_bottom);
 					}
 				} else if (position == 2) {
 					startActivity(new Intent(SettingAccountListActivity.this,
 							InviteActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
 				} else if (position == 3) {
 					startActivity(new Intent(SettingAccountListActivity.this,
 							NotificationsSettingsActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
 				} else if (position == 4) {
 					startActivity(new Intent(SettingAccountListActivity.this,
 							TermsConditionsActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
 				}
 
 			}
 		});
 
-		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
+		Handler hn = new Handler();
+		hn.postDelayed(new Runnable() {
 
-			params.add(new BasicNameValuePair("device_id", ""
-					+ UtilInList.getDeviceId(getApplicationContext())));
-			params.add(new BasicNameValuePair("device_type", "android"));
-			params.add(new BasicNameValuePair("PHPSESSIONID", ""
-					+ UtilInList.ReadSharePrefrence(
-							SettingAccountListActivity.this,
-							Constant.SHRED_PR.KEY_SESSIONID)));
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-			new WebServiceDataPosterAsyncTask(SettingAccountListActivity.this,
-					params, Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
-							+ "/?apiMode=VIP&json=true").execute();
-		}
+					params.add(new BasicNameValuePair("device_id", ""
+							+ UtilInList.getDeviceId(getApplicationContext())));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									SettingAccountListActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(
+							SettingAccountListActivity.this, params,
+							Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
+									+ "/?apiMode=VIP&json=true").execute();
+				}
+			}
+		}, 500);
 
 		actionBarAndButtonActions();
 
@@ -135,6 +158,7 @@ public class SettingAccountListActivity extends Activity implements
 
 		case android.R.id.home:
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 			return true;
 
 		default:
@@ -163,6 +187,14 @@ public class SettingAccountListActivity extends Activity implements
 
 		action_button.setVisibility(View.INVISIBLE);
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 	}
 
 }

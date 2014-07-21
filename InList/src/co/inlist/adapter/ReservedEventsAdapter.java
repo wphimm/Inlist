@@ -4,25 +4,34 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import co.inlist.activities.EventDetailsActivity;
-import co.inlist.activities.HomeScreenActivity;
+import co.inlist.activities.InListApplication;
 import co.inlist.activities.R;
 import co.inlist.activities.ReservedEventDetailsActivity;
 import co.inlist.util.Constant;
+import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -36,25 +45,33 @@ public class ReservedEventsAdapter extends BaseAdapter {
 	Context context;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
-	Typeface typeAkzidgrobeligex,typeAkzidgrobemedex,typeAvenir,typeLeaguegothic_condensedregular;
+	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
+			typeLeaguegothic_condensedregular;
+	Activity objAct;
+	int currentPos;
 
 	@SuppressWarnings("deprecation")
-	public ReservedEventsAdapter(ArrayList<HashMap<String, String>> list,Context context) {
+	public ReservedEventsAdapter(ArrayList<HashMap<String, String>> list,
+			Context context, Activity objAct) {
 		// TODO Auto-generated constructor stub
 		locallist = list;
-		this.context=context;
-		
-		
+		this.context = context;
+		this.objAct = objAct;
+
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
-		
+
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-		
-		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(), "akzidgrobeligex.ttf");
-		typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(), "helve_unbold.ttf");
-		typeLeaguegothic_condensedregular = Typeface.createFromAsset(context.getAssets(), "leaguegothic_condensedregular.otf");
-		typeAvenir = Typeface.createFromAsset(context.getAssets(), "avenir.ttc");
+
+		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(),
+				"akzidgrobeligex.ttf");
+		typeAkzidgrobemedex = Typeface.createFromAsset(context.getAssets(),
+				"helve_unbold.ttf");
+		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
+				context.getAssets(), "leaguegothic_condensedregular.otf");
+		typeAvenir = Typeface
+				.createFromAsset(context.getAssets(), "avenir.ttc");
 	}
 
 	@Override
@@ -79,8 +96,8 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.events_list_row,
-					null);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.events_list_row, null);
 		}
 
 		RelativeLayout relativeHeader = (RelativeLayout) convertView
@@ -94,15 +111,16 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
-//		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
-		txt_event_title.setText(locallist.get(position).get("event_title").toString().toUpperCase());
-		txt_event_location_city.setText(""+locallist.get(position).get(
-				"event_location_club")+", "+locallist.get(position).get(
-				"event_location_city"));
-		
+		// txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+		txt_event_title.setText(locallist.get(position).get("event_title")
+				.toString().toUpperCase());
+		txt_event_location_city.setText(""
+				+ locallist.get(position).get("event_location_club") + ", "
+				+ locallist.get(position).get("event_location_city"));
+
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
-		//txt_event_start_date.setTypeface(typeAvenir);
+		// txt_event_start_date.setTypeface(typeAvenir);
 
 		// ***** Date Format ************************************//
 		String strDate = "" + locallist.get(position).get("event_start_date");
@@ -158,9 +176,127 @@ public class ReservedEventsAdapter extends BaseAdapter {
 						ReservedEventDetailsActivity.class);
 				i.putExtra("pos", position);
 				context.startActivity(i);
+				objAct.overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
+			}
+		});
+
+		convertView.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder alert = new AlertDialog.Builder(objAct);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to hide this reservation?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(context)) {
+
+									currentPos = position;
+									new HideReservationAsyncTask(objAct).execute("");
+
+								} else {
+									UtilInList.validateDialog(objAct, ""
+											+ Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+				return false;
 			}
 		});
 
 		return convertView;
+	}
+
+	public class HideReservationAsyncTask extends AsyncTask<String, String, String> {
+
+		private MyProgressbar dialog;
+
+		public HideReservationAsyncTask(Context context) {
+			dialog = new MyProgressbar(context);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			Log.e("Name Value Pair", nameValuePairs.toString());
+			String response = UtilInList.postData(
+					nameValuePairs,
+					""
+							+ Constant.API
+							+ "reservation/hide"
+							+ "/?apiMode=VIP&json=true"
+							+ "&reservation_id="
+							+ locallist.get(currentPos).get("order_id")
+							+ "&PHPSESSIONID="
+							+ UtilInList.ReadSharePrefrence(objAct,
+									Constant.SHRED_PR.KEY_SESSIONID));
+			Log.e("Response In Activity-->", response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			// fragment_addconnection_search
+
+			try {
+				if (dialog != null) {
+					if (dialog.isShowing()) {
+						dialog.dismiss();
+					}
+				}
+
+				if (result != null) {
+					try {
+						JSONObject jObject = new JSONObject(result);
+						String str_temp = jObject.getString("status");
+						if (str_temp.equals("success")) {
+							InListApplication.getListReservedEvents().remove(currentPos);
+							notifyDataSetChanged();
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+		}
+
 	}
 }

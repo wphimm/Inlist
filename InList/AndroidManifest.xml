@@ -207,7 +207,6 @@
         <activity
             android:name="co.inlist.activities.ForgotPassworActivity"
             android:label="@string/activity_login"
-            android:parentActivityName="co.inlist.activities.LoginActivity"
             android:screenOrientation="portrait" >
 
             <!-- To support split actionbar below API Level 14 -->

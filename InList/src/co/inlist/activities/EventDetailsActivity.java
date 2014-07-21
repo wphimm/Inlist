@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -23,10 +25,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -82,6 +92,11 @@ public class EventDetailsActivity extends Activity implements
 	int position;
 	HashMap<String, String> map;
 	Context context = this;
+	ViewPager pager;
+	int pagerPosition = 0;
+	Timer timer;
+	MyTimerTask myTimerTask;
+	GestureDetector tapGestureDetector;
 
 	Double latitude, longitude;
 
@@ -121,6 +136,8 @@ public class EventDetailsActivity extends Activity implements
 
 		String image_url = "" + map.get("event_poster_url");
 		imageLoader.displayImage(image_url, img_event_poster_url, options);
+
+		pager = (ViewPager) findViewById(R.id.pager);
 
 		// ***** Date Format ************************************//
 		String strDate = "" + map.get("event_start_date");
@@ -284,7 +301,20 @@ public class EventDetailsActivity extends Activity implements
 				if (InListApplication.getGallery().size() > 0) {
 					startActivity(new Intent(EventDetailsActivity.this,
 							GalleryActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
 				}
+			}
+		});
+
+		tapGestureDetector = new GestureDetector(this, new TapGestureListener());
+		pager.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				tapGestureDetector.onTouchEvent(event);
+				return false;
 			}
 		});
 
@@ -305,7 +335,7 @@ public class EventDetailsActivity extends Activity implements
 									Constant.ERRORS.OOPS);
 				}
 			}
-		}, 100);
+		},500);
 
 	}
 
@@ -329,6 +359,21 @@ public class EventDetailsActivity extends Activity implements
 		txt_minimum = (TextView) findViewById(R.id.txt_minimum);
 		txtaddress = (TextView) findViewById(R.id.txtaddress);
 		txtcity = (TextView) findViewById(R.id.txtcity);
+	}
+
+	class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			// Your Code here
+			if (InListApplication.getGallery().size() > 0) {
+				startActivity(new Intent(EventDetailsActivity.this,
+						GalleryActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
+			}
+			return false;
+		}
 	}
 
 	public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
@@ -371,6 +416,93 @@ public class EventDetailsActivity extends Activity implements
 		}
 	}
 
+	private class ImagePagerAdapter extends PagerAdapter {
+
+		private LayoutInflater inflater;
+		ArrayList<HashMap<String, String>> locallist;
+
+		ImagePagerAdapter(ArrayList<HashMap<String, String>> list) {
+			locallist = list;
+			inflater = getLayoutInflater();
+			imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+		}
+
+		@Override
+		public void destroyItem(View container, int position, Object object) {
+			((ViewPager) container).removeView((View) object);
+		}
+
+		@Override
+		public void finishUpdate(View container) {
+		}
+
+		@Override
+		public int getCount() {
+			return locallist.size();
+		}
+
+		@SuppressLint("NewApi")
+		@Override
+		public Object instantiateItem(View view, int position) {
+			final View imageLayout = inflater.inflate(
+					R.layout.item_pager_image, null);
+
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.WRAP_CONTENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+			layoutParams.width = img_event_poster_url.getWidth();
+			layoutParams.height = img_event_poster_url.getHeight();
+
+			pager.setLayoutParams(layoutParams);
+
+			final ImageView imageView = (ImageView) imageLayout
+					.findViewById(R.id.image);
+
+			imageLoader.displayImage(
+					"" + locallist.get(position).get("source"), imageView,
+					options);
+
+			((ViewPager) view).addView(imageLayout, 0);
+			return imageLayout;
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view.equals(object);
+		}
+
+		@Override
+		public void restoreState(Parcelable state, ClassLoader loader) {
+		}
+
+		@Override
+		public Parcelable saveState() {
+			return null;
+		}
+
+		@Override
+		public void startUpdate(View container) {
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		try {
+			if (timer != null) {
+				timer.cancel();
+			}
+
+			if (myTimerTask != null) {
+				myTimerTask.cancel();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
@@ -381,6 +513,7 @@ public class EventDetailsActivity extends Activity implements
 		} else {
 			super.onBackPressed();
 			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 		}
 	}
 
@@ -395,6 +528,27 @@ public class EventDetailsActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		actionBarAndButtonActions();
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Timer();
+		myTimerTask = new MyTimerTask();
+		timer.schedule(myTimerTask, 3000, 1000);
+	}
+
+	class MyTimerTask extends TimerTask {
+
+		@Override
+		public void run() {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					pagerPosition++;
+					if (pagerPosition == InListApplication.getGallery().size())
+						pagerPosition = 0;
+					pager.setCurrentItem(pagerPosition);
+				}
+			});
+		}
 	}
 
 	/**
@@ -412,6 +566,7 @@ public class EventDetailsActivity extends Activity implements
 				relative_google_map.setVisibility(View.VISIBLE);
 			} else {
 				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			}
 			return true;
 
@@ -446,7 +601,7 @@ public class EventDetailsActivity extends Activity implements
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
-							+ Constant.API_LIVE
+							+ Constant.API
 							+ "event/"
 							+ map.get("event_id")
 							+ "/?apiMode=VIP&json=true"
@@ -530,6 +685,9 @@ public class EventDetailsActivity extends Activity implements
 							EventDetailsActivity.this,
 							R.layout.spinnertable_row, InListApplication
 									.getPricing()));
+
+					pager.setAdapter(new ImagePagerAdapter(InListApplication
+							.getGallery()));
 				}
 
 			} catch (JSONException e) { // TODO Auto-generated catch block
@@ -578,12 +736,16 @@ public class EventDetailsActivity extends Activity implements
 							.toString().equals("1")) {
 						startActivity(new Intent(EventDetailsActivity.this,
 								CompletePurchaseActivity.class));
+						overridePendingTransition(R.anim.enter_from_left,
+								R.anim.hold_bottom);
 					} else {
 						UtilInList.WriteSharePrefrence(
 								EventDetailsActivity.this,
 								Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
 						startActivity(new Intent(EventDetailsActivity.this,
 								AddCardActivity.class));
+						overridePendingTransition(R.anim.enter_from_bottom,
+								R.anim.hold_bottom);
 					}
 
 				} else {
@@ -592,6 +754,8 @@ public class EventDetailsActivity extends Activity implements
 
 					startActivity(new Intent(EventDetailsActivity.this,
 							LoginActivity.class));
+					overridePendingTransition(R.anim.enter_from_bottom,
+							R.anim.hold_bottom);
 				}
 			}
 		});
@@ -604,4 +768,5 @@ public class EventDetailsActivity extends Activity implements
 		}
 
 	}
+
 }
