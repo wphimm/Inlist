@@ -335,7 +335,7 @@ public class EventDetailsActivity extends Activity implements
 									Constant.ERRORS.OOPS);
 				}
 			}
-		},500);
+		}, 500);
 
 	}
 
@@ -726,6 +726,9 @@ public class EventDetailsActivity extends Activity implements
 				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 						Constant.SHRED_PR.KEY_PRICE_POSITION,
 						"" + spinnerTable.getSelectedItemPosition());
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_CURRENT_POSITION,
+						"" + position);
 
 				if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
 						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {

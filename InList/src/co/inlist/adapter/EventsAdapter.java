@@ -42,11 +42,11 @@ public class EventsAdapter extends BaseAdapter {
 
 	@SuppressWarnings("deprecation")
 	public EventsAdapter(ArrayList<HashMap<String, String>> list,
-			Context context,Activity objAct) {
+			Context context, Activity objAct) {
 		// TODO Auto-generated constructor stub
 		locallist = list;
 		this.context = context;
-		this.objAct=objAct;
+		this.objAct = objAct;
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
@@ -98,6 +98,7 @@ public class EventsAdapter extends BaseAdapter {
 				.findViewById(R.id.event_location_city);
 		ImageView img_event_poster_url = (ImageView) convertView
 				.findViewById(R.id.img);
+		img_event_poster_url.setBackgroundResource(0);
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 

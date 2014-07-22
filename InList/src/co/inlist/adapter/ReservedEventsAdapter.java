@@ -108,6 +108,7 @@ public class ReservedEventsAdapter extends BaseAdapter {
 				.findViewById(R.id.event_location_city);
 		ImageView img_event_poster_url = (ImageView) convertView
 				.findViewById(R.id.img);
+		img_event_poster_url.setBackgroundResource(0);
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 

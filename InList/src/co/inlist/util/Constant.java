@@ -5,7 +5,7 @@ public class Constant {
 	public static final String BLANK = "";
 
 	public static final String API = "http://www.inlistdev.com/";
-	//public static final String API_LIVE = "http://www.inlist.com/";
+	// public static final String API_LIVE = "http://www.inlist.com/";
 	public static final String STATUS = "status";
 	public static final String SUCCESS = "1";
 	public static final String FAIL = "0";
@@ -50,7 +50,7 @@ public class Constant {
 		public static final String BOOK_EVENT_TABLE = "reservation/prepaid/?apiMode=VIP&json=true";
 		public static final String REQUEST_VIP = "user/request_vip/?apiMode=VIP&json=true";
 		public static final String RESERVATION_LIST = "reservations/mine/?apiMode=VIP&json=true";
-		
+
 	}
 
 	public static class TAGS {
@@ -121,10 +121,10 @@ public class Constant {
 		public static final String PWD_NOT_MATCH = "New Passwords don't match";
 
 		public static final String NO_EVENTS_FOUND = "No events could be found. Please try switching cities in the app";
-		public static final String PLZ_ENTER_MFC="Please enter most frequent clubs";
-		public static final String PLZ_ENTER_OCM="Please enter other club memberships";
-		public static final String PLZ_ANNUAL_INCOME="Please select annual income";
-		public static final String PLZ_MUSIC_TYPE="Please select music type";
+		public static final String PLZ_ENTER_MFC = "Please enter most frequent clubs";
+		public static final String PLZ_ENTER_OCM = "Please enter other club memberships";
+		public static final String PLZ_ANNUAL_INCOME = "Please select annual income";
+		public static final String PLZ_MUSIC_TYPE = "Please select music type";
 
 	}
 
@@ -145,8 +145,9 @@ public class Constant {
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
 		public static final String KEY_PRICE_POSITION = "price_position";
 		public static final String KEY_YOUR_MINIMUM = "your_minimum";
-		
+
 		public static final String KEY_EVENT_ID = "event_id";
+		public static final String KEY_CURRENT_POSITION = "current_position";
 
 		// Credit Card Details:
 		public static final String KEY_USER_CARD_ADDED = "user_card_added";

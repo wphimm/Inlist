@@ -8,7 +8,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,7 +17,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -340,7 +338,6 @@ public class VipMemberShipActivity extends Activity implements
 						Log.i("Exception", "" + e);
 					}
 				}
-				Log.d("Gallery Path: ", camera_pathname + bmp);
 
 			}
 		}

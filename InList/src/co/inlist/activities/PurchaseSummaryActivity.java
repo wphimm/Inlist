@@ -1,9 +1,23 @@
 package co.inlist.activities;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
+import com.google.android.gms.internal.fa;
+
+import twitter4j.StatusUpdate;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import co.inlist.facebook.android.DialogError;
 import co.inlist.facebook.android.Facebook;
 import co.inlist.facebook.android.Facebook.DialogListener;
@@ -22,6 +37,7 @@ import co.inlist.twitter.android.TwitterApp.TwDialogListener;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
+@SuppressLint("SimpleDateFormat")
 public class PurchaseSummaryActivity extends Activity implements
 		ActionBar.OnNavigationListener {
 
@@ -47,6 +63,13 @@ public class PurchaseSummaryActivity extends Activity implements
 
 	private Button btnFacebook, btnTwitter;
 
+	Context context = this;
+	TextView txtEventTitle, txtDate, txtAddress, txtTable;
+	int position;
+	HashMap<String, String> map;
+	String sharingString = "I'm in\n";
+
+	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +78,61 @@ public class PurchaseSummaryActivity extends Activity implements
 		init();
 
 		actionBarAndButtonActions();
+
+		position = Integer.parseInt(UtilInList.ReadSharePrefrence(
+				PurchaseSummaryActivity.this,
+				Constant.SHRED_PR.KEY_CURRENT_POSITION).toString());
+
+		map = InListApplication.getListEvents().get(position);
+		txtEventTitle.setText("" + map.get("event_title"));
+		txtAddress.setText("" + map.get("event_location_address") + "\n"
+				+ map.get("event_location_city") + ", "
+				+ map.get("event_location_state") + " "
+				+ map.get("event_location_zip"));
+
+		String strTable = ""
+				+ InListApplication
+						.getPricing()
+						.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
+								PurchaseSummaryActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_POSITION)
+								.toString())).get("club_section_name");
+		txtTable.setText("" + strTable);
+
+		// ***** Date Format ************************************//
+		String strDate = "" + map.get("event_start_date");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Date date1;
+
+		try {
+			date1 = sdf.parse(strDate);
+
+			SimpleDateFormat format = new SimpleDateFormat("d");
+			String date = format.format(date1);
+
+			if (date.endsWith("1") && !date.endsWith("11"))
+				format = new SimpleDateFormat("EEEE, MMMM d'st'");
+			else if (date.endsWith("2") && !date.endsWith("12"))
+				format = new SimpleDateFormat("EEEE, MMMM d'nd'");
+			else if (date.endsWith("3") && !date.endsWith("13"))
+				format = new SimpleDateFormat("EEEE, MMMM d'rd'");
+			else
+				format = new SimpleDateFormat("EEEE, MMMM d'th'");
+
+			strDate = format.format(date1);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		txtDate.setText("" + strDate.toUpperCase());
+
+		// ***** Date Format ************************************//
+
+		sharingString += "" + txtEventTitle.getText().toString() + "\n"
+				+ txtDate.getText().toString() + "\n\nVENUE\n"
+				+ txtAddress.getText().toString() + "\n\n"
+				+ txtTable.getText().toString();
 
 		btnFacebook.setOnClickListener(new OnClickListener() {
 
@@ -93,6 +171,11 @@ public class PurchaseSummaryActivity extends Activity implements
 
 	private void init() {
 		// TODO Auto-generated method stub
+		txtEventTitle = (TextView) findViewById(R.id.txt_event_title);
+		txtDate = (TextView) findViewById(R.id.txt_date);
+		txtAddress = (TextView) findViewById(R.id.txt_address);
+		txtTable = (TextView) findViewById(R.id.txt_table);
+
 		btnFacebook = (Button) findViewById(R.id.btnFacebook);
 		btnTwitter = (Button) findViewById(R.id.btnTwitter);
 
@@ -153,46 +236,45 @@ public class PurchaseSummaryActivity extends Activity implements
 
 		if (!facebook.isSessionValid()) {
 			facebook.authorize(PurchaseSummaryActivity.this, new String[] {
-					"email", "publish_stream" }, new DialogListener() {
+					"email", "publish_stream", "status_update","publish_actions" },
+					new DialogListener() {
 
-				public void onCancel() {
-					// Function to handle cancel event
-					/*
-					 * if (progressDialog.isShowing()) {
-					 * progressDialog.dismiss(); }
-					 */
-				}
+						public void onCancel() {
+							// Function to handle cancel event
+							
+						}
 
-				public void onComplete(Bundle values) {
-					// Function to handle complete event
-					// Edit Preferences and update facebook acess_token
-					SharedPreferences.Editor editor = mPrefs.edit();
-					editor.putString("access_token", facebook.getAccessToken());
-					editor.putLong("access_expires",
-							facebook.getAccessExpires());
-					editor.commit();
-					Log.d("complete", "here..");
-					postOnWall();
+						public void onComplete(Bundle values) {
+							// Function to handle complete event
+							// Edit Preferences and update facebook acess_token
+							SharedPreferences.Editor editor = mPrefs.edit();
+							editor.putString("access_token",
+									facebook.getAccessToken());
+							editor.putLong("access_expires",
+									facebook.getAccessExpires());
+							editor.commit();
+							Log.d("complete", "here..");
+							postOnWall();
 
-				}
+						}
 
-				public void onError(DialogError error) {
-					// Function to handle error
-					/*
-					 * if (progressDialog.isShowing()) {
-					 * progressDialog.dismiss(); }
-					 */
-				}
+						public void onError(DialogError error) {
+							// Function to handle error
+							/*
+							 * if (progressDialog.isShowing()) {
+							 * progressDialog.dismiss(); }
+							 */
+						}
 
-				public void onFacebookError(FacebookError fberror) {
-					// Function to handle Facebook errors
-					/*
-					 * if (progressDialog.isShowing()) {
-					 * progressDialog.dismiss(); }
-					 */
-				}
+						public void onFacebookError(FacebookError fberror) {
+							// Function to handle Facebook errors
+							/*
+							 * if (progressDialog.isShowing()) {
+							 * progressDialog.dismiss(); }
+							 */
+						}
 
-			});
+					});
 		}
 	}
 
@@ -230,12 +312,15 @@ public class PurchaseSummaryActivity extends Activity implements
 			try {
 
 				StringBuffer msg = new StringBuffer("");
-				msg.append("Hi..");
+				msg.append("" + sharingString);
 
 				response = facebook.request("me");
 
+				Log.e("event_poster_url", ">>" + map.get("event_poster_url"));
 				Bundle parameters = new Bundle();
 				parameters.putString("message", msg.toString());
+				parameters.putString("picture",
+						"" + map.get("event_poster_url"));
 				response = facebook.request("me/feed", parameters, "POST");
 				Log.d("Tests", "got response: " + response);
 
@@ -244,13 +329,52 @@ public class PurchaseSummaryActivity extends Activity implements
 			}
 			return response;
 		}
-
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		facebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+	public void Update(final String response) {
+		// TODO Auto-generated method stub
+		this.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (response == null || response.equals("")
+						|| response.equals("false")) {
+					Log.v("Error", "Blank response");
+					AlertDialog.Builder alert = new AlertDialog.Builder(context);
+					alert.setTitle(Constant.AppName);
+					alert.setMessage("There is some server issue to share App in your Facebook account.");
+					alert.setPositiveButton("Ok",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+								}
+							});
+					alert.create();
+					alert.show();
+				} else {
+					AlertDialog.Builder alert = new AlertDialog.Builder(context);
+					alert.setTitle(Constant.AppName);
+					alert.setMessage("App share successfully on your Facebook account.");
+					alert.setPositiveButton("Ok",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+								}
+							});
+					alert.create();
+					alert.show();
+				}
+			}
+		});
 	}
 
 	private void loginToTwitter() {
@@ -327,23 +451,29 @@ public class PurchaseSummaryActivity extends Activity implements
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			String post = "Hi.";
+			String post = "" + sharingString;
 			if (post.length() > 140) {
 				post = post.substring(0, Math.min(post.length(), 137)) + "...";
 			}
+
+			Bitmap bmp = UtilInList.getBitmapFromURL(""
+					+ map.get("event_poster_url"));
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			byte[] byteArray = stream.toByteArray();
+			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+			StatusUpdate status = new StatusUpdate(post);
+			status.setMedia("event", bis);
+
 			try {
-				mTwitter.updateStatus(post);
-
+				mTwitter.updateStatus(status);
 				Log.d("twitter post..", "success");
-
 			} catch (Exception e) {
-
 				e.printStackTrace();
 			}
 
 			return null;
 		}
-
 	}
 
 	private void actionBarAndButtonActions() {

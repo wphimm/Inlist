@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -164,16 +167,15 @@ public class UtilInList {
 				obs.removeGlobalOnLayoutListener(this);
 
 				String temp;
-				if(viewMore){
-					temp="... " + expandText;
+				if (viewMore) {
+					temp = "... " + expandText;
+				} else {
+					temp = " " + expandText;
 				}
-				else{
-					temp=" " + expandText;
-				}
-				
+
 				if (maxLine == 0) {
 					int lineEndIndex = tv.getLayout().getLineEnd(0);
-					
+
 					String text = tv.getText().subSequence(0,
 							lineEndIndex - temp.length() + 1)
 							+ temp;
@@ -604,30 +606,19 @@ public class UtilInList {
 		return retStr;
 	}
 
-	/*
-	 * public static void WriteFile(String path, String filename, String data) {
-	 * try { File direct = new File(path);
-	 * 
-	 * if (!direct.exists()) { direct.mkdir();// directory is created; } String
-	 * fpath = path + filename; File txtfile = new File(fpath);
-	 * 
-	 * txtfile.createNewFile(); FileOutputStream fout = new
-	 * FileOutputStream(txtfile); OutputStreamWriter myoutwriter = new
-	 * OutputStreamWriter(fout); myoutwriter.write(data); myoutwriter.close();
-	 * fout.close();
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); } }
-	 * 
-	 * public static String ReadFile(String path, String filename) { File myFile
-	 * = new File(path + filename); if (!myFile.exists()) { return null; }
-	 * FileInputStream fIn = null; try { fIn = new FileInputStream(myFile); }
-	 * catch (FileNotFoundException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }
-	 * 
-	 * @SuppressWarnings("resource") BufferedReader myReader = new
-	 * BufferedReader(new InputStreamReader(fIn)); String aDataRow = ""; String
-	 * aBuffer = ""; try { while ((aDataRow = myReader.readLine()) != null) {
-	 * aBuffer += aDataRow + "\n"; } } catch (IOException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); } return aBuffer; }
-	 */
+	public static Bitmap getBitmapFromURL(String src) {
+		try {
+			URL url = new URL(src);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(input);
+			return myBitmap;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
