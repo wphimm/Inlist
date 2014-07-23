@@ -132,8 +132,8 @@
     <!-- Notification Settings Screen -->
     <string name="pushnotification">PUSH NOTIFICATIONS</string>
     <string name="textnotification">TEXT NOTIFICATIONS</string>
-    <string name="dailynotification">DAILY NOTIFICATIONS</string>
-    <string name="billingissues">BILLING ISSUES</string>
+    <string name="dailynotification">Daily Notifications</string>
+    <string name="billingissues">Billing Issues</string>
 
     <!-- PurchaseSummary Screen -->
     <string name="youarein">YOU\'RE IN</string>

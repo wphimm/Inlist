@@ -45,15 +45,6 @@ public class InviteActivity extends Activity implements
 		editEmail = (EditText) findViewById(R.id.edt_invite_e_mail);
 	}
 
-	//
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_invite_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
 	/**
 	 * On selecting action bar icons
 	 * */
