@@ -377,7 +377,14 @@ public class AddCardActivity extends Activity implements
 				overridePendingTransition(R.anim.hold_top,
 						R.anim.exit_in_bottom);
 			} else {
-				NoCardActivity.objNoCard.finish();
+				try {
+					if (NoCardActivity.objNoCard != null) {
+						NoCardActivity.objNoCard.finish();
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
 				finish();
 				overridePendingTransition(R.anim.hold_top,
 						R.anim.exit_in_bottom);
@@ -628,10 +635,16 @@ public class AddCardActivity extends Activity implements
 			finish();
 			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 		} else {
-			NoCardActivity.objNoCard.finish();
+			try {
+				if (NoCardActivity.objNoCard != null) {
+					NoCardActivity.objNoCard.finish();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
 			finish();
 			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 		}
-
 	}
 }

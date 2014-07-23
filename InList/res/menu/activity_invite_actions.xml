@@ -4,7 +4,7 @@
     <!-- Location Found -->
     <item
         android:id="@+id/action_send"
-        android:icon="@drawable/btn_send"
+        android:icon="@drawable/send_onclick"
         android:showAsAction="always"/>
 
 </menu>
