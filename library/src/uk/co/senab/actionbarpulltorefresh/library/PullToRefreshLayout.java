@@ -16,6 +16,8 @@
 
 package uk.co.senab.actionbarpulltorefresh.library;
 
+import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -25,14 +27,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import java.util.HashSet;
-
-import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 /**
  * The main component of the library. You wrap the views you wish to be 'pullable' within this layout.
@@ -245,4 +240,6 @@ public class PullToRefreshLayout extends FrameLayout {
             return mViewDelegateClassName;
         }
     }
+    
+
 }
