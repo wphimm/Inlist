@@ -19,7 +19,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,6 +96,57 @@ public class LoginActivity extends Activity implements
 				loginToFacebook();
 			}
 		});
+
+		edt_lgn_e_mail.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_lgn_e_mail.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_lgn_e_mail.setHint("Email Address");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_lgn_pwd.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_lgn_pwd.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_lgn_pwd.setHint("Password");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
 	}
 
 	public void loginToFacebook() {
@@ -224,6 +277,7 @@ public class LoginActivity extends Activity implements
 		txt_lgn_forgot_pwd = (TextView) findViewById(R.id.txt_lgn_forgot_pwd);
 		rl_fb_login = (RelativeLayout) findViewById(R.id.rl_fb_login);
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
+		
 	}
 
 	/**
@@ -319,6 +373,8 @@ public class LoginActivity extends Activity implements
 			if (UtilInList.ReadSharePrefrence(LoginActivity.this,
 					Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
 				finish();
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			} else {
 				startActivity(new Intent(LoginActivity.this,
 						HomeScreenActivity.class));
@@ -409,13 +465,21 @@ public class LoginActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(LoginActivity.this, "" + ""
-							+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
-
+					edt_lgn_e_mail.setText("");
+					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_e_mail.setHint("Email Invalid");
+				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+						edt_lgn_e_mail.getText().toString().trim()).matches() == false) {
+					edt_lgn_e_mail.setText("");
+					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_e_mail.setHint("Email Invalid");
 				} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(LoginActivity.this, "" + ""
-							+ Constant.ERRORS.PLZ_PASSWORD,
-							Constant.ERRORS.OOPS);
+					edt_lgn_pwd.setText("");
+					edt_lgn_pwd.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_pwd.setHint("Password Incorrect");
 				} else {
 
 					List<NameValuePair> params = new ArrayList<NameValuePair>();

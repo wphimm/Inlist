@@ -93,6 +93,7 @@
                     android:id="@+id/img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/info_icon"
                     android:contentDescription="@string/iv_desc" />
 
@@ -209,6 +210,7 @@
                     android:id="@+id/img2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/table_icon"
                     android:contentDescription="@string/iv_desc" />
 
@@ -228,8 +230,8 @@
 
                     <Spinner
                         android:id="@+id/spinnerTable"
-                        android:layout_width="200dp"
-                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/t3"
                         android:layout_marginTop="2dp"
                         android:background="@drawable/spinner" />
@@ -254,6 +256,7 @@
                     android:id="@+id/img3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/money_icon"
                     android:contentDescription="@string/iv_desc" />
 
@@ -314,6 +317,7 @@
                     android:id="@+id/img4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/location_icon"
                     android:contentDescription="@string/iv_desc" />
 

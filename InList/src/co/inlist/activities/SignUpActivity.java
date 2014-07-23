@@ -16,6 +16,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,6 +83,156 @@ public class SignUpActivity extends Activity implements
 				// TODO Auto-generated method stub
 				startActivity(new Intent(SignUpActivity.this,
 						VipMemberShipActivity.class));
+			}
+		});
+
+		edt_su_fname.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_fname.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_fname.setHint("First Name");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_su_lname.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_lname.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_lname.setHint("Last Name");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_su_e_mail.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_e_mail.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_e_mail.setHint("Email Address");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_su_pwd.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_pwd.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_pwd.setHint("Password");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_su_phno.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_phno.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_phno.setHint("Phone Number");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		edt_su_ans.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				edt_su_ans.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				edt_su_ans.setHint("Please Enter Answer");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 	}
@@ -334,27 +486,41 @@ public class SignUpActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (edt_su_fname.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(SignUpActivity.this,
-							Constant.ERRORS.PLZ_FIRST_NAME,
-							Constant.ERRORS.OOPS);
+					edt_su_fname.setText("");
+					edt_su_fname.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_fname.setHint("First Name");
 				} else if (edt_su_lname.getText().toString().trim().equals("")) {
-					UtilInList
-							.validateDialog(SignUpActivity.this,
-									Constant.ERRORS.PLZ_LAST_NAME,
-									Constant.ERRORS.OOPS);
+					edt_su_lname.setText("");
+					edt_su_lname.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_lname.setHint("Last Name");
 				} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(SignUpActivity.this,
-							Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
+					edt_su_e_mail.setText("");
+					edt_su_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_e_mail.setHint("Email Invalid");
+				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+						edt_su_e_mail.getText().toString().trim()).matches() == false) {
+					edt_su_e_mail.setText("");
+					edt_su_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_e_mail.setHint("Email Invalid");
 				} else if (edt_su_pwd.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(SignUpActivity.this,
-							Constant.ERRORS.PLZ_PASSWORD, Constant.ERRORS.OOPS);
+					edt_su_pwd.setText("");
+					edt_su_pwd.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_pwd.setHint("Password Incorrect");
 				} else if (edt_su_phno.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(SignUpActivity.this,
-							Constant.ERRORS.PLZ_CONTACT_NO,
-							Constant.ERRORS.OOPS);
+					edt_su_phno.setText("");
+					edt_su_phno.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_phno.setHint("Phone Number Incorrect");
 				} else if (edt_su_ans.getText().toString().trim().equals("")) {
-					UtilInList.validateDialog(SignUpActivity.this,
-							Constant.ERRORS.PLZ_ANS, Constant.ERRORS.OOPS);
+					edt_su_ans.setText("");
+					edt_su_ans.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_ans.setHint("Please Enter Answer");
 
 				} else {
 

@@ -9,13 +9,20 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
         android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light" />
 
         <ListView
             android:id="@+id/lst_setting"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:listSelector="#00000000" >
         </ListView>
     </LinearLayout>
 
@@ -28,11 +35,11 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:layout_alignParentTop="true"
-            android:background="@drawable/diamond" />
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/diamond"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
     </RelativeLayout>
 
 </LinearLayout>

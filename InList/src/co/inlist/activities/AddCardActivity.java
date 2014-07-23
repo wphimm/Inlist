@@ -365,8 +365,23 @@ public class AddCardActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case android.R.id.home:
-			finish();
-			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+			if (UtilInList
+					.ReadSharePrefrence(AddCardActivity.this,
+							Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
+					.equals("1")
+					&& UtilInList
+							.ReadSharePrefrence(AddCardActivity.this,
+									Constant.SHRED_PR.KEY_ADDCARD_FROM)
+							.toString().equals("1")) {
+				finish();
+				overridePendingTransition(R.anim.hold_top,
+						R.anim.exit_in_bottom);
+			} else {
+				NoCardActivity.objNoCard.finish();
+				finish();
+				overridePendingTransition(R.anim.hold_top,
+						R.anim.exit_in_bottom);
+			}
 			return true;
 
 		default:
@@ -502,7 +517,17 @@ public class AddCardActivity extends Activity implements
 				.equals("1")) {
 			action_button.setBackgroundResource(R.drawable.delete_card_onclick);
 		} else {
-			action_button.setBackgroundResource(R.drawable.btn_save);
+
+			if (UtilInList
+					.ReadSharePrefrence(AddCardActivity.this,
+							Constant.SHRED_PR.KEY_ADDCARD_FROM).toString()
+					.equals("1")) {
+				action_button
+						.setBackgroundResource(R.drawable.review_action_bar);
+			} else {
+				action_button.setBackgroundResource(R.drawable.save_onclick);
+			}
+
 		}
 
 		action_button.setOnClickListener(new OnClickListener() {
@@ -592,7 +617,21 @@ public class AddCardActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
-		finish();
-		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		if (UtilInList
+				.ReadSharePrefrence(AddCardActivity.this,
+						Constant.SHRED_PR.KEY_USER_CARD_ADDED).toString()
+				.equals("1")
+				&& UtilInList
+						.ReadSharePrefrence(AddCardActivity.this,
+								Constant.SHRED_PR.KEY_ADDCARD_FROM).toString()
+						.equals("1")) {
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		} else {
+			NoCardActivity.objNoCard.finish();
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		}
+
 	}
 }

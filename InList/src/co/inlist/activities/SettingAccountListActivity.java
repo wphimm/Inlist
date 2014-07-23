@@ -15,11 +15,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
@@ -36,14 +39,9 @@ public class SettingAccountListActivity extends Activity implements
 
 		listView = (ListView) findViewById(R.id.lst_setting);
 
-		String[] values = new String[] { "Change Password", "Billing Details",
-				"Invite", "Notification Settings", "Terms & Conditions" };
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				R.layout.setting_activity_row, R.id.txt_setting_lst_title,
-				values);
-
-		listView.setAdapter(adapter);
+		listView.setAdapter(new CustomAdapter());
+		listView.setDividerHeight(0);
+		listView.setDivider(null);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -127,6 +125,57 @@ public class SettingAccountListActivity extends Activity implements
 		}, 500);
 
 		actionBarAndButtonActions();
+
+	}
+
+	class CustomAdapter extends BaseAdapter {
+
+		String[] values = new String[] { "Change Password", "Billing Details",
+				"Invite", "Notification Settings", "Terms & Conditions" };
+
+		public CustomAdapter() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return values.length;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			View row = convertView;
+			if (row == null) {
+				row = getLayoutInflater().inflate(
+						R.layout.setting_activity_row, null);
+			}
+			TextView txt = (TextView) row
+					.findViewById(R.id.txt_setting_lst_title);
+			txt.setText("" + values[position]);
+
+			View v = (View) row.findViewById(R.id.v2);
+			if (position == 1) {
+				v.setVisibility(View.VISIBLE);
+			} else {
+				v.setVisibility(View.GONE);
+			}
+
+			return row;
+		}
 
 	}
 

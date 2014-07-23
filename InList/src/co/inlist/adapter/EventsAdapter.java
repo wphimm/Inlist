@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,11 +99,11 @@ public class EventsAdapter extends BaseAdapter {
 				.findViewById(R.id.event_location_city);
 		ImageView img_event_poster_url = (ImageView) convertView
 				.findViewById(R.id.img);
-		img_event_poster_url.setBackgroundResource(0);
+		img_event_poster_url.setBackgroundResource(R.drawable.event_details_overlay);
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
-		// txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText(locallist.get(position).get("event_title")
 				.toString().toUpperCase());
 		txt_event_location_city.setText(""

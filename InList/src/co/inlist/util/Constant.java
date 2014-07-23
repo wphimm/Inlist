@@ -96,7 +96,7 @@ public class Constant {
 		public static final String PLZ_FIRST_NAME = "Please enter Firstname";
 		public static final String PLZ_LAST_NAME = "Please enter Lastname";
 		public static final String PLZ_EMAIL = "Please enter email";
-		public static final String PLZ_VALID_EMAIL = "Please enter valid EMAIL address";
+		public static final String PLZ_VALID_EMAIL = "Please enter valid email address";
 		public static final String PLZ_CONTACT_NO = "Please enter contact no";
 		public static final String PLZ_PASSWORD = "Please enter password";
 		public static final String PLZ_REPASSWORD = "Please enter a password having a mix of letters and numbers, and at least 6 charecters in length.";

@@ -1,7 +1,10 @@
 package co.inlist.activities;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -25,12 +28,14 @@ import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
-@SuppressLint("DefaultLocale")
+@SuppressLint({ "DefaultLocale", "SimpleDateFormat" })
 public class CompletePurchaseActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
+	HashMap<String, String> map;
 	public static CompletePurchaseActivity cpObj;
-	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName;
+	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName,
+			txtSubtotal, txtTax, txtGratuity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,11 @@ public class CompletePurchaseActivity extends Activity implements
 		init();
 
 		actionBarAndButtonActions();
+
+		map = InListApplication.getListEvents().get(
+				Integer.parseInt(UtilInList.ReadSharePrefrence(
+						CompletePurchaseActivity.this,
+						Constant.SHRED_PR.KEY_CURRENT_POSITION).toString()));
 		cpObj = this;
 
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
@@ -49,17 +59,72 @@ public class CompletePurchaseActivity extends Activity implements
 				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
 		txtPoints.setText(Html.fromHtml(strHTML));
 
+		// ***** Date Format ************************************//
+		String strDate = "" + map.get("event_start_date");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Date date1;
+
+		try {
+			date1 = sdf.parse(strDate);
+
+			SimpleDateFormat format = new SimpleDateFormat("d");
+			String date = format.format(date1);
+
+			if (date.endsWith("1") && !date.endsWith("11"))
+				format = new SimpleDateFormat("EEE, MMM d'st'");
+			else if (date.endsWith("2") && !date.endsWith("12"))
+				format = new SimpleDateFormat("EEE, MMM d'nd'");
+			else if (date.endsWith("3") && !date.endsWith("13"))
+				format = new SimpleDateFormat("EEE, MMM d'rd'");
+			else
+				format = new SimpleDateFormat("EEE, MMM d'th'");
+
+			strDate = format.format(date1);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String strDateTime = "" + strDate;
+		try {
+			String strStartTime = ""
+					+ map.get("event_start_time").replace(" ", "");
+			if (!strStartTime.equals("null")) {
+				strDateTime = "" + strDate + " " + strStartTime;
+				String strEndTime = ""
+						+ map.get("event_end_time").replace(" ", "");
+				if (strEndTime.equals("null")) {
+					strDateTime = "" + strDate + " " + strStartTime;
+				} else {
+					strDateTime = "" + strDate + " " + strStartTime + " - "
+							+ strEndTime;
+				}
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
+		}
+
+		// ***** Date Format ************************************//
+
 		String strTable = ""
 				+ InListApplication
 						.getPricing()
 						.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
 								CompletePurchaseActivity.this,
 								Constant.SHRED_PR.KEY_PRICE_POSITION)
-								.toString())).get("club_section_name");
+								.toString())).get("club_section_name") + ",\n"
+				+ map.get("event_title") + ",\n" + strDateTime;
 		txtTable.setText("" + strTable);
-		txtTotal.setText("$"
+
+		txtSubtotal.setText("$"
 				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
 						Constant.SHRED_PR.KEY_YOUR_MINIMUM).toString());
+		txtTax.setText("$" + map.get("tax"));
+		txtGratuity.setText("$" + map.get("gratuity"));
+
+		txtTotal.setText("$"
+				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
+						Constant.SHRED_PR.KEY_YOUR_MINIMUM).toString() + " ");
 
 		String strCardNum = ""
 				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
@@ -91,12 +156,12 @@ public class CompletePurchaseActivity extends Activity implements
 			// TODO: handle exception
 		}
 
-		String strDate = new DecimalFormat("00").format(Integer
+		String strMonthYear = new DecimalFormat("00").format(Integer
 				.parseInt(UtilInList.ReadSharePrefrence(
 						CompletePurchaseActivity.this,
 						Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH).toString()))
 				+ "/" + strYear;
-		txtDate.setText("" + strDate);
+		txtDate.setText("" + strMonthYear);
 
 	}
 
@@ -108,6 +173,9 @@ public class CompletePurchaseActivity extends Activity implements
 		txtDate = (TextView) findViewById(R.id.txt_date);
 		txtCardNum = (TextView) findViewById(R.id.txt_card_num);
 		txtCardName = (TextView) findViewById(R.id.txt_card_name);
+		txtSubtotal = (TextView) findViewById(R.id.txt_subtotal);
+		txtTax = (TextView) findViewById(R.id.txt_tax);
+		txtGratuity = (TextView) findViewById(R.id.txt_gratuity);
 	}
 
 	// @Override

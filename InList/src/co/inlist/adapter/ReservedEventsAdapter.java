@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -112,7 +113,7 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
-		// txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText(locallist.get(position).get("event_title")
 				.toString().toUpperCase());
 		txt_event_location_city.setText(""
@@ -200,7 +201,8 @@ public class ReservedEventsAdapter extends BaseAdapter {
 										.isInternetConnectionExist(context)) {
 
 									currentPos = position;
-									new HideReservationAsyncTask(objAct).execute("");
+									new HideReservationAsyncTask(objAct)
+											.execute("");
 
 								} else {
 									UtilInList.validateDialog(objAct, ""
@@ -229,7 +231,8 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	public class HideReservationAsyncTask extends AsyncTask<String, String, String> {
+	public class HideReservationAsyncTask extends
+			AsyncTask<String, String, String> {
 
 		private MyProgressbar dialog;
 
@@ -285,7 +288,8 @@ public class ReservedEventsAdapter extends BaseAdapter {
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							InListApplication.getListReservedEvents().remove(currentPos);
+							InListApplication.getListReservedEvents().remove(
+									currentPos);
 							notifyDataSetChanged();
 						}
 					} catch (Exception e) {

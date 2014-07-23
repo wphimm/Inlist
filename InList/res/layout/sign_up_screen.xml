@@ -73,7 +73,8 @@
                         android:layout_weight="1"
                         android:hint="@string/fname"
                         android:shadowColor="@color/light_yellow"
-                        android:textColor="@color/light_yellow" />
+                        android:textColor="@color/light_yellow"
+                        android:textColorHint="@color/white_dull" />
 
                     <EditText
                         android:id="@+id/edt_su_lname"
@@ -83,7 +84,8 @@
                         android:layout_weight="1"
                         android:hint="@string/lname"
                         android:shadowColor="@color/light_yellow"
-                        android:textColor="@color/light_yellow" />
+                        android:textColor="@color/light_yellow"
+                        android:textColorHint="@color/white_dull" />
                 </LinearLayout>
 
                 <EditText
@@ -93,7 +95,8 @@
                     android:layout_margin="3dp"
                     android:hint="@string/email_address"
                     android:shadowColor="@color/light_yellow"
-                    android:textColor="@color/light_yellow" />
+                    android:textColor="@color/light_yellow"
+                    android:textColorHint="@color/white_dull" />
 
                 <EditText
                     android:id="@+id/edt_su_pwd"
@@ -101,7 +104,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/pwd"
-                    android:textColor="@color/light_yellow" />
+                    android:textColor="@color/light_yellow"
+                    android:textColorHint="@color/white_dull" />
 
                 <EditText
                     android:id="@+id/edt_su_phno"
@@ -109,7 +113,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/Phno"
-                    android:textColor="@color/light_yellow" />
+                    android:textColor="@color/light_yellow"
+                    android:textColorHint="@color/white_dull" />
 
                 <TextView
                     android:id="@+id/txt_su_que"
@@ -128,7 +133,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/pls_answer"
-                    android:textColor="@color/light_yellow" />
+                    android:textColor="@color/light_yellow"
+                    android:textColorHint="@color/white_dull" />
             </LinearLayout>
 
             <LinearLayout

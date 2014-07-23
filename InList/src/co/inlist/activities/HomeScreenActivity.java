@@ -461,7 +461,6 @@ public class HomeScreenActivity extends Activity implements
 			// TODO Auto-generated method stub
 			super.onViewCreated(view, savedInstanceState);
 
-			super.onViewCreated(view, savedInstanceState);
 			ViewGroup viewGroup = (ViewGroup) view;
 
 			// As we're using a ListFragment we create a PullToRefreshLayout

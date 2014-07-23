@@ -130,6 +130,7 @@ public class EventDetailsActivity extends Activity implements
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
 
+		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText("" + map.get("event_title"));
 		txt_event_location_city.setText("" + map.get("event_location_club")
 				+ ", " + map.get("event_location_city"));

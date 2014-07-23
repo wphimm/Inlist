@@ -25,7 +25,7 @@
                     android:id="@+id/img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/table_icon"
+                    android:background="@drawable/info_icon"
                     android:contentDescription="@string/iv_desc" />
 
                 <RelativeLayout
@@ -38,7 +38,8 @@
                         android:id="@+id/t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/table"
+                        android:text="@string/details"
+                        android:textColor="@color/light"
                         android:textStyle="bold" />
 
                     <TextView
@@ -57,7 +58,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/r1"
-                android:layout_margin="20dp" >
+                android:layout_margin="20dp"
+                android:visibility="gone" >
 
                 <ImageView
                     android:id="@+id/img1"
@@ -143,9 +145,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_below="@+id/txt_card_num"
-                        android:inputType="textCapWords"
                         android:layout_marginLeft="20dp"
                         android:gravity="center_vertical"
+                        android:inputType="textCapWords"
                         android:text="John Smith" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -174,18 +176,119 @@
                         android:id="@+id/t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/total"
+                        android:text="@string/cost"
+                        android:textColor="@color/light"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/t1"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal" >
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/t1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/subtotal" />
+
+                            <TextView
+                                android:id="@+id/txt_subtotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/t1"
+                                android:layout_marginTop="5dp"
+                                android:text="$2000"
+                                android:textColor="@color/light_yellow"
+                                android:textSize="20sp" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/t1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tax" />
+
+                            <TextView
+                                android:id="@+id/txt_tax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/t1"
+                                android:layout_marginTop="5dp"
+                                android:text="$2000"
+                                android:textColor="@color/light_yellow"
+                                android:textSize="20sp" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/t1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/gratuity" />
+
+                            <TextView
+                                android:id="@+id/txt_gratuity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/t1"
+                                android:layout_marginTop="5dp"
+                                android:text="$2000 "
+                                android:textColor="@color/light_yellow"
+                                android:textSize="20sp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/v1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linear"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/light_yellow" />
 
                     <TextView
                         android:id="@+id/txt_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/t1"
-                        android:layout_marginTop="5dp"
-                        android:text="$2000"
+                        android:layout_below="@+id/v1"
+                        android:layout_marginTop="10dp"
+                        android:text="$2000 "
                         android:textColor="@color/light_yellow"
-                        android:textIsSelectable="true"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/v1"
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@+id/txt_total"
+                        android:text="Total"
+                        android:textColor="@color/light_yellow"
                         android:textSize="20sp" />
 
                     <TextView
@@ -222,6 +325,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tc"
+                        android:textColor="@color/light"
                         android:textStyle="bold" />
 
                     <TextView

@@ -11,14 +11,24 @@ import android.widget.ImageButton;
 
 public class NoCardActivity extends Activity implements
 		ActionBar.OnNavigationListener {
+	
+	public static NoCardActivity objNoCard;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.no_card_screen);
 
+		objNoCard=this;
 		actionBarAndButtonActions();
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+	
 	/**
 	 * On selecting action bar icons
 	 * */
