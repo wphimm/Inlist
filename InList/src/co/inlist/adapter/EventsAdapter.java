@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.android.gms.internal.co;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -18,28 +20,29 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.inlist.activities.EventDetailsActivity;
 import co.inlist.activities.HomeScreenActivity;
 import co.inlist.activities.R;
+import co.inlist.imageloaders.ImageLoader;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
 @SuppressLint("SimpleDateFormat")
-public class EventsAdapter extends BaseAdapter {
+public class EventsAdapter extends BaseAdapter implements
+		StickyListHeadersAdapter, SectionIndexer {
 
 	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
 	Context context;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
+	protected ImageLoader imageLoader;
+
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
 			typeLeaguegothic_condensedregular;
 	Activity objAct;
+
+	private ArrayList<String> mSectionLetters;
 
 	@SuppressWarnings("deprecation")
 	public EventsAdapter(ArrayList<HashMap<String, String>> list,
@@ -49,11 +52,7 @@ public class EventsAdapter extends BaseAdapter {
 		this.context = context;
 		this.objAct = objAct;
 
-		options = new DisplayImageOptions.Builder().showStubImage(0)
-				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
-				.bitmapConfig(Bitmap.Config.RGB_565).build();
-
-		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+		imageLoader = new ImageLoader(context);
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(),
 				"akzidgrobeligex.ttf");
@@ -63,6 +62,28 @@ public class EventsAdapter extends BaseAdapter {
 				context.getAssets(), "leaguegothic_condensedregular.otf");
 		typeAvenir = Typeface
 				.createFromAsset(context.getAssets(), "avenir.ttc");
+
+		mSectionLetters = getSectionLetters();
+
+	}
+
+	private ArrayList<String> getSectionLetters() {
+
+		ArrayList<String> letters=new ArrayList<String>();
+		for (int j = 0; j < locallist.size(); j++) {
+			boolean flag = true;
+			for (int i = 0; i < j; i++) {
+				if (locallist.get(i).get("event_start_date")
+						.equals(locallist.get(j).get("event_start_date")))
+					flag = false;
+			}
+			if (flag) {
+				letters.add(""+locallist.get(j).get("event_start_date"));
+			}
+		}
+		
+
+		return letters;
 	}
 
 	@Override
@@ -85,6 +106,7 @@ public class EventsAdapter extends BaseAdapter {
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		ImageView img_event_poster_url;
 
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
@@ -93,13 +115,14 @@ public class EventsAdapter extends BaseAdapter {
 
 		RelativeLayout relativeHeader = (RelativeLayout) convertView
 				.findViewById(R.id.header);
+
 		TextView txt_event_title = (TextView) convertView
 				.findViewById(R.id.event_title);
 		TextView txt_event_location_city = (TextView) convertView
 				.findViewById(R.id.event_location_city);
-		ImageView img_event_poster_url = (ImageView) convertView
-				.findViewById(R.id.img);
-		img_event_poster_url.setBackgroundResource(R.drawable.event_details_overlay);
+		img_event_poster_url = (ImageView) convertView.findViewById(R.id.img);
+		img_event_poster_url
+				.setBackgroundResource(R.drawable.event_details_overlay);
 		TextView txt_event_start_date = (TextView) convertView
 				.findViewById(R.id.event_start_date);
 
@@ -157,7 +180,8 @@ public class EventsAdapter extends BaseAdapter {
 		}
 
 		String image_url = locallist.get(position).get("event_poster_url");
-		imageLoader.displayImage(image_url, img_event_poster_url, options);
+		// imageLoader.displayImage(image_url, img_event_poster_url, options);
+		imageLoader.DisplayImage(image_url, Color.BLACK, img_event_poster_url);
 
 		if (position == (getCount() - 1)) {
 			if (UtilInList.isInternetConnectionExist(context
@@ -167,6 +191,7 @@ public class EventsAdapter extends BaseAdapter {
 				HomeScreenActivity.HomeScreenObj.new EventsAsyncTask(
 						context.getApplicationContext()).execute("");
 			} else {
+
 				Toast.makeText(context.getApplicationContext(),
 						"" + Constant.network_error, Toast.LENGTH_SHORT).show();
 			}
@@ -177,7 +202,6 @@ public class EventsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Activity a = null;
 				Intent i = new Intent(context, EventDetailsActivity.class);
 				i.putExtra("pos", position);
 				context.startActivity(i);
@@ -187,5 +211,71 @@ public class EventsAdapter extends BaseAdapter {
 		});
 
 		return convertView;
+	}
+
+	@Override
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		HeaderViewHolder holder;
+
+		if (convertView == null) {
+			holder = new HeaderViewHolder();
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.headerlayout, parent, false);
+			holder.text_header = (TextView) convertView
+					.findViewById(R.id.event_start_date);
+			convertView.setTag(holder);
+		} else {
+			holder = (HeaderViewHolder) convertView.getTag();
+		}
+
+		// set header text as first char in name
+		holder.text_header.setText(""
+				+ locallist.get(position).get("event_start_date"));
+		return convertView;
+	}
+
+	/**
+	 * Remember that these have to be static, postion=1 should always return the
+	 * same Id that is.
+	 */
+	@Override
+	public long getHeaderId(int position) {
+		// return the first character of the country as ID because this is what
+		// headers are based upon
+		return locallist.get(position).get("event_start_date")
+				.subSequence(0, 1).charAt(0);
+	}
+
+	@Override
+	public int getPositionForSection(int section) {
+		if (mSectionLetters.size() == 0) {
+			return 0;
+		}
+
+		if (section >= mSectionLetters.size()) {
+			section = mSectionLetters.size()- 1;
+		} else if (section < 0) {
+			section = 0;
+		}
+		return mSectionLetters.get(section);
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		for (int i = 0; i < mSectionIndices.length; i++) {
+			if (position < mSectionIndices[i]) {
+				return i - 1;
+			}
+		}
+		return mSectionIndices.length - 1;
+	}
+
+	@Override
+	public Object[] getSections() {
+		return mSectionLetters;
+	}
+
+	class HeaderViewHolder {
+		TextView text_header;
 	}
 }

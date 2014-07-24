@@ -39,7 +39,6 @@ import co.inlist.util.UtilInList;
 public class AddCardActivity extends Activity implements
 		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
 
-	private static final String MY_CARDIO_APP_TOKEN = "4737eb3d1b954baf9c99f071722830a3";
 	private int MY_SCAN_REQUEST_CODE = 100; // arbitrary int
 
 	private EditText edt_card_num;
@@ -267,7 +266,7 @@ public class AddCardActivity extends Activity implements
 
 		// required for authentication with card.io
 		scanIntent
-				.putExtra(CardIOActivity.EXTRA_APP_TOKEN, MY_CARDIO_APP_TOKEN);
+				.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constant.MY_CARDIO_APP_TOKEN);
 
 		// customize these values to suit your needs.
 		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false); // default:

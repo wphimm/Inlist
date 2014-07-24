@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.google.android.gms.internal.fa;
-
 import twitter4j.StatusUpdate;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;

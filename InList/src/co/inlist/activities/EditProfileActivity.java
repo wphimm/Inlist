@@ -103,7 +103,6 @@ public class EditProfileActivity extends Activity implements
 				}
 			}
 		});
-
 	}
 
 	private void init() {
@@ -318,7 +317,8 @@ public class EditProfileActivity extends Activity implements
 
 									ProfileActivity.profObj.finish();
 									finish();
-									overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+									overridePendingTransition(R.anim.hold_top,
+											R.anim.exit_in_left);
 								} else {
 									UtilInList.validateDialog(
 											EditProfileActivity.this, ""

@@ -10,6 +10,7 @@ public class Constant {
 	public static final String SUCCESS = "1";
 	public static final String FAIL = "0";
 	public static final String LOADING = "Loading...";
+	public static final String MY_CARDIO_APP_TOKEN = "4737eb3d1b954baf9c99f071722830a3";
 
 	public static String network_error = "please check your network connectivity.";
 	public static String AppName = "InList";
