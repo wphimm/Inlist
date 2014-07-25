@@ -146,7 +146,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
     @Override
     public void onRefreshStarted() {
         if (mHeaderTextView != null) {
-            mHeaderTextView.setText("Refreshing content");
+            mHeaderTextView.setText(mRefreshingLabel);
         }
         if (mHeaderProgressBar != null) {
             mHeaderProgressBar.setVisibility(View.VISIBLE);

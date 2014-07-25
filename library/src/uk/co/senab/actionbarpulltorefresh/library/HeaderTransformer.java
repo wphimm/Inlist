@@ -25,8 +25,7 @@ import android.view.View;
  * of the pull-to-refresh interaction. They are responsible for showing and hiding the header
  * view, as well as update the state.
  */
-public abstract class HeaderTransformer 
-{
+public abstract class HeaderTransformer {
 
     /**
      * Called whether the header view has been inflated from the resources
