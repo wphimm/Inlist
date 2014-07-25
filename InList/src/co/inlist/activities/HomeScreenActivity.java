@@ -667,6 +667,7 @@ public class HomeScreenActivity extends Activity implements
 		}
 
 		adapterEvents.notifyDataSetChanged();
+
 	}
 
 	@Override

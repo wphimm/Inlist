@@ -5,22 +5,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.google.android.gms.internal.co;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.inlist.activities.EventDetailsActivity;
@@ -30,9 +27,8 @@ import co.inlist.imageloaders.ImageLoader;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
-@SuppressLint("SimpleDateFormat")
-public class EventsAdapter extends BaseAdapter implements
-		StickyListHeadersAdapter, SectionIndexer {
+@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
+public class EventsAdapter extends BaseAdapter {
 
 	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
 	Context context;
@@ -44,7 +40,6 @@ public class EventsAdapter extends BaseAdapter implements
 
 	private ArrayList<String> mSectionLetters;
 
-	@SuppressWarnings("deprecation")
 	public EventsAdapter(ArrayList<HashMap<String, String>> list,
 			Context context, Activity objAct) {
 		// TODO Auto-generated constructor stub
@@ -63,13 +58,14 @@ public class EventsAdapter extends BaseAdapter implements
 		typeAvenir = Typeface
 				.createFromAsset(context.getAssets(), "avenir.ttc");
 
-		mSectionLetters = getSectionLetters();
+		// mSectionLetters = getSectionLetters();
 
+		Log.e("getCount", "" + getCount());
 	}
 
 	private ArrayList<String> getSectionLetters() {
 
-		ArrayList<String> letters=new ArrayList<String>();
+		ArrayList<String> letters = new ArrayList<String>();
 		for (int j = 0; j < locallist.size(); j++) {
 			boolean flag = true;
 			for (int i = 0; i < j; i++) {
@@ -78,11 +74,11 @@ public class EventsAdapter extends BaseAdapter implements
 					flag = false;
 			}
 			if (flag) {
-				letters.add(""+locallist.get(j).get("event_start_date"));
+				letters.add("" + locallist.get(j).get("event_start_date"));
 			}
 		}
-		
 
+		Log.e("letters size:", "" + letters.size());
 		return letters;
 	}
 
@@ -112,6 +108,8 @@ public class EventsAdapter extends BaseAdapter implements
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.events_list_row, null);
 		}
+
+		Log.e("position in getView", ">>>>>>" + position);
 
 		RelativeLayout relativeHeader = (RelativeLayout) convertView
 				.findViewById(R.id.header);
@@ -213,69 +211,60 @@ public class EventsAdapter extends BaseAdapter implements
 		return convertView;
 	}
 
-	@Override
-	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		HeaderViewHolder holder;
-
-		if (convertView == null) {
-			holder = new HeaderViewHolder();
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.headerlayout, parent, false);
-			holder.text_header = (TextView) convertView
-					.findViewById(R.id.event_start_date);
-			convertView.setTag(holder);
-		} else {
-			holder = (HeaderViewHolder) convertView.getTag();
-		}
-
-		// set header text as first char in name
-		holder.text_header.setText(""
-				+ locallist.get(position).get("event_start_date"));
-		return convertView;
-	}
-
-	/**
-	 * Remember that these have to be static, postion=1 should always return the
-	 * same Id that is.
-	 */
-	@Override
-	public long getHeaderId(int position) {
-		// return the first character of the country as ID because this is what
-		// headers are based upon
-		return locallist.get(position).get("event_start_date")
-				.subSequence(0, 1).charAt(0);
-	}
-
-	@Override
-	public int getPositionForSection(int section) {
-		if (mSectionLetters.size() == 0) {
-			return 0;
-		}
-
-		if (section >= mSectionLetters.size()) {
-			section = mSectionLetters.size()- 1;
-		} else if (section < 0) {
-			section = 0;
-		}
-		return mSectionLetters.get(section);
-	}
-
-	@Override
-	public int getSectionForPosition(int position) {
-		for (int i = 0; i < mSectionIndices.length; i++) {
-			if (position < mSectionIndices[i]) {
-				return i - 1;
-			}
-		}
-		return mSectionIndices.length - 1;
-	}
-
-	@Override
-	public Object[] getSections() {
-		return mSectionLetters;
-	}
-
-	class HeaderViewHolder {
-		TextView text_header;
-	}
+	// @Override
+	// public View getHeaderView(int position, View convertView, ViewGroup
+	// parent) {
+	// HeaderViewHolder holder;
+	//
+	// if (convertView == null) {
+	// holder = new HeaderViewHolder();
+	// convertView = LayoutInflater.from(context).inflate(
+	// R.layout.headerlayout, parent, false);
+	// holder.text_header = (TextView) convertView
+	// .findViewById(R.id.event_start_date);
+	// convertView.setTag(holder);
+	// } else {
+	// holder = (HeaderViewHolder) convertView.getTag();
+	// }
+	//
+	// // set header text as first char in name
+	// holder.text_header.setText("" + mSectionLetters.get(position));
+	// return convertView;
+	// }
+	//
+	// /**
+	// * Remember that these have to be static, postion=1 should always return
+	// the
+	// * same Id that is.
+	// */
+	// @Override
+	// public long getHeaderId(int position) {
+	// // return the first character of the country as ID because this is what
+	// // headers are based upon
+	// return mSectionLetters.get(position).subSequence(0, 1).charAt(0);
+	// }
+	//
+	// @Override
+	// public int getPositionForSection(int section) {
+	// return section;
+	// }
+	//
+	// @Override
+	// public int getSectionForPosition(int position) {
+	// return position;
+	// }
+	//
+	// @Override
+	// public String[] getSections() {
+	// String[] mHeaders = new String[mSectionLetters.size()];
+	// for (int i = 0; i < mSectionLetters.size(); i++) {
+	// mHeaders[i] = mSectionLetters.get(i);
+	// }
+	// Log.e("sections size:", "" + mHeaders.length);
+	// return mHeaders;
+	// }
+	//
+	// class HeaderViewHolder {
+	// TextView text_header;
+	// }
 }

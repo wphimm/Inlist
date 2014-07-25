@@ -15,7 +15,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -31,21 +30,17 @@ import android.widget.TextView;
 import co.inlist.activities.InListApplication;
 import co.inlist.activities.R;
 import co.inlist.activities.ReservedEventDetailsActivity;
+import co.inlist.imageloaders.ImageLoader;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 @SuppressLint("SimpleDateFormat")
 public class ReservedEventsAdapter extends BaseAdapter {
 
 	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
 	Context context;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
+	protected ImageLoader imageLoader;
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
 			typeLeaguegothic_condensedregular;
 	Activity objAct;
@@ -59,11 +54,7 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		this.context = context;
 		this.objAct = objAct;
 
-		options = new DisplayImageOptions.Builder().showStubImage(0)
-				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
-				.bitmapConfig(Bitmap.Config.RGB_565).build();
-
-		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+		imageLoader = new ImageLoader(context);
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(),
 				"akzidgrobeligex.ttf");
@@ -167,7 +158,7 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		}
 
 		String image_url = locallist.get(position).get("event_poster_url");
-		imageLoader.displayImage(image_url, img_event_poster_url, options);
+		imageLoader.DisplayImage(image_url, Color.BLACK, img_event_poster_url);
 
 		convertView.setOnClickListener(new View.OnClickListener() {
 

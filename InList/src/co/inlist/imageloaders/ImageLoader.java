@@ -36,7 +36,7 @@ public class ImageLoader {
 		executorService = Executors.newFixedThreadPool(5);
 	}
 
-	int stub_id = R.drawable.no_images;
+	int stub_id = R.drawable.event_details_overlay;
 
 	public void DisplayImage(String url, int loader, ImageView imageView) {
 		stub_id = loader;

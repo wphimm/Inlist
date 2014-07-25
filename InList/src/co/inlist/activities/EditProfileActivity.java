@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -13,7 +12,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,7 +24,6 @@ import android.widget.ImageButton;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
-import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 public class EditProfileActivity extends Activity implements
@@ -34,6 +31,7 @@ public class EditProfileActivity extends Activity implements
 
 	EditText editFirst, editLast, editEmail, editPhone;
 	Button btnUpdate;
+	int flagLogout = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +87,12 @@ public class EditProfileActivity extends Activity implements
 										EditProfileActivity.this,
 										Constant.SHRED_PR.KEY_SESSIONID)));
 
+						flagLogout = 0;
 						new WebServiceDataPosterAsyncTask(
 								EditProfileActivity.this,
 								params,
 								Constant.API
-										+ "user/details/save/?apiMode=VIP&json=true")
+										+ "user/small_details/save/?apiMode=VIP&json=true")
 								.execute();
 
 					} else {
@@ -129,77 +128,6 @@ public class EditProfileActivity extends Activity implements
 
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	public class LogoutAsyncTask extends AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public LogoutAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ Constant.ACTIONS.LOGOUT
-							+ "?apiMode=VIP&json=true"
-							+ "&device_id="
-							+ UtilInList.getDeviceId(getApplicationContext())
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(
-									EditProfileActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("Response In Activity-->", ">>" + response);
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// fragment_addconnection_search
-
-			try {
-				if (dialog != null) {
-					if (dialog.isShowing()) {
-						dialog.dismiss();
-					}
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
-
-					if (str_temp.equals("success")) {
-
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -247,24 +175,51 @@ public class EditProfileActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
-		try {
-			if (result.getString("success").equals("true")) {
+		Log.e("result", ">>" + result);
 
-				editFirst.setText("");
-				editLast.setText("");
-				editEmail.setText("");
-				editPhone.setText("");
+		if (flagLogout == 0) {
+			try {
+				if (result.getString("success").equals("true")) {
 
-				UtilInList.validateDialog(EditProfileActivity.this, result
-						.getJSONArray("messages").getString(0),
-						Constant.ERRORS.OOPS);
-			} else {
-				UtilInList.validateDialog(EditProfileActivity.this, result
-						.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
+					editFirst.setText("");
+					editLast.setText("");
+					editEmail.setText("");
+					editPhone.setText("");
+
+					UtilInList.validateDialog(EditProfileActivity.this, result
+							.getJSONArray("messages").getString(0),
+							Constant.ERRORS.OOPS);
+				} else {
+					UtilInList.validateDialog(EditProfileActivity.this, result
+							.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
 			}
-		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
+		} else {
+			try {
+				if (result.getString("success").equals("true")) {
+
+					UtilInList.WriteSharePrefrence(EditProfileActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_STATUS, "false");
+
+					UtilInList.WriteSharePrefrence(EditProfileActivity.this,
+							Constant.SHRED_PR.KEY_USER_CARD_ADDED, "0");
+
+					ProfileActivity.profObj.finish();
+					finish();
+					overridePendingTransition(R.anim.hold_top,
+							R.anim.exit_in_left);
+
+				} else {
+					UtilInList.validateDialog(EditProfileActivity.this, result
+							.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
+			}
 		}
 
 	}
@@ -304,21 +259,30 @@ public class EditProfileActivity extends Activity implements
 								if (UtilInList
 										.isInternetConnectionExist(getApplicationContext())) {
 
-									UtilInList.WriteSharePrefrence(
+									List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+									params.add(new BasicNameValuePair(
+											"device_id",
+											""
+													+ UtilInList
+															.getDeviceId(getApplicationContext())));
+									params.add(new BasicNameValuePair(
+											"device_type", "android"));
+									params.add(new BasicNameValuePair(
+											"PHPSESSIONID",
+											""
+													+ UtilInList
+															.ReadSharePrefrence(
+																	EditProfileActivity.this,
+																	Constant.SHRED_PR.KEY_SESSIONID)));
+
+									new WebServiceDataPosterAsyncTask(
 											EditProfileActivity.this,
-											Constant.SHRED_PR.KEY_LOGIN_STATUS,
-											"false");
+											params,
+											Constant.API
+													+ "user/logout/?apiMode=VIP&json=true")
+											.execute();
 
-									UtilInList
-											.WriteSharePrefrence(
-													EditProfileActivity.this,
-													Constant.SHRED_PR.KEY_USER_CARD_ADDED,
-													"0");
-
-									ProfileActivity.profObj.finish();
-									finish();
-									overridePendingTransition(R.anim.hold_top,
-											R.anim.exit_in_left);
 								} else {
 									UtilInList.validateDialog(
 											EditProfileActivity.this, ""

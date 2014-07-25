@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Window;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTaskSplash;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -74,66 +76,26 @@ public class SplashScreenActivity extends Activity implements
 						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 					startActivity(new Intent(SplashScreenActivity.this,
 							HomeScreenActivity.class));
-					overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
+					overridePendingTransition(R.anim.enter_from_bottom,
+							R.anim.hold_bottom);
 				} else {
 					startActivity(new Intent(SplashScreenActivity.this,
 							LeadingActivity.class));
-					overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
+					overridePendingTransition(R.anim.enter_from_bottom,
+							R.anim.hold_bottom);
 				}
 			} else {
 
 				startActivity(new Intent(SplashScreenActivity.this,
 						LeadingActivity.class));
-				overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 
 			}
 			finish();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public class AddDeviceAsyncTask extends AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public AddDeviceAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					nameValuePairs,
-					"" + Constant.API + Constant.ACTIONS.ADD_DEVICE
-							+ "&device_id="
-							+ UtilInList.getDeviceId(getApplicationContext())
-							+ "&deviceType=android");
-			Log.e("Response In Activity-->", ".." + response);
-			Log.e("DeviceId",
-					"" + UtilInList.getDeviceId(getApplicationContext()));
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-
-			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		}
 	}
 
@@ -241,7 +203,8 @@ public class SplashScreenActivity extends Activity implements
 				for (int i = 0; i < data.length(); i++) {
 					JSONObject obj = data.getJSONObject(i);
 					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("music_type_id", "" + obj.getString("music_type_id"));
+					map.put("music_type_id",
+							"" + obj.getString("music_type_id"));
 					map.put("title", "" + obj.getString("title"));
 					InListApplication.getList_music_types().add(map);
 				}
@@ -251,7 +214,6 @@ public class SplashScreenActivity extends Activity implements
 			e.printStackTrace();
 		}
 
-		// new AddDeviceAsyncTask(getApplicationContext()).execute("");
 		new PartyAreaAsyncTask(getApplicationContext()).execute("");
 	}
 

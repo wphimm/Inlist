@@ -762,11 +762,24 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
+//			String response = UtilInList.postData(
+//					nameValuePairs,
+//					""
+//							+ Constant.API
+//							+ "reservation/hide"
+//							+ "/?apiMode=VIP&json=true"
+//							+ "&reservation_id="
+//							+ map.get("order_id")
+//							+ "&PHPSESSIONID="
+//							+ UtilInList.ReadSharePrefrence(
+//									ReservedEventDetailsActivity.this,
+//									Constant.SHRED_PR.KEY_SESSIONID));
+			
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
 							+ Constant.API
-							+ "reservation/hide"
+							+ "push_notification/test"
 							+ "/?apiMode=VIP&json=true"
 							+ "&reservation_id="
 							+ map.get("order_id")
