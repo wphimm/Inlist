@@ -46,7 +46,6 @@ public class ReservedEventsAdapter extends BaseAdapter {
 	Activity objAct;
 	int currentPos;
 
-	@SuppressWarnings("deprecation")
 	public ReservedEventsAdapter(ArrayList<HashMap<String, String>> list,
 			Context context, Activity objAct) {
 		// TODO Auto-generated constructor stub
@@ -149,7 +148,7 @@ public class ReservedEventsAdapter extends BaseAdapter {
 		for (int i = 0; i < position; i++) {
 			if (locallist.get(i).get("event_start_date")
 					.equals(locallist.get(position).get("event_start_date")))
-				flag = false;
+				flag = false;	
 		}
 		if (flag) {
 			relativeHeader.setVisibility(View.VISIBLE);

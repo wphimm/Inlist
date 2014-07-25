@@ -29,6 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -262,16 +264,15 @@ public class ReservedEventDetailsActivity extends Activity implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
-					/*
-					 * ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
-					 * 0.5f, 1.0f, Animation.RELATIVE_TO_SELF, (float) 0.5,
-					 * Animation.RELATIVE_TO_SELF, (float) 1.0);
-					 * animation.setDuration(500); AnimationSet zoom = new
-					 * AnimationSet(true); zoom.addAnimation(animation);
-					 */
+
+					ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
+							0.0f, 1.0f, Animation.RELATIVE_TO_SELF,
+							(float) 0.0, Animation.RELATIVE_TO_SELF,
+							(float) 1.0);
+					animation.setDuration(500);
 
 					relative_zoom_map.setVisibility(View.VISIBLE);
-					// relative_zoom_map.setAnimation(zoom);
+					relative_zoom_map.setAnimation(animation);
 					// scrollMain.setVisibility(View.GONE);
 					// relative_google_map.setVisibility(View.INVISIBLE);
 
@@ -427,9 +428,18 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		case android.R.id.home:
 			if (relative_zoom_map.getVisibility() == View.VISIBLE) {
+				
+				ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
+						1.0f, 0.0f, Animation.RELATIVE_TO_SELF,
+						(float) 0.0, Animation.RELATIVE_TO_SELF,
+						(float) 1.0);
+				animation.setDuration(500);
+				
+				relative_zoom_map.startAnimation(animation);
 				relative_zoom_map.setVisibility(View.GONE);
 				scrollMain.setVisibility(View.VISIBLE);
 				relative_google_map.setVisibility(View.VISIBLE);
+				
 			} else {
 				finish();
 				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
@@ -445,6 +455,15 @@ public class ReservedEventDetailsActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (relative_zoom_map.getVisibility() == View.VISIBLE) {
+			
+			ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
+					1.0f, 0.0f, Animation.RELATIVE_TO_SELF,
+					(float) 0.0, Animation.RELATIVE_TO_SELF,
+					(float) 1.0);
+			animation.setDuration(500);
+			
+			relative_zoom_map.startAnimation(animation);
+			
 			relative_zoom_map.setVisibility(View.GONE);
 			scrollMain.setVisibility(View.VISIBLE);
 			relative_google_map.setVisibility(View.VISIBLE);
@@ -762,24 +781,11 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
-//			String response = UtilInList.postData(
-//					nameValuePairs,
-//					""
-//							+ Constant.API
-//							+ "reservation/hide"
-//							+ "/?apiMode=VIP&json=true"
-//							+ "&reservation_id="
-//							+ map.get("order_id")
-//							+ "&PHPSESSIONID="
-//							+ UtilInList.ReadSharePrefrence(
-//									ReservedEventDetailsActivity.this,
-//									Constant.SHRED_PR.KEY_SESSIONID));
-			
 			String response = UtilInList.postData(
 					nameValuePairs,
 					""
 							+ Constant.API
-							+ "push_notification/test"
+							+ "reservation/hide"
 							+ "/?apiMode=VIP&json=true"
 							+ "&reservation_id="
 							+ map.get("order_id")
@@ -787,6 +793,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 							+ UtilInList.ReadSharePrefrence(
 									ReservedEventDetailsActivity.this,
 									Constant.SHRED_PR.KEY_SESSIONID));
+
 			Log.e("Response In Activity-->", response);
 			return response;
 		}

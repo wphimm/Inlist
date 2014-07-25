@@ -26,6 +26,7 @@ package co.inlist.util;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Rect;
@@ -47,6 +48,7 @@ import android.widget.Scroller;
  * e.. i change the license. i don't known it's a right choice.
  * @author bin
  */
+@SuppressLint("DrawAllocation")
 public class HorizontalListView extends AdapterView<ListAdapter> {
 
     /**
@@ -185,9 +187,11 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 
     private View mFreezeChild;
 
-    private int mSpecificOldPosition;
+    @SuppressWarnings("unused")
+	private int mSpecificOldPosition;
 
-    private int mSpecificOldLeft;
+    @SuppressWarnings("unused")
+	private int mSpecificOldLeft;
 
     @Override
     public ListAdapter getAdapter() {
@@ -263,7 +267,8 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         return position;
     }
 
-    private boolean isAllowSelectionOnShown(int position, int delta) {
+    @SuppressWarnings("unused")
+	private boolean isAllowSelectionOnShown(int position, int delta) {
         final int deltaPos = position - getFirstVisiblePosition();
 
         if (getChildCount() == 0) return false;

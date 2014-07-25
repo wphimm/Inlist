@@ -7,7 +7,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.Window;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataCollectorAsyncTaskSplash;
-import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;

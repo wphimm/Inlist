@@ -276,6 +276,7 @@ public class EditProfileActivity extends Activity implements
 																	EditProfileActivity.this,
 																	Constant.SHRED_PR.KEY_SESSIONID)));
 
+									flagLogout = 1;
 									new WebServiceDataPosterAsyncTask(
 											EditProfileActivity.this,
 											params,

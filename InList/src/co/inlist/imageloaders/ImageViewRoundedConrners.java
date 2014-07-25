@@ -1,5 +1,6 @@
 package co.inlist.imageloaders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -15,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+@SuppressLint("DrawAllocation")
 public class ImageViewRoundedConrners extends ImageView {
 
 	public ImageViewRoundedConrners(Context context) {
@@ -75,6 +77,7 @@ public class ImageViewRoundedConrners extends ImageView {
 		Canvas canvas = new Canvas(output);
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();
+		@SuppressWarnings("unused")
 		int radius = Math.min(h/2, w/2);
 		final int color = 0xff424242;
 		final Paint paint = new Paint();

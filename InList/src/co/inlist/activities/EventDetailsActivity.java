@@ -36,6 +36,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -272,7 +274,14 @@ public class EventDetailsActivity extends Activity implements
 				@Override
 				public void onMapClick(LatLng arg0) {
 					// TODO Auto-generated method stub
+					ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
+							0.0f, 1.0f, Animation.RELATIVE_TO_SELF,
+							(float) 0.0, Animation.RELATIVE_TO_SELF,
+							(float) 1.0);
+					animation.setDuration(500);
+
 					relative_zoom_map.setVisibility(View.VISIBLE);
+					relative_zoom_map.setAnimation(animation);
 				}
 			});
 		}
@@ -507,6 +516,13 @@ public class EventDetailsActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (relative_zoom_map.getVisibility() == View.VISIBLE) {
+
+			ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f, 1.0f,
+					0.0f, Animation.RELATIVE_TO_SELF, (float) 0.0,
+					Animation.RELATIVE_TO_SELF, (float) 1.0);
+			animation.setDuration(500);
+
+			relative_zoom_map.startAnimation(animation);
 			relative_zoom_map.setVisibility(View.GONE);
 			scrollMain.setVisibility(View.VISIBLE);
 			relative_google_map.setVisibility(View.VISIBLE);
@@ -561,6 +577,13 @@ public class EventDetailsActivity extends Activity implements
 
 		case android.R.id.home:
 			if (relative_zoom_map.getVisibility() == View.VISIBLE) {
+
+				ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f, 1.0f,
+						0.0f, Animation.RELATIVE_TO_SELF, (float) 0.0,
+						Animation.RELATIVE_TO_SELF, (float) 1.0);
+				animation.setDuration(500);
+
+				relative_zoom_map.startAnimation(animation);
 				relative_zoom_map.setVisibility(View.GONE);
 				scrollMain.setVisibility(View.VISIBLE);
 				relative_google_map.setVisibility(View.VISIBLE);
@@ -717,48 +740,52 @@ public class EventDetailsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_EVENT_ID,
-						"" + map.get("event_id"));
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_YOUR_MINIMUM,
-						"" + map.get("event_min_price"));
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_PRICE_POSITION,
-						"" + spinnerTable.getSelectedItemPosition());
-				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_CURRENT_POSITION,
-						"" + position);
+				if (spinnerTable.getSelectedItemPosition() >= 0) {
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_EVENT_ID,
+							"" + map.get("event_id"));
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_YOUR_MINIMUM,
+							"" + map.get("event_min_price"));
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_POSITION, ""
+									+ spinnerTable.getSelectedItemPosition());
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_CURRENT_POSITION, ""
+									+ position);
 
-				if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
-						Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+					if (UtilInList.ReadSharePrefrence(
+							EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
-					if (UtilInList
-							.ReadSharePrefrence(EventDetailsActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-							.toString().equals("1")) {
-						startActivity(new Intent(EventDetailsActivity.this,
-								CompletePurchaseActivity.class));
-						overridePendingTransition(R.anim.enter_from_left,
-								R.anim.hold_bottom);
+						if (UtilInList
+								.ReadSharePrefrence(EventDetailsActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+								.toString().equals("1")) {
+							startActivity(new Intent(EventDetailsActivity.this,
+									CompletePurchaseActivity.class));
+							overridePendingTransition(R.anim.enter_from_left,
+									R.anim.hold_bottom);
+						} else {
+							UtilInList.WriteSharePrefrence(
+									EventDetailsActivity.this,
+									Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
+							startActivity(new Intent(EventDetailsActivity.this,
+									AddCardActivity.class));
+							overridePendingTransition(R.anim.enter_from_bottom,
+									R.anim.hold_bottom);
+						}
+
 					} else {
 						UtilInList.WriteSharePrefrence(
 								EventDetailsActivity.this,
-								Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
+								Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
+
 						startActivity(new Intent(EventDetailsActivity.this,
-								AddCardActivity.class));
+								LoginActivity.class));
 						overridePendingTransition(R.anim.enter_from_bottom,
 								R.anim.hold_bottom);
 					}
-
-				} else {
-					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
-
-					startActivity(new Intent(EventDetailsActivity.this,
-							LoginActivity.class));
-					overridePendingTransition(R.anim.enter_from_bottom,
-							R.anim.hold_bottom);
 				}
 			}
 		});

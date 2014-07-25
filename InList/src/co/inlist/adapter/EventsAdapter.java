@@ -38,7 +38,6 @@ public class EventsAdapter extends BaseAdapter {
 			typeLeaguegothic_condensedregular;
 	Activity objAct;
 
-	private ArrayList<String> mSectionLetters;
 
 	public EventsAdapter(ArrayList<HashMap<String, String>> list,
 			Context context, Activity objAct) {
@@ -58,28 +57,6 @@ public class EventsAdapter extends BaseAdapter {
 		typeAvenir = Typeface
 				.createFromAsset(context.getAssets(), "avenir.ttc");
 
-		// mSectionLetters = getSectionLetters();
-
-		Log.e("getCount", "" + getCount());
-	}
-
-	private ArrayList<String> getSectionLetters() {
-
-		ArrayList<String> letters = new ArrayList<String>();
-		for (int j = 0; j < locallist.size(); j++) {
-			boolean flag = true;
-			for (int i = 0; i < j; i++) {
-				if (locallist.get(i).get("event_start_date")
-						.equals(locallist.get(j).get("event_start_date")))
-					flag = false;
-			}
-			if (flag) {
-				letters.add("" + locallist.get(j).get("event_start_date"));
-			}
-		}
-
-		Log.e("letters size:", "" + letters.size());
-		return letters;
 	}
 
 	@Override
