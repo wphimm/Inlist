@@ -11,11 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import co.inlist.activities.HomeScreenActivity;
-import co.inlist.activities.InListApplication;
 import co.inlist.activities.R;
-import co.inlist.util.Constant;
-import co.inlist.util.UtilInList;
 
 public class TitleNavigationAdapter extends BaseAdapter {
 
@@ -56,13 +52,13 @@ public class TitleNavigationAdapter extends BaseAdapter {
 		txtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
 		txtTitle.setText(spinnerNavItem.get(position).get("title").toString());
 
-		Log.e("status"+position,">>"+spinnerNavItem.get(position).get("status"));
+		Log.e("status" + position,
+				">>" + spinnerNavItem.get(position).get("status"));
 		if (spinnerNavItem.get(position).get("status").equals("0")) {
 			convertView.setFocusable(false);
 			convertView.setClickable(false);
 			convertView.setAlpha(0.5f);
-		}
-		else{
+		} else {
 			convertView.setFocusable(true);
 			convertView.setClickable(true);
 			convertView.setAlpha(1.0f);
