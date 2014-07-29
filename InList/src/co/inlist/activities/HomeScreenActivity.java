@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.annotation.SuppressLint;
@@ -48,7 +49,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, OnRefreshListener {
 
 	// action bar
 	private static ActionBar actionBar;
@@ -67,15 +68,11 @@ public class HomeScreenActivity extends Activity implements
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 
-	protected Fragment getSampleFragment() {
-		return new SimpleListFragment();
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_homescreen);
+		setContentView(R.layout.activity_homescreen);
 		actionBar = getActionBar();
 		// Hide the action bar title
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -97,19 +94,16 @@ public class HomeScreenActivity extends Activity implements
 		actionBar.setListNavigationCallbacks(adapter, this);
 
 		HomeScreenObj = this;
-		adapterEvents = new EventsAdapter(InListApplication.getListEvents(),
-				this, HomeScreenActivity.this);
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 
-		// Add the Sample Fragment if there is one
-		Fragment sampleFragment = getSampleFragment();
-		if (sampleFragment != null) {
-			getFragmentManager().beginTransaction()
-					.replace(android.R.id.content, sampleFragment).commit();
-		}
+		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+
+		ActionBarPullToRefresh.from(this).options(Options.create().build())
+				.allChildrenArePullable().listener(this)
+				.setup(mPullToRefreshLayout);
 
 	}
 
@@ -453,66 +447,6 @@ public class HomeScreenActivity extends Activity implements
 
 	}
 
-	public static class SimpleListFragment extends ListFragment implements
-			OnRefreshListener {
-
-		@Override
-		public void onViewCreated(View view, Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
-			super.onViewCreated(view, savedInstanceState);
-
-			ViewGroup viewGroup = (ViewGroup) view;
-
-			// As we're using a ListFragment we create a PullToRefreshLayout
-			// manually
-			mPullToRefreshLayout = new PullToRefreshLayout(
-					viewGroup.getContext());
-
-			// We can now setup the PullToRefreshLayout
-
-			ActionBarPullToRefresh
-					.from(getActivity())
-					// We need to insert the PullToRefreshLayout into the
-					// Fragment's ViewGroup
-					.insertLayoutInto(viewGroup)
-					// Here we mark just the ListView and it's Empty View as
-					// pullable
-					.theseChildrenArePullable(android.R.id.list,
-							android.R.id.empty).listener(this)
-					.setup(mPullToRefreshLayout);
-
-		}
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
-			super.onActivityCreated(savedInstanceState);
-
-			// Set the List Adapter to display the sample items
-			setListAdapter(adapterEvents);
-			setListShownNoAnimation(true);
-
-		}
-
-		@Override
-		public void onRefreshStarted(View view) {
-			// TODO Auto-generated method stub
-
-			// setListShown(false); // This will hide the listview and visible a
-			// round progress bar
-
-			if (UtilInList.isInternetConnectionExist(getActivity())) {
-				flagReset = true;
-				flagIfProgress = false;
-				HomeScreenObj.new EventsAsyncTask(getActivity()).execute("");
-			} else {
-				UtilInList.validateDialog(getActivity(), "" + ""
-						+ Constant.network_error, Constant.ERRORS.OOPS);
-			}
-		}
-
-	}
-
 	public class EventsAsyncTask extends AsyncTask<String, String, String> {
 
 		private MyProgressbar dialog;
@@ -651,7 +585,11 @@ public class HomeScreenActivity extends Activity implements
 					map.put("atmosphere", "" + obj.getString("atmosphere"));
 					map.put("music_type", "" + obj.getString("music_type"));
 
-					InListApplication.getListEvents().add(map);
+					if (flagReset) {
+						InListApplication.getListEvents().add(map);
+					} else {
+						adapterEvents.add(map);
+					}
 				}
 
 				Log.i("size:", "" + InListApplication.getListEvents().size());
@@ -666,8 +604,13 @@ public class HomeScreenActivity extends Activity implements
 			e.printStackTrace();
 		}
 
-		adapterEvents.notifyDataSetChanged();
+		if (flagReset) {
+			adapterEvents = new EventsAdapter(
+					InListApplication.getListEvents(), this,
+					HomeScreenActivity.this);
+			mPullToRefreshLayout.setAdapter(adapterEvents);
 
+		}
 	}
 
 	@Override
@@ -680,6 +623,20 @@ public class HomeScreenActivity extends Activity implements
 
 		} else {
 			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		}
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		// TODO Auto-generated method stub
+		if (UtilInList.isInternetConnectionExist(HomeScreenActivity.this)) {
+			flagReset = true;
+			flagIfProgress = false;
+			HomeScreenObj.new EventsAsyncTask(HomeScreenActivity.this)
+					.execute("");
+		} else {
+			UtilInList.validateDialog(HomeScreenActivity.this, "" + ""
+					+ Constant.network_error, Constant.ERRORS.OOPS);
 		}
 	}
 
