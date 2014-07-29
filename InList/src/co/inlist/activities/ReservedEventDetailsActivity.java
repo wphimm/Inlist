@@ -66,6 +66,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 
+	@SuppressWarnings("unused")
 	private RelativeLayout relativeThumb;
 	private ImageButton btnDirection;
 	private TextView txt_event_title;

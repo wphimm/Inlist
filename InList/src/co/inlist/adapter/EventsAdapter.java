@@ -155,11 +155,7 @@ public class EventsAdapter extends BaseAdapter implements
 				HomeScreenActivity.flagIfProgress = false;
 				HomeScreenActivity.HomeScreenObj.new EventsAsyncTask(
 						context.getApplicationContext()).execute("");
-			} else {
-
-				Toast.makeText(context.getApplicationContext(),
-						"" + Constant.network_error, Toast.LENGTH_SHORT).show();
-			}
+			} 
 		}
 
 		convertView.setOnClickListener(new View.OnClickListener() {

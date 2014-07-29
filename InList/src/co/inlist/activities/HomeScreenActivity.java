@@ -18,8 +18,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.ListFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,7 +32,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -489,11 +486,7 @@ public class HomeScreenActivity extends Activity implements
 							+ UtilInList.ReadSharePrefrence(
 									HomeScreenActivity.this,
 									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("KEY_SESSIONID",
-					""
-							+ UtilInList.ReadSharePrefrence(
-									HomeScreenActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
+
 			Log.e("Response In Activity-->", response);
 			return response;
 		}

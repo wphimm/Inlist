@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import co.inlist.activities.InListApplication;
+import co.inlist.activities.ProfileActivity;
 import co.inlist.activities.R;
 import co.inlist.activities.ReservedEventDetailsActivity;
 import co.inlist.imageloaders.ImageLoader;
@@ -107,6 +108,12 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 		notifyDataSetChanged();
 	}
 
+	public void refresh() {
+		// TODO Auto-generated method stub
+		mSectionLetters = getSectionLetters();
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -150,9 +157,19 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 
 		txt_event_title.setTypeface(typeAkzidgrobemedex);
 		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
-		
+
 		String image_url = locallist.get(position).get("event_poster_url");
 		imageLoader.DisplayImage(image_url, Color.BLACK, img_event_poster_url);
+
+		if (position == (getCount() - 1)) {
+			if (UtilInList.isInternetConnectionExist(context
+					.getApplicationContext())) {
+				ProfileActivity.flagReset = false;
+				ProfileActivity.flagIfProgress = false;
+				ProfileActivity.profObj.new ReservationEventsAsyncTask(
+						context.getApplicationContext()).execute("");
+			}
+		}
 
 		convertView.setOnClickListener(new View.OnClickListener() {
 
@@ -359,7 +376,7 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 						if (str_temp.equals("success")) {
 							InListApplication.getListReservedEvents().remove(
 									currentPos);
-							notifyDataSetChanged();
+							refresh();
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
