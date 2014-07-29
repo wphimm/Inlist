@@ -13,7 +13,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
+-->
 
 <resources>
 
@@ -21,7 +21,6 @@
 
         <!-- The class to use as a View's View Delegate. Can be relative path from app's package name -->
         <attr name="ptrViewDelegateClass" format="reference|string" />
-
     </declare-styleable>
 
     <!-- The attribute to set in your Application/Activity theme to reference your custom theme -->
@@ -47,8 +46,8 @@
             <flag name="outside" value="0x1" />
         </attr>
 
-	    <!-- The height of the Progress Bar -->
-	    <attr name="ptrProgressBarHeight" format="reference|dimension" />
+        <!-- The height of the Progress Bar -->
+        <attr name="ptrProgressBarHeight" format="reference|dimension" />
 
         <!-- Text to show to prompt the user is pull (or keep pulling) -->
         <attr name="ptrPullText" format="reference|string" />
@@ -58,7 +57,37 @@
 
         <!-- Text to show to tell the user has scrolled enough to refresh -->
         <attr name="ptrReleaseText" format="reference|string" />
+    </declare-styleable>
+    <declare-styleable name="StickyListHeadersListView">
 
+        <!-- View attributes -->
+        <attr name="android:clipToPadding" />
+        <attr name="android:scrollbars" />
+        <attr name="android:overScrollMode" />
+        <attr name="android:padding" />
+        <attr name="android:paddingLeft" />
+        <attr name="android:paddingTop" />
+        <attr name="android:paddingRight" />
+        <attr name="android:paddingBottom" />
+
+        <!-- ListView attributes -->
+        <attr name="android:fadingEdgeLength" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:cacheColorHint" />
+        <attr name="android:choiceMode" />
+        <attr name="android:drawSelectorOnTop" />
+        <attr name="android:fastScrollEnabled" />
+        <attr name="android:fastScrollAlwaysVisible" />
+        <attr name="android:listSelector" />
+        <attr name="android:scrollingCache" />
+        <attr name="android:scrollbarStyle" />
+        <attr name="android:divider" />
+        <attr name="android:dividerHeight" />
+        <attr name="android:transcriptMode" />
+
+        <!-- StickyListHeaders attributes -->
+        <attr name="hasStickyHeaders" format="boolean" />
+        <attr name="isDrawingListUnderStickyHeader" format="boolean" />
     </declare-styleable>
 
 </resources>
