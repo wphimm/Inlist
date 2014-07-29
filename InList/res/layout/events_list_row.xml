@@ -12,29 +12,9 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#000"
-            android:visibility="gone" >
-
-            <TextView
-                android:id="@+id/event_start_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:singleLine="true"
-                android:textColor="@color/date_color"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/r2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/header" >
+            android:layout_height="match_parent" >
 
             <co.inlist.util.ResizableImageView
                 android:id="@+id/img"

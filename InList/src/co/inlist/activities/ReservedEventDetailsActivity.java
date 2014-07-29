@@ -297,20 +297,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 			}
 		});
 
-		relativeThumb.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (InListApplication.getGallery().size() > 0) {
-					startActivity(new Intent(ReservedEventDetailsActivity.this,
-							GalleryActivity.class));
-					overridePendingTransition(R.anim.enter_from_left,
-							R.anim.hold_bottom);
-				}
-			}
-		});
-
 		imgReservation.setOnClickListener(new OnClickListener() {
 
 			@Override

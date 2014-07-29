@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +41,7 @@ public class ProfileActivity extends Activity implements
 	private TextView txt_vip_membership_req;
 
 	View viewCategories, viewArchive;
-	ListView lst;
+	private static PullToRefreshLayout mPullToRefreshLayout;
 	ReservedEventsAdapter adapterReservedEvents;
 
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
@@ -74,12 +76,6 @@ public class ProfileActivity extends Activity implements
 		txtPhone.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_PHONE));
-
-		adapterReservedEvents = new ReservedEventsAdapter(
-				InListApplication.getListReservedEvents(),
-				ProfileActivity.this, ProfileActivity.this);
-
-		lst.setAdapter(adapterReservedEvents);
 
 		Handler hn = new Handler();
 		hn.postDelayed(new Runnable() {
@@ -154,9 +150,8 @@ public class ProfileActivity extends Activity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		adapterReservedEvents.notifyDataSetChanged();
 	}
-	
+
 	private void init() {
 		// TODO Auto-generated method stub
 		txtName = (TextView) findViewById(R.id.txtName);
@@ -167,7 +162,7 @@ public class ProfileActivity extends Activity implements
 		relativeVip = (RelativeLayout) findViewById(R.id.relativeVIP);
 		viewCategories = (View) findViewById(R.id.viewCategories);
 		viewArchive = (View) findViewById(R.id.viewArchive);
-		lst = (ListView) findViewById(R.id.lst);
+		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(),
 				"akzidgrobeligex.ttf");
@@ -275,7 +270,10 @@ public class ProfileActivity extends Activity implements
 			e.printStackTrace();
 		}
 
-		adapterReservedEvents.notifyDataSetChanged();
+		adapterReservedEvents = new ReservedEventsAdapter(
+				InListApplication.getListReservedEvents(),
+				ProfileActivity.this, ProfileActivity.this);
+		mPullToRefreshLayout.setAdapter(adapterReservedEvents);
 	}
 
 	@Override
