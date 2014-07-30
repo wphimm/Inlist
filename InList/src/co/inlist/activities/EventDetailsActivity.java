@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -430,31 +431,61 @@ public class EventDetailsActivity extends Activity implements
 		private LayoutInflater inflater;
 		ArrayList<HashMap<String, String>> locallist;
 
-		ImagePagerAdapter(ArrayList<HashMap<String, String>> list) {
+		private int[] pageIDsArray;
+		private int count;
+
+		ImagePagerAdapter(ArrayList<HashMap<String, String>> list,
+				final ViewPager pager, int... pageIDs) {
+			super();
+			int actualNoOfIDs = pageIDs.length;
+			count = actualNoOfIDs + 2;
+			pageIDsArray = new int[count];
+			for (int i = 0; i < actualNoOfIDs; i++) {
+				pageIDsArray[i + 1] = pageIDs[i];
+			}
+			pageIDsArray[0] = pageIDs[actualNoOfIDs - 1];
+			pageIDsArray[count - 1] = pageIDs[0];
+
+			pager.setOnPageChangeListener(new OnPageChangeListener() {
+
+				public void onPageSelected(int position) {
+
+					Log.e("pos:", "" + position);
+
+					int pageCount = getCount();
+					if (position == 0) {
+						pager.setCurrentItem(pageCount - 2, false);
+					} else if (position == pageCount - 1) {
+						pager.setCurrentItem(1, false);
+					}
+				}
+
+				public void onPageScrolled(int position, float positionOffset,
+						int positionOffsetPixels) {
+					// TODO Auto-generated method stub
+				}
+
+				public void onPageScrollStateChanged(int state) {
+					// TODO Auto-generated method stub
+				}
+			});
+
 			locallist = list;
 			inflater = getLayoutInflater();
 			imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 		}
 
 		@Override
-		public void destroyItem(View container, int position, Object object) {
-			((ViewPager) container).removeView((View) object);
-		}
-
-		@Override
-		public void finishUpdate(View container) {
-		}
-
-		@Override
 		public int getCount() {
-			return locallist.size();
+			return count;
 		}
 
 		@SuppressLint("NewApi")
 		@Override
 		public Object instantiateItem(View view, int position) {
-			final View imageLayout = inflater.inflate(
-					R.layout.item_pager_image, null);
+			int pageId = pageIDsArray[position];
+
+			final View imageLayout = inflater.inflate(pageId, null);
 
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 					RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -469,29 +500,43 @@ public class EventDetailsActivity extends Activity implements
 					.findViewById(R.id.image);
 
 			imageLoader.displayImage(
-					"" + locallist.get(position).get("source"), imageView,
-					options);
+					""
+							+ locallist.get(position % locallist.size()).get(
+									"source"), imageView, options);
 
 			((ViewPager) view).addView(imageLayout, 0);
 			return imageLayout;
 		}
 
 		@Override
+		public void destroyItem(View container, int position, Object object) {
+			((ViewPager) container).removeView((View) object);
+		}
+
+		@Override
+		public void finishUpdate(View container) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
 		public boolean isViewFromObject(View view, Object object) {
-			return view.equals(object);
+			return view == ((View) object);
 		}
 
 		@Override
 		public void restoreState(Parcelable state, ClassLoader loader) {
+			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public Parcelable saveState() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public void startUpdate(View container) {
+			// TODO Auto-generated method stub
 		}
 	}
 
@@ -559,9 +604,24 @@ public class EventDetailsActivity extends Activity implements
 			runOnUiThread(new Runnable() {
 				public void run() {
 					pagerPosition++;
-					if (pagerPosition == InListApplication.getGallery().size())
-						pagerPosition = 0;
-					pager.setCurrentItem(pagerPosition);
+
+					// if (pagerPosition ==
+					// InListApplication.getGallery().size())
+					// pagerPosition = 0;
+					// pager.setCurrentItem(pagerPosition);
+
+					Log.e("pagerPosition", ""+pagerPosition);
+					if (pagerPosition == 0) {
+						pager.setCurrentItem(InListApplication.getGallery()
+								.size(), false);
+					} else if (pagerPosition == InListApplication.getGallery()
+							.size() + 1) {
+						pager.setCurrentItem(1, false);
+						pagerPosition=0;
+					} else {
+						pager.setCurrentItem(pagerPosition);
+					}
+
 				}
 			});
 		}
@@ -709,8 +769,13 @@ public class EventDetailsActivity extends Activity implements
 							R.layout.spinnertable_row, InListApplication
 									.getPricing()));
 
+					int[] ids = new int[InListApplication.getGallery().size()];
+					for (int i = 0; i < ids.length; i++) {
+						ids[i] = R.layout.item_pager_image;
+					}
+
 					pager.setAdapter(new ImagePagerAdapter(InListApplication
-							.getGallery()));
+							.getGallery(), pager, ids));
 				}
 
 			} catch (JSONException e) { // TODO Auto-generated catch block

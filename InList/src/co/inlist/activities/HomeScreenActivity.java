@@ -97,6 +97,8 @@ public class HomeScreenActivity extends Activity implements
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+		mPullToRefreshLayout.setDivider(null);
+		mPullToRefreshLayout.setDividerHeight(0);
 
 		ActionBarPullToRefresh.from(this).options(Options.create().build())
 				.allChildrenArePullable().listener(this)

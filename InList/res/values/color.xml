@@ -15,6 +15,7 @@
     <color name="light_red">#c95a5a</color>
     <color name="black_shadow">#595959</color>
     <color name="gray_event_details">#4d4d4d</color>
+    <color name="divider">#333333</color>
 
     <!-- HomeScreen List row Color -->
     <color name="hs_title_yellow">#deb968</color>

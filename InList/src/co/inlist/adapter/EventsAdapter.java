@@ -20,12 +20,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-import android.widget.Toast;
 import co.inlist.activities.EventDetailsActivity;
 import co.inlist.activities.HomeScreenActivity;
 import co.inlist.activities.R;
 import co.inlist.imageloaders.ImageLoader;
-import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
 
 @SuppressLint({ "SimpleDateFormat", "DefaultLocale" })

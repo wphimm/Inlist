@@ -157,6 +157,8 @@ public class ProfileActivity extends Activity implements
 		viewCategories = (View) findViewById(R.id.viewCategories);
 		viewArchive = (View) findViewById(R.id.viewArchive);
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+		mPullToRefreshLayout.setDivider(null);
+		mPullToRefreshLayout.setDividerHeight(0);
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(),
 				"akzidgrobeligex.ttf");
