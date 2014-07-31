@@ -65,7 +65,6 @@ public class HomeScreenActivity extends Activity implements
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,15 +74,7 @@ public class HomeScreenActivity extends Activity implements
 		actionBar.setDisplayShowTitleEnabled(false);
 		// Enabling Spinner dropdown navigation
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		// actionBar.setBackgroundDrawable(getResources().getDrawable(
-		// R.drawable.actionbar_gradiant));
-
-		for (int i = 0; i < InListApplication.getParty_area().size(); i++) {
-			Log.e("title",
-					"" + InListApplication.getParty_area().get(i).get("title")
-							+ "\n");
-		}
+		
 		// title drop down adapter
 		adapter = new TitleNavigationAdapter(getApplicationContext(),
 				InListApplication.getParty_area());
@@ -93,7 +84,7 @@ public class HomeScreenActivity extends Activity implements
 		HomeScreenObj = this;
 
 		options = new DisplayImageOptions.Builder().showStubImage(0)
-				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
+				.showImageForEmptyUri(0).cacheInMemory(true).cacheOnDisc(true)
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
