@@ -78,6 +78,28 @@ public class ProfileActivity extends Activity implements
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
 						Constant.SHRED_PR.KEY_PHONE));
 
+		if (UtilInList
+				.ReadSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_VIP_STATUS).toString()
+				.equals("vip")) {
+
+			relativeVip.setVisibility(View.GONE);
+
+		} else if (UtilInList
+				.ReadSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_VIP_STATUS).toString()
+				.equals("pending")) {
+
+			relativeVip.setVisibility(View.VISIBLE);
+			txt_vip_membership_req.setText("PENDING VIP REQUEST");
+
+		} else {
+
+			relativeVip.setVisibility(View.VISIBLE);
+			txt_vip_membership_req.setText("REQUEST VIP MEMBERSHIP");
+
+		}
+
 		Handler hn = new Handler();
 		hn.postDelayed(new Runnable() {
 
@@ -454,6 +476,21 @@ public class ProfileActivity extends Activity implements
 
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
+		TextView txtVIP = (TextView) actionBar.getCustomView().findViewById(
+				R.id.txtVIP);
+		txtVIP.setTypeface(typeAkzidgrobemedex);
+
+
+		if (UtilInList
+				.ReadSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_VIP_STATUS).toString()
+				.equals("vip")) {
+
+			txtVIP.setVisibility(View.VISIBLE);
+
+		} else {
+			txtVIP.setVisibility(View.GONE);
+		}
 
 		action_button.setBackgroundResource(R.drawable.edit_onclick);
 

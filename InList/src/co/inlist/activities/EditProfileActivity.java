@@ -78,8 +78,6 @@ public class EditProfileActivity extends Activity implements
 								+ editLast.getText().toString().trim()));
 						params.add(new BasicNameValuePair("phone", ""
 								+ editPhone.getText().toString().trim()));
-						params.add(new BasicNameValuePair("email", ""
-								+ editEmail.getText().toString().trim()));
 						params.add(new BasicNameValuePair("device_type",
 								"android"));
 						params.add(new BasicNameValuePair("PHPSESSIONID", ""
@@ -181,14 +179,20 @@ public class EditProfileActivity extends Activity implements
 			try {
 				if (result.getString("success").equals("true")) {
 
-					editFirst.setText("");
-					editLast.setText("");
-					editEmail.setText("");
-					editPhone.setText("");
-
 					UtilInList.validateDialog(EditProfileActivity.this, result
 							.getJSONArray("messages").getString(0),
 							Constant.ERRORS.OOPS);
+					
+					UtilInList.WriteSharePrefrence(EditProfileActivity.this,
+							Constant.SHRED_PR.KEY_FIRSTNAME, ""
+									+ editFirst.getText().toString());
+					UtilInList.WriteSharePrefrence(EditProfileActivity.this,
+							Constant.SHRED_PR.KEY_LASTNAME, ""
+									+ editLast.getText().toString());
+					UtilInList.WriteSharePrefrence(EditProfileActivity.this,
+							Constant.SHRED_PR.KEY_PHONE, ""
+									+ editPhone.getText().toString());
+					
 				} else {
 					UtilInList.validateDialog(EditProfileActivity.this, result
 							.getJSONArray("errors").getString(0),

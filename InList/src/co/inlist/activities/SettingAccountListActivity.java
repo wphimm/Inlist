@@ -9,7 +9,9 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -50,6 +52,7 @@ public class SettingAccountListActivity extends Activity implements
 				// TODO Auto-generated method stub
 
 				if (position == 0) {
+
 					startActivity(new Intent(SettingAccountListActivity.this,
 							ChangePasswordActivity.class));
 					overridePendingTransition(R.anim.enter_from_left,
@@ -105,23 +108,11 @@ public class SettingAccountListActivity extends Activity implements
 				// TODO Auto-generated method stub
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("device_id", ""
-							+ UtilInList.getDeviceId(getApplicationContext())));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(
-									SettingAccountListActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					new WebServiceDataPosterAsyncTask(
-							SettingAccountListActivity.this, params,
-							Constant.API + Constant.ACTIONS.PUSHNOTIFICATIONS
-									+ "/?apiMode=VIP&json=true").execute();
+					new PUSHNOTIFICATIONSAsyncTask(getApplicationContext())
+							.execute("");
 				}
 			}
-		}, 500);
+		}, 200);
 
 		actionBarAndButtonActions();
 
@@ -178,20 +169,76 @@ public class SettingAccountListActivity extends Activity implements
 
 	}
 
-	@Override
-	public void onTaskComplete(JSONObject result) {
-		// TODO Auto-generated method stub
-		try {
-			if (result.getString("success").equals("true")) {
-				UtilInList.WriteSharePrefrence(SettingAccountListActivity.this,
-						Constant.SHRED_PR.KEY_DAILY,
-						result.getJSONObject("data").getString("daily"));
-				UtilInList.WriteSharePrefrence(SettingAccountListActivity.this,
-						Constant.SHRED_PR.KEY_BILLING,
-						result.getJSONObject("data").getString("billing"));
+	public class PUSHNOTIFICATIONSAsyncTask extends
+			AsyncTask<String, String, String> {
+
+		public PUSHNOTIFICATIONSAsyncTask(Context context) {
+		}
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							SettingAccountListActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			String response = UtilInList.postData(params, "" + Constant.API
+					+ Constant.ACTIONS.PUSHNOTIFICATIONS_INFO);
+
+			Log.e("Response In Activity-->", "+++++" + response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result1) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result1);
+			// fragment_addconnection_search
+
+			if (result1 != null) {
+				try {
+					JSONObject result = new JSONObject(result1);
+					if (result.getString("success").equals("true")) {
+						UtilInList
+								.WriteSharePrefrence(
+										SettingAccountListActivity.this,
+										Constant.SHRED_PR.KEY_DAILY, result
+												.getJSONObject("data")
+												.getString("daily"));
+						UtilInList.WriteSharePrefrence(
+								SettingAccountListActivity.this,
+								Constant.SHRED_PR.KEY_BILLING,
+								result.getJSONObject("data").getString(
+										"billing"));
+					}
+				} catch (Exception e) {
+					Log.v("", "Exception : " + e);
+				}
 			}
-		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
+
+			Log.i("device_id",
+					"" + UtilInList.getDeviceId(getApplicationContext()));
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							SettingAccountListActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			new WebServiceDataPosterAsyncTask(SettingAccountListActivity.this,
+					params, Constant.API + Constant.ACTIONS.ADD_DEVICE)
+					.execute();
+
 		}
 
 	}
@@ -243,6 +290,12 @@ public class SettingAccountListActivity extends Activity implements
 		super.onBackPressed();
 		finish();
 		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		Log.e("result:", ">>>>>" + result);
 	}
 
 }

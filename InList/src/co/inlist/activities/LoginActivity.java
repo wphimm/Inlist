@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -76,7 +78,7 @@ public class LoginActivity extends Activity implements
 
 		// UtilInList.makeActionBarGradiant(LoginActivity.this);
 
-		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() {
+		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() { 
 
 			@Override
 			public void onClick(View v) {
@@ -420,6 +422,12 @@ public class LoginActivity extends Activity implements
 							result.getJSONObject("session")
 									.getJSONObject("userInfo")
 									.getString("sessionId"));
+					UtilInList.WriteSharePrefrence(
+							LoginActivity.this,
+							Constant.SHRED_PR.KEY_VIP_STATUS,
+							result.getJSONObject("session")
+									.getJSONObject("userInfo")
+									.getString("vip_status"));
 					UtilInList.WriteSharePrefrence(LoginActivity.this,
 							Constant.SHRED_PR.KEY_CURRENT_PASSWORD, edt_lgn_pwd
 									.getText().toString().trim());
@@ -464,6 +472,10 @@ public class LoginActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(edt_lgn_e_mail.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_lgn_pwd.getWindowToken(), 0);
+				
 				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
 					edt_lgn_e_mail.setText("");
 					edt_lgn_e_mail.setHintTextColor(getResources().getColor(

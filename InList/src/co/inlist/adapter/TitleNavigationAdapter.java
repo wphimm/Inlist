@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +51,6 @@ public class TitleNavigationAdapter extends BaseAdapter {
 		txtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
 		txtTitle.setText(spinnerNavItem.get(position).get("title").toString());
 
-		Log.e("status" + position,
-				">>" + spinnerNavItem.get(position).get("status"));
 		if (spinnerNavItem.get(position).get("status").equals("0")) {
 			convertView.setFocusable(false);
 			convertView.setClickable(false);

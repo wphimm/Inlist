@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import co.inlist.activities.EventDetailsActivity;
@@ -56,6 +57,7 @@ public class EventsAdapter extends BaseAdapter implements
 		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
 				context.getAssets(), "leaguegothic_condensedregular.otf");
 		typeAvenir = Typeface
+				
 				.createFromAsset(context.getAssets(), "avenir.ttc");
 
 		mSectionLetters = getSectionLetters();
@@ -129,8 +131,7 @@ public class EventsAdapter extends BaseAdapter implements
 		TextView txt_event_location_city = (TextView) convertView
 				.findViewById(R.id.event_location_city);
 		img_event_poster_url = (ImageView) convertView.findViewById(R.id.img);
-		img_event_poster_url
-				.setBackgroundResource(R.drawable.event_details_overlay);
+		//img_event_poster_url = (ImageView) convertView.findViewById(R.id.img);
 
 		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText(locallist.get(position).get("event_title")
@@ -146,6 +147,15 @@ public class EventsAdapter extends BaseAdapter implements
 		// imageLoader.displayImage(image_url, img_event_poster_url, options);
 		imageLoader.DisplayImage(image_url, Color.BLACK, img_event_poster_url);
 
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+		layoutParams.width = img_event_poster_url.getWidth();
+		layoutParams.height = img_event_poster_url.getHeight();
+
+		//pager.setLayoutParams(layoutParams);
+		
 		if (position == (getCount() - 1)) {
 			if (UtilInList.isInternetConnectionExist(context
 					.getApplicationContext())) {

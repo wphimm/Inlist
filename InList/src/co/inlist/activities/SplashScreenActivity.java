@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ public class SplashScreenActivity extends Activity implements
 		AsyncTaskCompleteListener {
 
 	public static final int SPLASH_TIMEOUT = 2000;
+	boolean flagAddDevice = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,12 @@ public class SplashScreenActivity extends Activity implements
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+			flagAddDevice = false;
 			new WebServiceDataCollectorAsyncTaskSplash(Constant.API
 					+ Constant.ACTIONS.PREPARE_REGISTER,
 					SplashScreenActivity.this).execute();
@@ -183,36 +191,72 @@ public class SplashScreenActivity extends Activity implements
 
 		Log.e("result..", ">>" + result);
 
-		try {
-			/*
-			 * Prepare registration response write in file mode private
-			 */
-			UtilInList.writeToFile(result.getJSONObject("data").toString(),
-					Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
-					SplashScreenActivity.this);
+		if (!flagAddDevice) {
+			try {
+				/*
+				 * Prepare registration response write in file mode private
+				 */
+				UtilInList.writeToFile(result.getJSONObject("data").toString(),
+						Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
+						SplashScreenActivity.this);
 
-			String str_temp = result.getString("status");
-			if (str_temp.equals("success")) {
-				JSONObject jObjectData = new JSONObject(
-						result.getString("data"));
-				JSONArray data = jObjectData.getJSONArray("music_types");
-				Log.e("Length of json array ----->", "" + data.length());
-				InListApplication.getList_music_types().clear();
-				for (int i = 0; i < data.length(); i++) {
-					JSONObject obj = data.getJSONObject(i);
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("music_type_id",
-							"" + obj.getString("music_type_id"));
-					map.put("title", "" + obj.getString("title"));
-					InListApplication.getList_music_types().add(map);
+				String str_temp = result.getString("status");
+				if (str_temp.equals("success")) {
+					JSONObject jObjectData = new JSONObject(
+							result.getString("data"));
+					JSONArray data = jObjectData.getJSONArray("music_types");
+					Log.e("Length of json array ----->", "" + data.length());
+					InListApplication.getList_music_types().clear();
+					for (int i = 0; i < data.length(); i++) {
+						JSONObject obj = data.getJSONObject(i);
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("music_type_id",
+								"" + obj.getString("music_type_id"));
+						map.put("title", "" + obj.getString("title"));
+						InListApplication.getList_music_types().add(map);
+					}
+
+					UtilInList.WriteSharePrefrence(
+							SplashScreenActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID,
+							result.getJSONObject("session")
+									.getJSONObject("userInfo")
+									.getString("sessionId"));
+					UtilInList.WriteSharePrefrence(
+							SplashScreenActivity.this,
+							Constant.SHRED_PR.KEY_VIP_STATUS,
+							result.getJSONObject("session")
+									.getJSONObject("userInfo")
+									.getString("vip_status"));
+
 				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			flagAddDevice = true;
+			
+//			Log.i("device_id",
+//					"" + UtilInList.getDeviceId(getApplicationContext()));
+//			List<NameValuePair> params = new ArrayList<NameValuePair>();
+//			params.add(new BasicNameValuePair("device_id", ""
+//					+ UtilInList.getDeviceId(getApplicationContext())));
+//			params.add(new BasicNameValuePair("device_type", "android"));
+//			
+//			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+//					+ UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
+//							Constant.SHRED_PR.KEY_SESSIONID)));
+//
+//			new WebServiceDataPosterAsyncTask(SplashScreenActivity.this,
+//					params, Constant.API + Constant.ACTIONS.ADD_DEVICE)
+//					.execute();
+			
+			new PartyAreaAsyncTask(getApplicationContext()).execute("");
+			
+		} else {
+			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		}
-
-		new PartyAreaAsyncTask(getApplicationContext()).execute("");
 	}
 
 	@Override

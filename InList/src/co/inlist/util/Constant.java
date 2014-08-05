@@ -38,6 +38,7 @@ public class Constant {
 		public static final String REGISTER_FB = "/facebook/register/?apiMode=VIP&json=true";
 		public static final String PREPARE_REGISTER = "common/prepare_registration/?json=true";
 		public static final String CHANGE_PASSWORD = "user/login/save/?apiMode=VIP&json=true";
+		public static final String PUSHNOTIFICATIONS_INFO = "push_notifications/?apiMode=VIP&json=true";
 		public static final String PUSHNOTIFICATIONS = "push_notifications/";
 		public static final String PUSHNOTIFICATIONS_TEST = "push_notifications/test/?apiMode=VIP&json=true";
 		public static final String USER_INVITE = "user/invite/";
@@ -146,6 +147,7 @@ public class Constant {
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
 		public static final String KEY_PRICE_POSITION = "price_position";
 		public static final String KEY_YOUR_MINIMUM = "your_minimum";
+		public static final String KEY_VIP_STATUS = "vip_status";
 
 		public static final String KEY_EVENT_ID = "event_id";
 		public static final String KEY_CURRENT_POSITION = "current_position";

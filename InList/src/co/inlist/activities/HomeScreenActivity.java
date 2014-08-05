@@ -74,7 +74,7 @@ public class HomeScreenActivity extends Activity implements
 		actionBar.setDisplayShowTitleEnabled(false);
 		// Enabling Spinner dropdown navigation
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
+
 		// title drop down adapter
 		adapter = new TitleNavigationAdapter(getApplicationContext(),
 				InListApplication.getParty_area());
@@ -331,11 +331,6 @@ public class HomeScreenActivity extends Activity implements
 									HomeScreenActivity.this,
 									Constant.SHRED_PR.KEY_SESSIONID));
 			Log.e("Response In Activity-->", response);
-			Log.e("KEY_SESSIONID",
-					""
-							+ UtilInList.ReadSharePrefrence(
-									HomeScreenActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
 
 			return response;
 		}
@@ -369,11 +364,13 @@ public class HomeScreenActivity extends Activity implements
 								jObject.getJSONObject("session")
 										.getJSONObject("userInfo")
 										.getString("sessionId"));
-						Log.e("session::",
-								""
-										+ jObject.getJSONObject("session")
-												.getJSONObject("userInfo")
-												.getString("sessionId"));
+
+						UtilInList.WriteSharePrefrence(
+								HomeScreenActivity.this,
+								Constant.SHRED_PR.KEY_VIP_STATUS,
+								jObject.getJSONObject("session")
+										.getJSONObject("userInfo")
+										.getString("vip_status"));
 
 						if (UtilInList
 								.isInternetConnectionExist(getApplicationContext())) {

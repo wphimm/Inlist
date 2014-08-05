@@ -146,7 +146,6 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 				.findViewById(R.id.event_location_city);
 		ImageView img_event_poster_url = (ImageView) convertView
 				.findViewById(R.id.img);
-		img_event_poster_url.setBackgroundResource(0);
 
 		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
 		txt_event_title.setText(locallist.get(position).get("event_title")

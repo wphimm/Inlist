@@ -1,20 +1,31 @@
 package co.inlist.activities;
 
+import co.inlist.util.Constant;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class TermsConditionsActivity extends Activity implements
 		ActionBar.OnNavigationListener {
+	
+	WebView webView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.terms_conditions);
 
 		actionBarAndButtonActions();
+		
+		webView = (WebView) findViewById(R.id.webview);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.loadUrl(Constant.API+"terms/?noContainer=true");
 	}
 
 	/**
