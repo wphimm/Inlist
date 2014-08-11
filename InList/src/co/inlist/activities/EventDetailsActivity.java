@@ -823,24 +823,37 @@ public class EventDetailsActivity extends Activity implements
 							EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
-						if (UtilInList
-								.ReadSharePrefrence(EventDetailsActivity.this,
-										Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-								.toString().equals("1")) {
+						if (map.get("card_required").equals("0")) {
 							startActivity(new Intent(EventDetailsActivity.this,
 									CompletePurchaseActivity.class));
 							overridePendingTransition(R.anim.enter_from_left,
 									R.anim.hold_bottom);
 						} else {
-							UtilInList.WriteSharePrefrence(
-									EventDetailsActivity.this,
-									Constant.SHRED_PR.KEY_ADDCARD_FROM, "1");
-							startActivity(new Intent(EventDetailsActivity.this,
-									AddCardActivity.class));
-							overridePendingTransition(R.anim.enter_from_bottom,
-									R.anim.hold_bottom);
+							if (UtilInList
+									.ReadSharePrefrence(
+											EventDetailsActivity.this,
+											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+									.toString().equals("1")) {
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										CompletePurchaseActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_left,
+										R.anim.hold_bottom);
+							} else {
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										AddCardActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_bottom,
+										R.anim.hold_bottom);
+							}
 						}
-
 					} else {
 						UtilInList.WriteSharePrefrence(
 								EventDetailsActivity.this,

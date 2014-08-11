@@ -566,7 +566,7 @@ public class UtilInList {
 		nameValuePairs.add(new BasicNameValuePair("common_appVersion", ""
 				+ UtilInList.getCommon_appVersion(context)));
 		nameValuePairs.add(new BasicNameValuePair("common_deviceId", ""
-				+ ParseInstallation.getCurrentInstallation().getObjectId()));
+				+ UtilInList.getDeviceId(context)));
 //		nameValuePairs.add(new BasicNameValuePair("common_locationLatitude", ""
 //				+ gps.getLatitude()));
 //		nameValuePairs.add(new BasicNameValuePair("common_locationLongitude",

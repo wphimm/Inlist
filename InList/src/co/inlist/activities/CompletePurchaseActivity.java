@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -34,6 +35,7 @@ public class CompletePurchaseActivity extends Activity implements
 
 	HashMap<String, String> map;
 	public static CompletePurchaseActivity cpObj;
+	RelativeLayout relativeCost;
 	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName,
 			txtSubtotal, txtTax, txtGratuity;
 
@@ -43,16 +45,15 @@ public class CompletePurchaseActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.complete_purchase);
 
-		init();
-
-		actionBarAndButtonActions();
-
 		map = InListApplication.getListEvents().get(
 				Integer.parseInt(UtilInList.ReadSharePrefrence(
 						CompletePurchaseActivity.this,
 						Constant.SHRED_PR.KEY_CURRENT_POSITION).toString()));
 		cpObj = this;
 
+		init();
+		actionBarAndButtonActions();
+		
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
 				+ "&#8226; I will dress approprately for the venue <br/>"
 				+ "&#8226; I will arrive sober <br/>"
@@ -167,6 +168,7 @@ public class CompletePurchaseActivity extends Activity implements
 
 	private void init() {
 		// TODO Auto-generated method stub
+		relativeCost = (RelativeLayout) findViewById(R.id.r3);
 		txtPoints = (TextView) findViewById(R.id.txt_points);
 		txtTable = (TextView) findViewById(R.id.txt_table);
 		txtTotal = (TextView) findViewById(R.id.txt_total);
@@ -243,6 +245,11 @@ public class CompletePurchaseActivity extends Activity implements
 
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
+		
+		if(map.get("card_required").equals("0")){
+			action_button.setVisibility(View.GONE);
+			relativeCost.setVisibility(View.GONE);
+		}
 
 		action_button.setBackgroundResource(R.drawable.confirm_update_onclick);
 
