@@ -73,6 +73,7 @@
                         android:layout_weight="1"
                         android:hint="@string/fname"
                         android:shadowColor="@color/light_yellow"
+                        android:singleLine="true"
                         android:textColor="@color/light_yellow"
                         android:textColorHint="@color/white_dull" />
 
@@ -84,6 +85,7 @@
                         android:layout_weight="1"
                         android:hint="@string/lname"
                         android:shadowColor="@color/light_yellow"
+                        android:singleLine="true"
                         android:textColor="@color/light_yellow"
                         android:textColorHint="@color/white_dull" />
                 </LinearLayout>
@@ -95,6 +97,7 @@
                     android:layout_margin="3dp"
                     android:hint="@string/email_address"
                     android:shadowColor="@color/light_yellow"
+                    android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />
 
@@ -104,6 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/pwd"
+                    android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />
 
@@ -113,6 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/Phno"
+                    android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />
 
@@ -133,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     android:hint="@string/pls_answer"
+                    android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />
             </LinearLayout>

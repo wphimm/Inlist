@@ -92,6 +92,7 @@ public class AddCardActivity extends Activity implements
 				String subString = strCardNum.substring(
 						strCardNum.length() - 4, strCardNum.length());
 				edt_card_num.setText("**** **** **** " + subString);
+				
 			} catch (Exception e) {
 				// TODO: handle exception
 			}

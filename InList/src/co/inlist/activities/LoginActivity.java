@@ -78,7 +78,7 @@ public class LoginActivity extends Activity implements
 
 		// UtilInList.makeActionBarGradiant(LoginActivity.this);
 
-		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() { 
+		txt_lgn_forgot_pwd.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -279,7 +279,7 @@ public class LoginActivity extends Activity implements
 		txt_lgn_forgot_pwd = (TextView) findViewById(R.id.txt_lgn_forgot_pwd);
 		rl_fb_login = (RelativeLayout) findViewById(R.id.rl_fb_login);
 		mAsyncRunner = new AsyncFacebookRunner(facebook);
-		
+
 	}
 
 	/**
@@ -475,7 +475,7 @@ public class LoginActivity extends Activity implements
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(edt_lgn_e_mail.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(edt_lgn_pwd.getWindowToken(), 0);
-				
+
 				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
 					edt_lgn_e_mail.setText("");
 					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
@@ -502,6 +502,10 @@ public class LoginActivity extends Activity implements
 							+ edt_lgn_e_mail.getText().toString().trim()));
 					params.add(new BasicNameValuePair("password", edt_lgn_pwd
 							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
 
 					flagCard = false;
 					new WebServiceDataPosterAsyncTask(LoginActivity.this,

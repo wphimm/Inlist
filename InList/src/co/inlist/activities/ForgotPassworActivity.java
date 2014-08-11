@@ -215,9 +215,6 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			UtilInList.validateDialog(ForgotPassworActivity.this,
-					Constant.ERRORS.SOMETHING_GOES_WRONG, Constant.ERRORS.OOPS);
 		}
 	}
 

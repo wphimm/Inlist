@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,12 +20,23 @@ import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,11 +153,11 @@ public class UtilInList {
 				Secure.ANDROID_ID);
 	}
 
-	// public static void makeToast(Context context, String msg) {
-	// Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-	// toast.setGravity(Gravity.CENTER, 0, 0);
-	// toast.show();
-	// }
+	public static String getCommon_appVersion(Context mContext) {
+		String common_appVersion="android/"+android.os.Build.VERSION.RELEASE+"/1.0.0";
+		Log.e("common_appVersion",""+common_appVersion);
+		return common_appVersion;
+	}
 
 	public static void makeTextViewResizable(final TextView tv,
 			final int maxLine, final String expandText, final boolean viewMore) {
@@ -559,7 +571,7 @@ public class UtilInList {
 	public static String postData(List<NameValuePair> nameValuePairs, String url) {
 		// TODO Auto-generated method stub
 		String responseStr = "";
-		HttpClient httpclient = new DefaultHttpClient();
+		HttpClient httpclient = getNewHttpClient();
 		HttpPost httpPost = new HttpPost(url);
 		Log.e("reqURL", "" + url);
 		try {
@@ -589,6 +601,35 @@ public class UtilInList {
 		}
 		return responseStr;
 	};
+
+	public static HttpClient getNewHttpClient() {
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore
+					.getDefaultType());
+			trustStore.load(null, null);
+
+			MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+			HttpParams params = new BasicHttpParams();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			registry.register(new Scheme("https", sf, 443));
+
+			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+					params, registry);
+
+			return new DefaultHttpClient(ccm, params);
+		} catch (Exception e) {
+			return new DefaultHttpClient();
+		}
+	}
+	
+	
 
 	public String prepareWebserviceRequest(String[] keys, String[] values)
 			throws JSONException {

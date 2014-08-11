@@ -403,7 +403,8 @@ public class SignUpActivity extends Activity implements
 						Constant.SHRED_PR.KEY_LOGIN_STATUS, "true");
 				UtilInList.WriteSharePrefrence(SignUpActivity.this,
 						Constant.SHRED_PR.KEY_USERID,
-						result.getJSONObject("data").getString("user_id"));
+						result.getJSONObject("userInfoSet")
+								.getString("user_id"));
 				UtilInList.WriteSharePrefrence(SignUpActivity.this,
 						Constant.SHRED_PR.KEY_EMAIL, edt_su_e_mail.getText()
 								.toString().trim());
@@ -430,13 +431,11 @@ public class SignUpActivity extends Activity implements
 			} else {
 
 				UtilInList.validateDialog(SignUpActivity.this, result
-						.getJSONArray("errors").getString(0).toString(),
+						.getJSONArray("errors").getString(0).toString(),	
 						Constant.ERRORS.OOPS);
 			}
 
 		} catch (Exception e) {
-			UtilInList.validateDialog(SignUpActivity.this,
-					Constant.ERRORS.SOMETHING_GOES_WRONG, Constant.ERRORS.OOPS);
 			Log.v("", "Excption : " + e);
 		}
 	}

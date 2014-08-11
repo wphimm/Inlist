@@ -4,7 +4,7 @@ public class Constant {
 
 	public static final String BLANK = "";
 
-	public static final String API = "http://www.inlistdev.com/";
+	public static final String API = "https://www.inlistdev.com/";
 	// public static final String API_LIVE = "http://www.inlist.com/";
 	public static final String STATUS = "status";
 	public static final String SUCCESS = "1";
@@ -14,6 +14,10 @@ public class Constant {
 
 	public static String network_error = "please check your network connectivity.";
 	public static String AppName = "InList";
+
+	// Parse Push Notification:
+	public static String YOUR_APP_ID = "e8q6lZpSKrUmOr5Bc5JaWLWg5EwoWWSJGGrpdx4N";
+	public static String YOUR_CLIENT_KEY = "IWzan6ZwLZi9s5tsgWtTjlZ70ypjLnHLa1xF1mJ2";
 
 	// Facebook
 	public static final String FB_API_KEY = "1510315072530999";
@@ -106,7 +110,6 @@ public class Constant {
 		public static final String RECORDS_NOT_FOUNT = "No records found";
 		public static final String NO_PENDING_REQUEST = "You have no pending request";
 		public static final String PLZ_ANS = "Please enter answer";
-		public static final String SOMETHING_GOES_WRONG = "Something goes wrong, please try again";
 
 		public static final String NO_INTERNET_CONNECTION = "We were unable to establish a connection to the internet. Check your signal, WiFi settings or restart the app or phone.";
 		public static final String NO_INTERNET_CONNECTION_TITLE = "No internet connection";
