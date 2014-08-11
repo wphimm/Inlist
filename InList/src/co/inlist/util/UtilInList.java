@@ -33,6 +33,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -40,6 +41,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.parse.ParseInstallation;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -154,8 +157,9 @@ public class UtilInList {
 	}
 
 	public static String getCommon_appVersion(Context mContext) {
-		String common_appVersion="android/"+android.os.Build.VERSION.RELEASE+"/1.0.0";
-		Log.e("common_appVersion",""+common_appVersion);
+		String common_appVersion = "android/"
+				+ android.os.Build.VERSION.RELEASE + "/1.0.0";
+		Log.e("common_appVersion", "" + common_appVersion);
 		return common_appVersion;
 	}
 
@@ -531,25 +535,6 @@ public class UtilInList {
 		}
 	}
 
-	// public static boolean isNetworkAvailable(Context context) {
-	// ConnectivityManager conMgr = (ConnectivityManager) context
-	// .getSystemService(Context.CONNECTIVITY_SERVICE);
-	//
-	// if (conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
-	// || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING) {
-	// // notify user you are online
-	// return true;
-	// } else if (conMgr.getNetworkInfo(0).getState() ==
-	// NetworkInfo.State.DISCONNECTED
-	// || conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED)
-	// {
-	// // notify user you are not online
-	// return false;
-	// } else {
-	// return false;
-	// }
-	// }
-
 	public static void WriteSharePrefrence(Context context, String key,
 			String values) {
 		@SuppressWarnings("static-access")
@@ -564,34 +549,41 @@ public class UtilInList {
 		@SuppressWarnings("static-access")
 		SharedPreferences read_data = context.getSharedPreferences(
 				Constant.SHRED_PR.SHARE_PREF, context.MODE_PRIVATE);
+		
 
 		return read_data.getString(key, Constant.BLANK);
 	}
 
-	public static String postData(List<NameValuePair> nameValuePairs, String url) {
+	public static String postData(Context context,
+			List<NameValuePair> nameValuePairs, String url) {
 		// TODO Auto-generated method stub
 		String responseStr = "";
 		HttpClient httpclient = getNewHttpClient();
 		HttpPost httpPost = new HttpPost(url);
+
+		// ************* Common Data: *****************//
+		//GPSTracker gps = new GPSTracker(context);
+		nameValuePairs.add(new BasicNameValuePair("common_appVersion", ""
+				+ UtilInList.getCommon_appVersion(context)));
+		nameValuePairs.add(new BasicNameValuePair("common_deviceId", ""
+				+ ParseInstallation.getCurrentInstallation().getObjectId()));
+//		nameValuePairs.add(new BasicNameValuePair("common_locationLatitude", ""
+//				+ gps.getLatitude()));
+//		nameValuePairs.add(new BasicNameValuePair("common_locationLongitude",
+//				"" + gps.getLongitude()));
+		// ******************************************* //
+
 		Log.e("reqURL", "" + url);
+		Log.e("nameValuePairs", "" + nameValuePairs);
 		try {
-
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			// Execute HTTP Post Request
 			HttpResponse response = httpclient.execute(httpPost);
-
 			HttpEntity resEntity = response.getEntity();
 
 			if (resEntity != null) {
-
 				responseStr = EntityUtils.toString(resEntity).trim();
-
-				// you can add an if statement here and do other actions based
-				// on the response
 			}
-
 			Log.e("Response-->", responseStr);
-
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 			// TODO Auto-generated catch block
@@ -628,8 +620,6 @@ public class UtilInList {
 			return new DefaultHttpClient();
 		}
 	}
-	
-	
 
 	public String prepareWebserviceRequest(String[] keys, String[] values)
 			throws JSONException {

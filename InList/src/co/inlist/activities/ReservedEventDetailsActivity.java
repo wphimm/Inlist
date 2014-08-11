@@ -415,18 +415,17 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		case android.R.id.home:
 			if (relative_zoom_map.getVisibility() == View.VISIBLE) {
-				
-				ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
-						1.0f, 0.0f, Animation.RELATIVE_TO_SELF,
-						(float) 0.0, Animation.RELATIVE_TO_SELF,
-						(float) 1.0);
+
+				ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f, 1.0f,
+						0.0f, Animation.RELATIVE_TO_SELF, (float) 0.0,
+						Animation.RELATIVE_TO_SELF, (float) 1.0);
 				animation.setDuration(500);
-				
+
 				relative_zoom_map.startAnimation(animation);
 				relative_zoom_map.setVisibility(View.GONE);
 				scrollMain.setVisibility(View.VISIBLE);
 				relative_google_map.setVisibility(View.VISIBLE);
-				
+
 			} else {
 				finish();
 				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
@@ -442,15 +441,14 @@ public class ReservedEventDetailsActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		if (relative_zoom_map.getVisibility() == View.VISIBLE) {
-			
-			ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f,
-					1.0f, 0.0f, Animation.RELATIVE_TO_SELF,
-					(float) 0.0, Animation.RELATIVE_TO_SELF,
-					(float) 1.0);
+
+			ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f, 1.0f,
+					0.0f, Animation.RELATIVE_TO_SELF, (float) 0.0,
+					Animation.RELATIVE_TO_SELF, (float) 1.0);
 			animation.setDuration(500);
-			
+
 			relative_zoom_map.startAnimation(animation);
-			
+
 			relative_zoom_map.setVisibility(View.GONE);
 			scrollMain.setVisibility(View.VISIBLE);
 			relative_google_map.setVisibility(View.VISIBLE);
@@ -493,6 +491,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API
@@ -578,6 +577,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API
@@ -769,6 +769,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API

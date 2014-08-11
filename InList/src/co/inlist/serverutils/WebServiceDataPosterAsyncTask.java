@@ -20,6 +20,7 @@ public class WebServiceDataPosterAsyncTask extends
 	private List<NameValuePair> nameValuePair;
 	private String URL;
 	public AsyncTaskCompleteListener callback;
+	Context context;
 
 	public WebServiceDataPosterAsyncTask(Context context,
 			List<NameValuePair> nameValuePair, String URL) {
@@ -27,6 +28,7 @@ public class WebServiceDataPosterAsyncTask extends
 		this.callback = (AsyncTaskCompleteListener) context;
 		this.nameValuePair = nameValuePair;
 		this.URL = URL;
+		this.context = context;
 
 	}
 
@@ -42,8 +44,8 @@ public class WebServiceDataPosterAsyncTask extends
 	@Override
 	protected String doInBackground(String... arg0) {
 		// TODO Auto-generated method stub
-		Log.v("", "Chk URL : " + URL+nameValuePair);
-		String response = UtilInList.postData(nameValuePair, URL);
+		Log.v("", "Chk URL : " + URL + nameValuePair);
+		String response = UtilInList.postData(context, nameValuePair, URL);
 		Log.v("Response In Activity-->", response);
 
 		return response;
@@ -59,9 +61,9 @@ public class WebServiceDataPosterAsyncTask extends
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		Log.i("result", ">>"+result);
-		
+
+		Log.i("result", ">>" + result);
+
 		JSONObject jObj;
 		try {
 			jObj = new JSONObject(result);

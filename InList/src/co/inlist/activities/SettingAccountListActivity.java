@@ -189,8 +189,9 @@ public class SettingAccountListActivity extends Activity implements
 							SettingAccountListActivity.this,
 							Constant.SHRED_PR.KEY_SESSIONID)));
 
-			String response = UtilInList.postData(params, "" + Constant.API
-					+ Constant.ACTIONS.PUSHNOTIFICATIONS_INFO);
+			String response = UtilInList.postData(getApplicationContext(),
+					params, "" + Constant.API
+							+ Constant.ACTIONS.PUSHNOTIFICATIONS_INFO);
 
 			Log.e("Response In Activity-->", "+++++" + response);
 			return response;

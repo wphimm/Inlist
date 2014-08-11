@@ -233,8 +233,8 @@ public class ProfileActivity extends Activity implements
 					+ UtilInList.ReadSharePrefrence(ProfileActivity.this,
 							Constant.SHRED_PR.KEY_SESSIONID)));
 
-			String response = UtilInList.postData(params, Constant.API
-					+ Constant.ACTIONS.RESERVATION_LIST);
+			String response = UtilInList.postData(getApplicationContext(),
+					params, Constant.API + Constant.ACTIONS.RESERVATION_LIST);
 			Log.e("Response In Activity-->", response);
 			return response;
 		}
@@ -479,7 +479,6 @@ public class ProfileActivity extends Activity implements
 		TextView txtVIP = (TextView) actionBar.getCustomView().findViewById(
 				R.id.txtVIP);
 		txtVIP.setTypeface(typeAkzidgrobemedex);
-
 
 		if (UtilInList
 				.ReadSharePrefrence(ProfileActivity.this,

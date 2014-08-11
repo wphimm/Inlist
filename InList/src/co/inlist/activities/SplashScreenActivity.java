@@ -73,19 +73,17 @@ public class SplashScreenActivity extends Activity {
 			// TODO Auto-generated method stub
 
 			List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-			params1.add(new BasicNameValuePair("common_appVersion", ""
-					+ UtilInList.getCommon_appVersion(getApplicationContext())));
-			params1.add(new BasicNameValuePair("common_deviceId", ""
-					+ UtilInList.getDeviceId(getApplicationContext())));
 			params1.add(new BasicNameValuePair("device_type", "android"));
+			params1.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
 			params1.add(new BasicNameValuePair("parse_object_id", ""
 					+ ParseInstallation.getCurrentInstallation().getObjectId()));
 			params1.add(new BasicNameValuePair("PHPSESSIONID", ""
 					+ UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
 							Constant.SHRED_PR.KEY_SESSIONID)));
 
-			String response = UtilInList.postData(params1, Constant.API
-					+ Constant.API + Constant.ACTIONS.ADD_DEVICE);
+			String response = UtilInList.postData(getApplicationContext(),
+					params1, Constant.API + Constant.ACTIONS.ADD_DEVICE);
 			Log.e("Response In Activity-->", response);
 
 			return response;
@@ -144,8 +142,8 @@ public class SplashScreenActivity extends Activity {
 					+ UtilInList.ReadSharePrefrence(SplashScreenActivity.this,
 							Constant.SHRED_PR.KEY_SESSIONID)));
 
-			String response = UtilInList.postData(params1, Constant.API
-					+ Constant.ACTIONS.PREPARE_REGISTER);
+			String response = UtilInList.postData(getApplicationContext(),
+					params1, Constant.API + Constant.ACTIONS.PREPARE_REGISTER);
 			Log.e("Response In Activity-->", response);
 
 			return response;
@@ -227,9 +225,10 @@ public class SplashScreenActivity extends Activity {
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(nameValuePairs, ""
-					+ Constant.API + Constant.ACTIONS.PARTY_AREA
-					+ "?apiMode=VIP&json=true");
+			String response = UtilInList.postData(getApplicationContext(),
+					nameValuePairs, "" + Constant.API
+							+ Constant.ACTIONS.PARTY_AREA
+							+ "?apiMode=VIP&json=true");
 			Log.e("Response In Activity-->", response);
 			return response;
 		}

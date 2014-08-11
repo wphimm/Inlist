@@ -341,6 +341,7 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					context,
 					nameValuePairs,
 					""
 							+ Constant.API

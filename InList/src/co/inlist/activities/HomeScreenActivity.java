@@ -317,6 +317,7 @@ public class HomeScreenActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API
@@ -466,6 +467,7 @@ public class HomeScreenActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API

@@ -37,9 +37,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -294,11 +294,10 @@ public class EventDetailsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				LeadingActivity.gps = new GPSTracker(EventDetailsActivity.this);
+				GPSTracker gps = new GPSTracker(EventDetailsActivity.this);
 				startActivity(new Intent(android.content.Intent.ACTION_VIEW,
 						Uri.parse("http://maps.google.com/maps?saddr="
-								+ LeadingActivity.gps.getLatitude() + ","
-								+ LeadingActivity.gps.getLongitude()
+								+ gps.getLatitude() + "," + gps.getLongitude()
 								+ "&daddr=" + latitude + "," + longitude)));
 			}
 		});
@@ -610,14 +609,14 @@ public class EventDetailsActivity extends Activity implements
 					// pagerPosition = 0;
 					// pager.setCurrentItem(pagerPosition);
 
-					Log.e("pagerPosition", ""+pagerPosition);
+					Log.e("pagerPosition", "" + pagerPosition);
 					if (pagerPosition == 0) {
 						pager.setCurrentItem(InListApplication.getGallery()
 								.size(), false);
 					} else if (pagerPosition == InListApplication.getGallery()
 							.size() + 1) {
 						pager.setCurrentItem(1, false);
-						pagerPosition=0;
+						pagerPosition = 0;
 					} else {
 						pager.setCurrentItem(pagerPosition);
 					}
@@ -682,6 +681,7 @@ public class EventDetailsActivity extends Activity implements
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			Log.e("Name Value Pair", nameValuePairs.toString());
 			String response = UtilInList.postData(
+					getApplicationContext(),
 					nameValuePairs,
 					""
 							+ Constant.API
