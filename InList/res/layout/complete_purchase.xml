@@ -48,8 +48,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/t1"
                         android:layout_marginTop="2dp"
-                        android:text="Table for 4"
-                        android:textIsSelectable="true" />
+                        android:text="Table for 4" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -333,15 +332,89 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/t1"
-                        android:layout_marginTop="2dp"
-                        android:textIsSelectable="true" />
+                        android:layout_marginTop="2dp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/r5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/r4"
+                android:visibility="gone"
+                android:layout_margin="20dp" >
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/money_icon"
+                    android:contentDescription="@string/iv_desc" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/img1" >
+
+                    <TextView
+                        android:id="@+id/t1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quote"
+                        android:textColor="@color/light"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/r11"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/t1" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="Number of Men:" />
+
+                        <EditText
+                            android:id="@+id/editMen"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="150dp"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="@color/light_yellow" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/r12"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/r11" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="Number of Women:" />
+
+                        <EditText
+                            android:id="@+id/editWomen"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="150dp"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textColor="@color/light_yellow" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:layout_below="@+id/r4" />
+                android:layout_below="@+id/r5" />
         </RelativeLayout>
     </ScrollView>
 

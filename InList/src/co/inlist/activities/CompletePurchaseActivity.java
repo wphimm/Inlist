@@ -16,11 +16,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,9 +38,11 @@ public class CompletePurchaseActivity extends Activity implements
 
 	HashMap<String, String> map;
 	public static CompletePurchaseActivity cpObj;
-	RelativeLayout relativeCost;
+	RelativeLayout relativeCost, relativeQuote;
 	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName,
 			txtSubtotal, txtTax, txtGratuity;
+	EditText editMen, editWomen;
+	boolean flagQuote = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,7 @@ public class CompletePurchaseActivity extends Activity implements
 
 		init();
 		actionBarAndButtonActions();
-		
+
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
 				+ "&#8226; I will dress approprately for the venue <br/>"
 				+ "&#8226; I will arrive sober <br/>"
@@ -164,11 +169,62 @@ public class CompletePurchaseActivity extends Activity implements
 				+ "/" + strYear;
 		txtDate.setText("" + strMonthYear);
 
+		editMen.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				editMen.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				editMen.setHint("");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		editWomen.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				editWomen.setHintTextColor(getResources().getColor(
+						R.color.white_dull));
+				editWomen.setHint("");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
 	}
 
 	private void init() {
 		// TODO Auto-generated method stub
 		relativeCost = (RelativeLayout) findViewById(R.id.r3);
+		relativeQuote = (RelativeLayout) findViewById(R.id.r5);
 		txtPoints = (TextView) findViewById(R.id.txt_points);
 		txtTable = (TextView) findViewById(R.id.txt_table);
 		txtTotal = (TextView) findViewById(R.id.txt_total);
@@ -178,15 +234,10 @@ public class CompletePurchaseActivity extends Activity implements
 		txtSubtotal = (TextView) findViewById(R.id.txt_subtotal);
 		txtTax = (TextView) findViewById(R.id.txt_tax);
 		txtGratuity = (TextView) findViewById(R.id.txt_gratuity);
-	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.activity_complete_purchase_actions, menu);
-	//
-	// return super.onCreateOptionsMenu(menu);
-	// }
+		editMen = (EditText) findViewById(R.id.editMen);
+		editWomen = (EditText) findViewById(R.id.editWomen);
+	}
 
 	/**
 	 * On selecting action bar icons
@@ -215,19 +266,35 @@ public class CompletePurchaseActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
-		try {
-			if (result.getString("success").equals("true")) {
-				startActivity(new Intent(CompletePurchaseActivity.this,
-						PurchaseSummaryActivity.class));
-				overridePendingTransition(R.anim.enter_from_left,
-						R.anim.hold_bottom);
-			} else {
-				UtilInList.validateDialog(CompletePurchaseActivity.this, result
-						.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
+		if (flagQuote) {
+			try {
+				if (result.getString("success").equals("true")) {
+					UtilInList.validateDialog(CompletePurchaseActivity.this,
+							result.getJSONArray("messages").getString(0),
+							Constant.ERRORS.OOPS);
+				} else {
+					UtilInList.validateDialog(CompletePurchaseActivity.this,
+							result.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
 			}
-		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
+		} else {
+			try {
+				if (result.getString("success").equals("true")) {
+					startActivity(new Intent(CompletePurchaseActivity.this,
+							PurchaseSummaryActivity.class));
+					overridePendingTransition(R.anim.enter_from_left,
+							R.anim.hold_bottom);
+				} else {
+					UtilInList.validateDialog(CompletePurchaseActivity.this,
+							result.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
+			}
 		}
 
 	}
@@ -236,7 +303,7 @@ public class CompletePurchaseActivity extends Activity implements
 
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.custome_action_bar);
+		actionBar.setCustomView(R.layout.custom_actionbar_completepurchase);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);
@@ -245,13 +312,23 @@ public class CompletePurchaseActivity extends Activity implements
 
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
-		
-		if(map.get("card_required").equals("0")){
+
+		ImageButton action_button_quote = (ImageButton) actionBar
+				.getCustomView().findViewById(R.id.btn_action_bar_quote);
+
+		action_button.setBackgroundResource(R.drawable.confirm_update_onclick);
+		action_button_quote
+				.setBackgroundResource(R.drawable.quote_onclick);
+
+		if (map.get("card_required").equals("0")) {
 			action_button.setVisibility(View.GONE);
 			relativeCost.setVisibility(View.GONE);
 		}
 
-		action_button.setBackgroundResource(R.drawable.confirm_update_onclick);
+		if (map.get("quote_allowed").equals("1")) {
+			action_button_quote.setVisibility(View.VISIBLE);
+			relativeQuote.setVisibility(View.VISIBLE);
+		}
 
 		action_button.setOnClickListener(new OnClickListener() {
 
@@ -259,88 +336,164 @@ public class CompletePurchaseActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				String strCapacity = ""
-						+ InListApplication
-								.getPricing()
-								.get(Integer
-										.parseInt(UtilInList
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					String strCapacity = ""
+							+ InListApplication
+									.getPricing()
+									.get(Integer
+											.parseInt(UtilInList
+													.ReadSharePrefrence(
+															CompletePurchaseActivity.this,
+															Constant.SHRED_PR.KEY_PRICE_POSITION)
+													.toString()))
+									.get("table_capacity");
+					String strPriceId = ""
+							+ InListApplication
+									.getPricing()
+									.get(Integer
+											.parseInt(UtilInList
+													.ReadSharePrefrence(
+															CompletePurchaseActivity.this,
+															Constant.SHRED_PR.KEY_PRICE_POSITION)
+													.toString()))
+									.get("event_pricing_id");
+
+					String strCardId = ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ID)
+									.toString();
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("event_id", ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_EVENT_ID).toString()));
+					params.add(new BasicNameValuePair("party_size", ""
+							+ strCapacity));
+					params.add(new BasicNameValuePair("bookingItem", "event"));
+					params.add(new BasicNameValuePair("event_pricing_id", ""
+							+ strPriceId));
+					params.add(new BasicNameValuePair("user_card_id", ""
+							+ strCardId));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					if (strCardId.equals("0")) {
+						params.add(new BasicNameValuePair("card_number", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_NUMBER)
+										.toString()));
+						params.add(new BasicNameValuePair(
+								"card_name",
+								""
+										+ UtilInList
 												.ReadSharePrefrence(
 														CompletePurchaseActivity.this,
-														Constant.SHRED_PR.KEY_PRICE_POSITION)
-												.toString()))
-								.get("table_capacity");
-				String strPriceId = ""
-						+ InListApplication
-								.getPricing()
-								.get(Integer
-										.parseInt(UtilInList
+														Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME)
+												.toString()));
+						params.add(new BasicNameValuePair("card_cvc", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_CVV)
+										.toString()));
+						params.add(new BasicNameValuePair(
+								"card_exp_year",
+								""
+										+ UtilInList
 												.ReadSharePrefrence(
 														CompletePurchaseActivity.this,
-														Constant.SHRED_PR.KEY_PRICE_POSITION)
-												.toString()))
-								.get("event_pricing_id");
+														Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR)
+												.toString()));
+						params.add(new BasicNameValuePair(
+								"card_exp_month",
+								""
+										+ UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH)
+												.toString()));
+					}
 
-				String strCardId = ""
-						+ UtilInList.ReadSharePrefrence(
-								CompletePurchaseActivity.this,
-								Constant.SHRED_PR.KEY_USER_CARD_ID).toString();
-
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-				params.add(new BasicNameValuePair("event_id", ""
-						+ UtilInList.ReadSharePrefrence(
-								CompletePurchaseActivity.this,
-								Constant.SHRED_PR.KEY_EVENT_ID).toString()));
-				params.add(new BasicNameValuePair("party_size", ""
-						+ strCapacity));
-				params.add(new BasicNameValuePair("bookingItem", "event"));
-				params.add(new BasicNameValuePair("event_pricing_id", ""
-						+ strPriceId));
-				params.add(new BasicNameValuePair("user_card_id", ""
-						+ strCardId));
-				params.add(new BasicNameValuePair("device_type", "android"));
-				params.add(new BasicNameValuePair("PHPSESSIONID", ""
-						+ UtilInList.ReadSharePrefrence(
-								CompletePurchaseActivity.this,
-								Constant.SHRED_PR.KEY_SESSIONID)));
-
-				if (strCardId.equals("0")) {
-					params.add(new BasicNameValuePair("card_number", ""
-							+ UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_NUMBER)
-									.toString()));
-					params.add(new BasicNameValuePair(
-							"card_name",
-							""
-									+ UtilInList
-											.ReadSharePrefrence(
-													CompletePurchaseActivity.this,
-													Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME)
-											.toString()));
-					params.add(new BasicNameValuePair("card_cvc", ""
-							+ UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_CVV)
-									.toString()));
-					params.add(new BasicNameValuePair("card_exp_year", ""
-							+ UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR)
-									.toString()));
-					params.add(new BasicNameValuePair("card_exp_month", ""
-							+ UtilInList.ReadSharePrefrence(
-									CompletePurchaseActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH)
-									.toString()));
+					flagQuote = false;
+					new WebServiceDataPosterAsyncTask(
+							CompletePurchaseActivity.this, params, Constant.API
+									+ Constant.ACTIONS.BOOK_EVENT_TABLE)
+							.execute();
+				} else {
+					UtilInList.validateDialog(CompletePurchaseActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
 				}
-
-				new WebServiceDataPosterAsyncTask(
-						CompletePurchaseActivity.this, params, Constant.API
-								+ Constant.ACTIONS.BOOK_EVENT_TABLE).execute();
 
 			}
 		});
+
+		action_button_quote.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (isValidate()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("event_id", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_EVENT_ID)
+										.toString()));
+						params.add(new BasicNameValuePair("men", ""
+								+ editMen.getText().toString().trim()));
+						params.add(new BasicNameValuePair("women", ""
+								+ editWomen.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						flagQuote = true;
+						new WebServiceDataPosterAsyncTask(
+								CompletePurchaseActivity.this, params,
+								Constant.API + Constant.ACTIONS.REUEST_QUOTE)
+								.execute();
+					} else {
+						UtilInList.validateDialog(
+								CompletePurchaseActivity.this, ""
+										+ Constant.network_error,
+								Constant.AppName);
+					}
+
+				}
+			}
+		});
+
+	}
+
+	protected boolean isValidate() {
+		// TODO Auto-generated method stub
+		if (editMen.getText().toString().trim().length() == 0) {
+			editMen.setText("");
+			editMen.setHintTextColor(getResources().getColor(R.color.light_red));
+			editMen.setHint("Men");
+			return false;
+		}
+		if (editWomen.getText().toString().trim().length() == 0) {
+			editWomen.setText("");
+			editWomen.setHintTextColor(getResources().getColor(
+					R.color.light_red));
+			editWomen.setHint("Women");
+			return false;
+		}
+		return true;
 	}
 
 	@Override

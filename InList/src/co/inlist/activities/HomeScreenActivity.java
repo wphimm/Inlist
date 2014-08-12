@@ -535,6 +535,8 @@ public class HomeScreenActivity extends Activity implements
 							"" + obj.getString("event_min_price"));
 					map.put("card_required",
 							"" + obj.getString("card_required"));
+					map.put("quote_allowed",
+							"" + obj.getString("quote_allowed"));
 					map.put("event_description",
 							"" + obj.getString("event_description"));
 

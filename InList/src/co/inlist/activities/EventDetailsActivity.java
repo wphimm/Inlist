@@ -609,7 +609,6 @@ public class EventDetailsActivity extends Activity implements
 					// pagerPosition = 0;
 					// pager.setCurrentItem(pagerPosition);
 
-					Log.e("pagerPosition", "" + pagerPosition);
 					if (pagerPosition == 0) {
 						pager.setCurrentItem(InListApplication.getGallery()
 								.size(), false);

@@ -55,7 +55,7 @@ public class SplashScreenActivity extends Activity {
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 
-			new AddDeviceAsyncTask().execute();
+			new PrepRegAsyncTask().execute();
 
 		} else {
 			UtilInList.validateDialog(SplashScreenActivity.this, ""
@@ -125,7 +125,7 @@ public class SplashScreenActivity extends Activity {
 				e.printStackTrace();
 			}
 
-			new PrepRegAsyncTask().execute();
+			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 
 		}
 
@@ -198,7 +198,7 @@ public class SplashScreenActivity extends Activity {
 				e.printStackTrace();
 			}
 
-			new PartyAreaAsyncTask(getApplicationContext()).execute("");
+			new AddDeviceAsyncTask().execute();
 		}
 
 	}
