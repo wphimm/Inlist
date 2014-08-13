@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
 import android.view.View;
@@ -23,6 +22,7 @@ import co.inlist.fragments.LeadingFragment;
 import co.inlist.util.Constant;
 import co.inlist.util.GPSTracker;
 import co.inlist.util.UtilInList;
+import co.inlist.util.ViewPagerCustomDuration;
 
 public class LeadingActivity extends FragmentActivity {
 	// ...
@@ -31,7 +31,7 @@ public class LeadingActivity extends FragmentActivity {
 	private LinearLayout rl_btn_register;
 	private LinearLayout rl_btn_login;
 
-	ViewPager vpPager;
+	ViewPagerCustomDuration vpPager;
 	int pagerPosition = 0;
 	Timer timer;
 	MyTimerTask myTimerTask;
@@ -84,7 +84,7 @@ public class LeadingActivity extends FragmentActivity {
 		txtSkip.setText(Html
 				.fromHtml("<p><font color=\"#DFBB6A\"><u>Skip for now</u></font></p>"));
 
-		vpPager = (ViewPager) findViewById(R.id.vpPager);
+		vpPager = (ViewPagerCustomDuration) findViewById(R.id.vpPager);
 		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
 		vpPager.setAdapter(adapterViewPager);
 
@@ -263,7 +263,12 @@ public class LeadingActivity extends FragmentActivity {
 					pagerPosition++;
 					if (pagerPosition == 4)
 						pagerPosition = 0;
+					if (pagerPosition == 0)
+						vpPager.setScrollDurationFactor(4);
+					else
+						vpPager.setScrollDurationFactor(1);
 					vpPager.setCurrentItem(pagerPosition);
+					
 				}
 			});
 		}

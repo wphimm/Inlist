@@ -12,6 +12,8 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
@@ -59,6 +62,8 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 			actionBar.setDisplayHomeAsUpEnabled(true);
 
+			RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+					.getCustomView().findViewById(R.id.relativeActionBar);
 			ImageButton action_button = (ImageButton) actionBar.getCustomView()
 					.findViewById(R.id.btn_action_bar);
 
@@ -70,12 +75,59 @@ public class ForgotPassworActivity extends FragmentActivity implements
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					if (edt_frg_e_mail.getText().toString().equals("")) {
-						UtilInList
-								.validateDialog(getActivity(),
-										Constant.ERRORS.PLZ_EMAIL,
-										Constant.ERRORS.OOPS);
-					} else {
+					if (edt_frg_e_mail.getText().toString().trim().equals("")) {
+						edt_frg_e_mail.setText("");
+						edt_frg_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_frg_e_mail.setHint("Email Invalid");
+					} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+							edt_frg_e_mail.getText().toString().trim()).matches() == false) {
+						edt_frg_e_mail.setText("");
+						edt_frg_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_frg_e_mail.setHint("Email Invalid");
+					}  else {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("email", ""
+								+ edt_frg_e_mail.getText().toString().trim()));
+
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(getActivity(),
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								getActivity(),
+								params,
+								Constant.API
+										+ "request_password_reset/?apiMode=VIP&json=true")
+								.execute();
+					}
+
+				}
+			});
+			
+			relativeActionBar.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+					if (edt_frg_e_mail.getText().toString().trim().equals("")) {
+						edt_frg_e_mail.setText("");
+						edt_frg_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_frg_e_mail.setHint("Email Invalid");
+					} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+							edt_frg_e_mail.getText().toString().trim()).matches() == false) {
+						edt_frg_e_mail.setText("");
+						edt_frg_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_frg_e_mail.setHint("Email Invalid");
+					}  else {
 						List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 						params.add(new BasicNameValuePair("email", ""
@@ -133,7 +185,35 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 			edt_frg_e_mail = (EditText) rootView
 					.findViewById(R.id.edt_frg_e_mail);
+			edt_frg_e_mail.setHintTextColor(getResources().getColor(
+					R.color.light_black));
 
+			edt_frg_e_mail.addTextChangedListener(new TextWatcher() {
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before,
+						int count) {
+					// TODO Auto-generated method stub
+					edt_frg_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_black));
+					edt_frg_e_mail.setHint("Email Address");
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+
+			
 			return rootView;
 		}
 	}
@@ -154,12 +234,25 @@ public class ForgotPassworActivity extends FragmentActivity implements
 
 			actionBar.setDisplayHomeAsUpEnabled(true);
 
+			RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+					.getCustomView().findViewById(R.id.relativeActionBar);
 			ImageButton action_button = (ImageButton) actionBar.getCustomView()
 					.findViewById(R.id.btn_action_bar);
 
 			action_button.setBackgroundResource(R.drawable.done_btn_action_bar);
 
 			action_button.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					getActivity().finish();
+					getActivity().overridePendingTransition(R.anim.hold_top,
+							R.anim.exit_in_left);
+				}
+			});
+			
+			relativeActionBar.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {

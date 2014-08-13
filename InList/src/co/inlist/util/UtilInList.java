@@ -42,8 +42,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.parse.ParseInstallation;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;

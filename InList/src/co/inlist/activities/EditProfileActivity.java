@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
@@ -239,12 +240,82 @@ public class EditProfileActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		action_button.setBackgroundResource(R.drawable.logout_action_bar);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				// search action
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						EditProfileActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to logout?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(getApplicationContext())) {
+
+									List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+									params.add(new BasicNameValuePair(
+											"device_id",
+											""
+													+ UtilInList
+															.getDeviceId(getApplicationContext())));
+									params.add(new BasicNameValuePair(
+											"device_type", "android"));
+									params.add(new BasicNameValuePair(
+											"PHPSESSIONID",
+											""
+													+ UtilInList
+															.ReadSharePrefrence(
+																	EditProfileActivity.this,
+																	Constant.SHRED_PR.KEY_SESSIONID)));
+
+									flagLogout = 1;
+									new WebServiceDataPosterAsyncTask(
+											EditProfileActivity.this,
+											params,
+											Constant.API
+													+ "user/logout/?apiMode=VIP&json=true")
+											.execute();
+
+								} else {
+									UtilInList.validateDialog(
+											EditProfileActivity.this, ""
+													+ Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

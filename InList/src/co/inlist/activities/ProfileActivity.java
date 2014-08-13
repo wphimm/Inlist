@@ -474,6 +474,8 @@ public class ProfileActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 		TextView txtVIP = (TextView) actionBar.getCustomView().findViewById(
@@ -494,6 +496,18 @@ public class ProfileActivity extends Activity implements
 		action_button.setBackgroundResource(R.drawable.edit_onclick);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(ProfileActivity.this,
+						EditProfileActivity.class));
+				overridePendingTransition(R.anim.enter_from_left,
+						R.anim.hold_bottom);
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

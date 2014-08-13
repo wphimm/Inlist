@@ -40,7 +40,7 @@ public class CompletePurchaseActivity extends Activity implements
 	public static CompletePurchaseActivity cpObj;
 	RelativeLayout relativeCost, relativeQuote;
 	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName,
-			txtSubtotal, txtTax, txtGratuity;
+			txtSubtotal, txtTax, txtGratuity, txt_MinimumDetails;
 	EditText editMen, editWomen;
 	boolean flagQuote = false;
 
@@ -169,6 +169,16 @@ public class CompletePurchaseActivity extends Activity implements
 				+ "/" + strYear;
 		txtDate.setText("" + strMonthYear);
 
+		// ****** Payment Type **********************//
+		if (map.get("payment_type").equals("at_door")) {
+			txt_MinimumDetails.setText(""
+					+ getResources().getString(R.string.your_minimum2));
+		} else {
+			txt_MinimumDetails.setText(""
+					+ getResources().getString(R.string.your_minimum1));
+		}
+		// ***************************************** //
+
 		editMen.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -234,6 +244,7 @@ public class CompletePurchaseActivity extends Activity implements
 		txtSubtotal = (TextView) findViewById(R.id.txt_subtotal);
 		txtTax = (TextView) findViewById(R.id.txt_tax);
 		txtGratuity = (TextView) findViewById(R.id.txt_gratuity);
+		txt_MinimumDetails = (TextView) findViewById(R.id.txtMinimumDetails);
 
 		editMen = (EditText) findViewById(R.id.editMen);
 		editWomen = (EditText) findViewById(R.id.editWomen);
@@ -303,34 +314,142 @@ public class CompletePurchaseActivity extends Activity implements
 
 		ActionBar actionBar = getActionBar();
 		// add the custom view to the action bar
-		actionBar.setCustomView(R.layout.custom_actionbar_completepurchase);
+		actionBar.setCustomView(R.layout.custom_actionbar_two_buttons);
 
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
 				| ActionBar.DISPLAY_SHOW_HOME);
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBarHide);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
-				.findViewById(R.id.btn_action_bar);
-
+				.findViewById(R.id.btn_action_bar_hide);
+		RelativeLayout relativeActionBarQuote = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBarConfirm);
 		ImageButton action_button_quote = (ImageButton) actionBar
-				.getCustomView().findViewById(R.id.btn_action_bar_quote);
+				.getCustomView().findViewById(R.id.btn_action_bar_confirm);
 
 		action_button.setBackgroundResource(R.drawable.confirm_update_onclick);
-		action_button_quote
-				.setBackgroundResource(R.drawable.quote_onclick);
+		action_button_quote.setBackgroundResource(R.drawable.quote_onclick);
 
 		if (map.get("card_required").equals("0")) {
 			action_button.setVisibility(View.GONE);
+			relativeActionBar.setVisibility(View.GONE);
 			relativeCost.setVisibility(View.GONE);
 		}
 
 		if (map.get("quote_allowed").equals("1")) {
 			action_button_quote.setVisibility(View.VISIBLE);
+			relativeActionBarQuote.setVisibility(View.VISIBLE);
 			relativeQuote.setVisibility(View.VISIBLE);
 		}
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					String strCapacity = ""
+							+ InListApplication
+									.getPricing()
+									.get(Integer
+											.parseInt(UtilInList
+													.ReadSharePrefrence(
+															CompletePurchaseActivity.this,
+															Constant.SHRED_PR.KEY_PRICE_POSITION)
+													.toString()))
+									.get("table_capacity");
+					String strPriceId = ""
+							+ InListApplication
+									.getPricing()
+									.get(Integer
+											.parseInt(UtilInList
+													.ReadSharePrefrence(
+															CompletePurchaseActivity.this,
+															Constant.SHRED_PR.KEY_PRICE_POSITION)
+													.toString()))
+									.get("event_pricing_id");
+
+					String strCardId = ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ID)
+									.toString();
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("event_id", ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_EVENT_ID).toString()));
+					params.add(new BasicNameValuePair("party_size", ""
+							+ strCapacity));
+					params.add(new BasicNameValuePair("bookingItem", "event"));
+					params.add(new BasicNameValuePair("event_pricing_id", ""
+							+ strPriceId));
+					params.add(new BasicNameValuePair("user_card_id", ""
+							+ strCardId));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									CompletePurchaseActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					if (strCardId.equals("0")) {
+						params.add(new BasicNameValuePair("card_number", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_NUMBER)
+										.toString()));
+						params.add(new BasicNameValuePair(
+								"card_name",
+								""
+										+ UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME)
+												.toString()));
+						params.add(new BasicNameValuePair("card_cvc", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_CVV)
+										.toString()));
+						params.add(new BasicNameValuePair(
+								"card_exp_year",
+								""
+										+ UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR)
+												.toString()));
+						params.add(new BasicNameValuePair(
+								"card_exp_month",
+								""
+										+ UtilInList
+												.ReadSharePrefrence(
+														CompletePurchaseActivity.this,
+														Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH)
+												.toString()));
+					}
+
+					flagQuote = false;
+					new WebServiceDataPosterAsyncTask(
+							CompletePurchaseActivity.this, params, Constant.API
+									+ Constant.ACTIONS.BOOK_EVENT_TABLE)
+							.execute();
+				} else {
+					UtilInList.validateDialog(CompletePurchaseActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
+				}
+
+			}
+		});
+
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -476,6 +595,47 @@ public class CompletePurchaseActivity extends Activity implements
 			}
 		});
 
+		relativeActionBarQuote.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (isValidate()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("event_id", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_EVENT_ID)
+										.toString()));
+						params.add(new BasicNameValuePair("men", ""
+								+ editMen.getText().toString().trim()));
+						params.add(new BasicNameValuePair("women", ""
+								+ editWomen.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										CompletePurchaseActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						flagQuote = true;
+						new WebServiceDataPosterAsyncTask(
+								CompletePurchaseActivity.this, params,
+								Constant.API + Constant.ACTIONS.REUEST_QUOTE)
+								.execute();
+					} else {
+						UtilInList.validateDialog(
+								CompletePurchaseActivity.this, ""
+										+ Constant.network_error,
+								Constant.AppName);
+					}
+
+				}
+			}
+		});
 	}
 
 	protected boolean isValidate() {

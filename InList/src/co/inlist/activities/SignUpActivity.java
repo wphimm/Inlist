@@ -474,12 +474,123 @@ public class SignUpActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		action_button.setBackgroundResource(R.drawable.sign_up_action_bar);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (edt_su_fname.getText().toString().trim().equals("")) {
+					edt_su_fname.setText("");
+					edt_su_fname.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_fname.setHint("First Name");
+				} else if (edt_su_lname.getText().toString().trim().equals("")) {
+					edt_su_lname.setText("");
+					edt_su_lname.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_lname.setHint("Last Name");
+				} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
+					edt_su_e_mail.setText("");
+					edt_su_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_e_mail.setHint("Email Invalid");
+				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+						edt_su_e_mail.getText().toString().trim()).matches() == false) {
+					edt_su_e_mail.setText("");
+					edt_su_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_e_mail.setHint("Email Invalid");
+				} else if (edt_su_pwd.getText().toString().trim().equals("")) {
+					edt_su_pwd.setText("");
+					edt_su_pwd.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_pwd.setHint("Password Incorrect");
+				} else if (edt_su_phno.getText().toString().trim().equals("")) {
+					edt_su_phno.setText("");
+					edt_su_phno.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_phno.setHint("Phone Number Incorrect");
+				} else if (edt_su_ans.getText().toString().trim().equals("")) {
+					edt_su_ans.setText("");
+					edt_su_ans.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_su_ans.setHint("Please Enter Answer");
+
+				} else {
+
+					if (fb_regiter_flag) {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(SignUpActivity.this)));
+						params.add(new BasicNameValuePair("email",
+								edt_su_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_su_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("first_name",
+								edt_su_fname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("last_name",
+								edt_su_lname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("phone", edt_su_phno
+								.getText().toString().trim()));
+						params.add(new BasicNameValuePair(
+								"membership_question_id", question_id));
+						params.add(new BasicNameValuePair(
+								"membership_question_answer", edt_su_ans
+										.getText().toString().trim()
+										.replace(" ", "%20")));
+						params.add(new BasicNameValuePair("access_token", ""
+								+ facebook.getAccessToken().toString().trim()));
+
+						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.REGISTER_FB)
+								.execute();
+
+					} else {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(SignUpActivity.this)));
+						params.add(new BasicNameValuePair("email",
+								edt_su_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_su_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("first_name",
+								edt_su_fname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("last_name",
+								edt_su_lname.getText().toString().trim()));
+						params.add(new BasicNameValuePair("phone", edt_su_phno
+								.getText().toString().trim()));
+						params.add(new BasicNameValuePair(
+								"membership_question_id", question_id));
+						params.add(new BasicNameValuePair(
+								"membership_question_answer", edt_su_ans
+										.getText().toString().trim()
+										.replace(" ", "%20")));
+
+						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.REGISTRATION)
+								.execute();
+
+					}
+
+				}
+
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

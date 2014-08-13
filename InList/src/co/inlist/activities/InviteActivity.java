@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
@@ -200,12 +201,39 @@ public class InviteActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		action_button.setBackgroundResource(R.drawable.send_onclick);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
+
+				if (isValid()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+						new InviteAsyncTask(InviteActivity.this).execute("");
+					} else {
+						UtilInList.validateDialog(InviteActivity.this, "" + ""
+								+ Constant.network_error, Constant.ERRORS.OOPS);
+
+					}
+				}
+
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

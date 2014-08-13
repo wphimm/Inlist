@@ -573,6 +573,7 @@ public class HomeScreenActivity extends Activity implements
 
 					map.put("atmosphere", "" + obj.getString("atmosphere"));
 					map.put("music_type", "" + obj.getString("music_type"));
+					map.put("payment_type", "" + obj.getString("payment_type"));
 
 					if (flagReset) {
 						InListApplication.getListEvents().add(map);

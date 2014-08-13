@@ -614,6 +614,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 							JSONObject jObjectData = new JSONObject(
 									jObject.getString("data"));
 							strAction = jObjectData.getString("action");
+							imgReservation.setVisibility(View.VISIBLE);
 							if (strAction.equals("show_text")) {
 								imgReservation
 										.setBackgroundResource(R.drawable.purchase_history_reservation_confirmed);
@@ -667,15 +668,21 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBarHide = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBarHide);
 		ImageButton btnHide = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar_hide);
+		RelativeLayout relativeActionBarConfirm = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBarConfirm);
 		ImageButton btnConfirm = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar_confirm);
 
 		if (strAction.equals("confirmation_required")) {
 			btnConfirm.setVisibility(View.VISIBLE);
+			relativeActionBarConfirm.setVisibility(View.VISIBLE);
 		} else {
 			btnConfirm.setVisibility(View.GONE);
+			relativeActionBarConfirm.setVisibility(View.GONE);
 		}
 
 		btnHide.setOnClickListener(new OnClickListener() {
@@ -724,7 +731,72 @@ public class ReservedEventDetailsActivity extends Activity implements
 			}
 		});
 
+		relativeActionBarHide.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						ReservedEventDetailsActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to hide this reservation?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(context)) {
+
+									new HideReservationAsyncTask(
+											ReservedEventDetailsActivity.this)
+											.execute("");
+
+								} else {
+									UtilInList.validateDialog(
+											ReservedEventDetailsActivity.this,
+											"" + Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+			}
+		});
+
+		
 		btnConfirm.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					new ConfirmReservationAsyncTask(
+							ReservedEventDetailsActivity.this).execute("");
+				} else {
+					UtilInList.validateDialog(
+							ReservedEventDetailsActivity.this, "" + ""
+									+ Constant.network_error,
+							Constant.ERRORS.OOPS);
+				}
+			}
+		});
+		
+		relativeActionBarConfirm.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

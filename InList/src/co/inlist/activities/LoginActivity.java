@@ -464,8 +464,59 @@ public class LoginActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
+
+		relativeActionBar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(edt_lgn_e_mail.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_lgn_pwd.getWindowToken(), 0);
+
+				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
+					edt_lgn_e_mail.setText("");
+					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_e_mail.setHint("Email Invalid");
+				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+						edt_lgn_e_mail.getText().toString().trim()).matches() == false) {
+					edt_lgn_e_mail.setText("");
+					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_e_mail.setHint("Email Invalid");
+				} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
+					edt_lgn_pwd.setText("");
+					edt_lgn_pwd.setHintTextColor(getResources().getColor(
+							R.color.light_red));
+					edt_lgn_pwd.setHint("Password Incorrect");
+				} else {
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("device_id", UtilInList
+							.getDeviceId(LoginActivity.this)));
+					params.add(new BasicNameValuePair("login", ""
+							+ edt_lgn_e_mail.getText().toString().trim()));
+					params.add(new BasicNameValuePair("password", edt_lgn_pwd
+							.getText().toString().trim()));
+					params.add(new BasicNameValuePair("device_type", "android"));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					flagCard = false;
+					new WebServiceDataPosterAsyncTask(LoginActivity.this,
+							params, Constant.API + Constant.ACTIONS.LOGIN)
+							.execute();
+
+				}
+			}
+		});
 
 		action_button.setOnClickListener(new OnClickListener() {
 

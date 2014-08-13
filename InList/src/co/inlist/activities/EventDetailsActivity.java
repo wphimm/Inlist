@@ -87,6 +87,7 @@ public class EventDetailsActivity extends Activity implements
 	private TextView txt_music;
 	private Spinner spinnerTable;
 	private TextView txt_minimum;
+	private TextView txt_MinimumDetails;
 	private TextView txtaddress;
 	private TextView txtcity;
 
@@ -119,7 +120,7 @@ public class EventDetailsActivity extends Activity implements
 		}
 
 		map = InListApplication.getListEvents().get(position);
-
+	
 		options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.event_details_overlay)
 				.showImageForEmptyUri(R.drawable.event_details_overlay)
@@ -207,6 +208,18 @@ public class EventDetailsActivity extends Activity implements
 				+ map.get("event_location_state") + " "
 				+ map.get("event_location_zip"));
 
+		// ****** Payment Type **********************//
+		if (map.get("payment_type").equals("at_door")) {
+			txt_MinimumDetails.setText(""
+					+ getResources().getString(
+							R.string.your_minimum2));
+		} else {
+			txt_MinimumDetails.setText(""
+					+ getResources().getString(
+							R.string.your_minimum1));
+		}
+		// ***************************************** //
+		
 		// ********** Google Map ************//
 
 		googleMap = ((MapFragment) getFragmentManager().findFragmentById(
@@ -366,6 +379,7 @@ public class EventDetailsActivity extends Activity implements
 		txt_music = (TextView) findViewById(R.id.txt_music);
 		spinnerTable = (Spinner) findViewById(R.id.spinnerTable);
 		txt_minimum = (TextView) findViewById(R.id.txt_minimum);
+		txt_MinimumDetails = (TextView) findViewById(R.id.txtMinimumDetails);
 		txtaddress = (TextView) findViewById(R.id.txtaddress);
 		txtcity = (TextView) findViewById(R.id.txtcity);
 	}
@@ -775,6 +789,8 @@ public class EventDetailsActivity extends Activity implements
 
 					pager.setAdapter(new ImagePagerAdapter(InListApplication
 							.getGallery(), pager, ids));
+
+
 				}
 
 			} catch (JSONException e) { // TODO Auto-generated catch block
@@ -794,12 +810,82 @@ public class EventDetailsActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		// action_button.setBackgroundResource(R.drawable.ev)
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (spinnerTable.getSelectedItemPosition() >= 0) {
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_EVENT_ID,
+							"" + map.get("event_id"));
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_YOUR_MINIMUM,
+							"" + map.get("event_min_price"));
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_POSITION, ""
+									+ spinnerTable.getSelectedItemPosition());
+					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_CURRENT_POSITION, ""
+									+ position);
+
+					if (UtilInList.ReadSharePrefrence(
+							EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+						if (map.get("card_required").equals("0")) {
+							startActivity(new Intent(EventDetailsActivity.this,
+									CompletePurchaseActivity.class));
+							overridePendingTransition(R.anim.enter_from_left,
+									R.anim.hold_bottom);
+						} else {
+							if (UtilInList
+									.ReadSharePrefrence(
+											EventDetailsActivity.this,
+											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+									.toString().equals("1")) {
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										CompletePurchaseActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_left,
+										R.anim.hold_bottom);
+							} else {
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										AddCardActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_bottom,
+										R.anim.hold_bottom);
+							}
+						}
+					} else {
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
+
+						startActivity(new Intent(EventDetailsActivity.this,
+								LoginActivity.class));
+						overridePendingTransition(R.anim.enter_from_bottom,
+								R.anim.hold_bottom);
+					}
+				}
+			}
+		});
+
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

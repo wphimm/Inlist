@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 public class NoCardActivity extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -64,6 +65,8 @@ public class NoCardActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
@@ -71,6 +74,19 @@ public class NoCardActivity extends Activity implements
 				.setBackgroundResource(R.drawable.no_card_action_btn_onclick);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent(NoCardActivity.this,
+						AddCardActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
+
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

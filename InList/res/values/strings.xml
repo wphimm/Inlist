@@ -88,7 +88,8 @@
     <string name="deposit">DEPOSIT</string>
     <string name="location">LOCATION</string>
     <string name="cost">COST</string>
-    <string name="your_minimum">You will be charged for the minimum amount once your InList concierge confirms your reservation by calling the phone number on your account.</string>
+    <string name="your_minimum1">You will be charged for the minimum amount once your InList concierge confirms your reservation by calling the phone number on your account.</string>
+    <string name="your_minimum2">The venue will bill you when you arrive. An InList concierge will confirm your reservation by calling the phone number on your account.</string>
 
     <!-- Complete Purchase -->
     <string name="payment_details">PAYMENT DETAILS</string>

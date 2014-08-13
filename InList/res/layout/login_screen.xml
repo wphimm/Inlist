@@ -21,6 +21,7 @@
             android:layout_margin="10dp"
             android:hint="@string/email_address"
             android:singleLine="true"
+            android:inputType="textEmailAddress"
             android:textColor="@color/light_yellow"
             android:textColorHint="@color/white_dull" />
 

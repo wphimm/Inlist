@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
@@ -154,6 +155,8 @@ public class ChangePasswordActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
@@ -212,6 +215,59 @@ public class ChangePasswordActivity extends Activity implements
 			}
 		});
 
+		relativeActionBar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(
+						editCurrentPassword.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editNewPassword.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(
+						editConfirmPassword.getWindowToken(), 0);
+
+				if (isValidate()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("current_password",
+								""
+										+ editCurrentPassword.getText()
+												.toString().trim()));
+						params.add(new BasicNameValuePair("password", ""
+								+ editNewPassword.getText().toString().trim()));
+						params.add(new BasicNameValuePair("confirm_password",
+								""
+										+ editConfirmPassword.getText()
+												.toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										ChangePasswordActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								ChangePasswordActivity.this,
+								params,
+								Constant.API
+										+ "user/login/save/?apiMode=VIP&json=true")
+								.execute();
+
+					} else {
+						UtilInList.validateDialog(ChangePasswordActivity.this,
+								"" + "" + Constant.network_error,
+								Constant.ERRORS.OOPS);
+
+					}
+				}
+			}
+		});
+		
 	}
 
 	@Override

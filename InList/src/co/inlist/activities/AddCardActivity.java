@@ -515,6 +515,8 @@ public class AddCardActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
@@ -536,6 +538,87 @@ public class AddCardActivity extends Activity implements
 			}
 
 		}
+
+		relativeActionBar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				if (UtilInList
+						.ReadSharePrefrence(AddCardActivity.this,
+								Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+						.toString().equals("1")) {
+
+					flagCardDelete = true;
+
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+					params.add(new BasicNameValuePair("user_card_id", ""
+							+ UtilInList.ReadSharePrefrence(
+									AddCardActivity.this,
+									Constant.SHRED_PR.KEY_USER_CARD_ID)
+									.toString()));
+					params.add(new BasicNameValuePair("PHPSESSIONID", ""
+							+ UtilInList.ReadSharePrefrence(
+									AddCardActivity.this,
+									Constant.SHRED_PR.KEY_SESSIONID)));
+
+					new WebServiceDataPosterAsyncTask(AddCardActivity.this,
+							params, Constant.API + Constant.ACTIONS.REMOVE_CARD)
+							.execute();
+
+				} else {
+
+					if (edt_card_num.getText().toString().equals("")) {
+
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_NUMBER,
+								Constant.ERRORS.OOPS);
+					} else if (edt_card_name.getText().toString().equals("")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_NAME,
+								Constant.ERRORS.OOPS);
+					} else if (selected_month.equals("Month")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_MONTH,
+								Constant.ERRORS.OOPS);
+					} else if (selected_year.equals("Year")) {
+						UtilInList.validateDialog(AddCardActivity.this,
+								Constant.ERRORS.PLZ_CARD_YEAR,
+								Constant.ERRORS.OOPS);
+					} else {
+
+						flagCardDelete = false;
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("user_card_id", "0"));
+						params.add(new BasicNameValuePair("card_type", "visa"));
+						params.add(new BasicNameValuePair("card_number",
+								edt_card_num.getText().toString().trim()
+										.replace(" ", "")));
+						params.add(new BasicNameValuePair("card_name",
+								edt_card_name.getText().toString().trim()));
+						params.add(new BasicNameValuePair("card_exp_year",
+								selected_year));
+						params.add(new BasicNameValuePair("card_exp_month",
+								selected_month));
+						params.add(new BasicNameValuePair("set_default", "1"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										AddCardActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(AddCardActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.ADD_CARD).execute();
+
+					}
+				}
+
+			}
+		});
 
 		action_button.setOnClickListener(new OnClickListener() {
 
@@ -617,7 +700,7 @@ public class AddCardActivity extends Activity implements
 
 			}
 		});
-
+		
 	}
 
 	@Override

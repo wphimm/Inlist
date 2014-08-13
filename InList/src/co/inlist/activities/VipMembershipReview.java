@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 public class VipMembershipReview extends Activity implements
 		ActionBar.OnNavigationListener {
@@ -59,12 +60,27 @@ public class VipMembershipReview extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		action_button.setBackgroundResource(R.drawable.chk_out_action_btn);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				ProfileActivity.profObj.finish();
+				VipMemberShipActivity.vmaObj.finish();
+				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

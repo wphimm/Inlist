@@ -73,14 +73,14 @@ public class LeadingFragment extends Fragment {
 			img.setBackgroundResource(R.drawable.onboarding_image2);
 			tvLabel.setText(Html
 					.fromHtml("<p><h3><font color=\"#ffffff\">Find the </font>"
-							+ "<font color=\"#DFBB6A\">best venue</font>"
-							+ "<font color=\"#ffffff\">, guarantee entry, and book your table, right from your phone.</font></h3></p>"));
+							+ "<font color=\"#DFBB6A\">best events</font>"
+							+ "<font color=\"#ffffff\">, and book your reservation, right from your phone.</font></h3></p>"));
 			break;
 		case 3:
 			img.setBackgroundResource(R.drawable.onboarding_image3);
 			tvLabel.setText(Html
-					.fromHtml("<p><h3><font color=\"#ffffff\">Made for the night, by the </font>"
-							+ "<font color=\"#DFBB6A\">Night Life</font>"
+					.fromHtml("<p><h3><font color=\"#ffffff\">Made by the nightlife, for the </font>"
+							+ "<font color=\"#DFBB6A\">nightlife</font>"
 							+ "<font color=\"#ffffff\">.</font><h3></p>"));
 			break;
 

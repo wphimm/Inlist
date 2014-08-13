@@ -37,6 +37,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.adapter.HorizontalListAdapter;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
@@ -625,12 +626,71 @@ public class VipMemberShipActivity extends Activity implements
 
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		RelativeLayout relativeActionBar = (RelativeLayout) actionBar
+				.getCustomView().findViewById(R.id.relativeActionBar);
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
 		action_button.setBackgroundResource(R.drawable.submit_onclick);
 
 		action_button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(editInviteCode.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(
+						editMostFrequentedClubs.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editOccupation.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(editOtherClub.getWindowToken(), 0);
+
+				if (isValidate()) {
+					if (UtilInList
+							.isInternetConnectionExist(getApplicationContext())) {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("user_id", ""
+								+ UtilInList.ReadSharePrefrence(
+										VipMemberShipActivity.this,
+										Constant.SHRED_PR.KEY_USERID)));
+						params.add(new BasicNameValuePair("income_bracket_id",
+								"" + (selectedIncomePosition + 1)));
+						params.add(new BasicNameValuePair("music_type_id", ""
+								+ InListApplication.getList_music_types()
+										.get(selectedMusicTypePosition)
+										.get("music_type_id")));
+						params.add(new BasicNameValuePair("favorite_clubs", ""
+								+ editMostFrequentedClubs.getText().toString()
+										.trim()));
+						params.add(new BasicNameValuePair("other_memberships",
+								"" + editOtherClub.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										VipMemberShipActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						new WebServiceDataPosterAsyncTask(
+								VipMemberShipActivity.this, params,
+								Constant.API + Constant.ACTIONS.REQUEST_VIP)
+								.execute();
+
+					} else {
+						UtilInList.validateDialog(VipMemberShipActivity.this,
+								"" + "" + Constant.network_error,
+								Constant.ERRORS.OOPS);
+
+					}
+				}
+
+			}
+		});
+		
+		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

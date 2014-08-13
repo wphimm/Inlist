@@ -290,11 +290,11 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/txtMinimumDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/l1"
                         android:layout_marginTop="10dp"
-                        android:text="@string/your_minimum"
                         android:textColor="@color/light" />
                 </RelativeLayout>
             </RelativeLayout>
