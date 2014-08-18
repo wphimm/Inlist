@@ -120,11 +120,13 @@ public class EventDetailsActivity extends Activity implements
 		}
 
 		map = InListApplication.getListEvents().get(position);
-	
+
 		options = new DisplayImageOptions.Builder()
-				.showStubImage(R.drawable.event_details_overlay)
+				.showImageOnLoading(R.drawable.event_details_overlay)
+				.resetViewBeforeLoading(true)
 				.showImageForEmptyUri(R.drawable.event_details_overlay)
-				.cacheInMemory().cacheOnDisc()
+				.showImageOnFail(R.drawable.event_details_overlay).cacheInMemory(true)
+				.cacheOnDisk(true).considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
@@ -211,15 +213,13 @@ public class EventDetailsActivity extends Activity implements
 		// ****** Payment Type **********************//
 		if (map.get("payment_type").equals("at_door")) {
 			txt_MinimumDetails.setText(""
-					+ getResources().getString(
-							R.string.your_minimum2));
+					+ getResources().getString(R.string.your_minimum2));
 		} else {
 			txt_MinimumDetails.setText(""
-					+ getResources().getString(
-							R.string.your_minimum1));
+					+ getResources().getString(R.string.your_minimum1));
 		}
 		// ***************************************** //
-		
+
 		// ********** Google Map ************//
 
 		googleMap = ((MapFragment) getFragmentManager().findFragmentById(
@@ -500,14 +500,14 @@ public class EventDetailsActivity extends Activity implements
 
 			final View imageLayout = inflater.inflate(pageId, null);
 
-			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.WRAP_CONTENT,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-			layoutParams.width = img_event_poster_url.getWidth();
-			layoutParams.height = img_event_poster_url.getHeight();
-
-			pager.setLayoutParams(layoutParams);
+//			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+//					RelativeLayout.LayoutParams.WRAP_CONTENT,
+//					RelativeLayout.LayoutParams.WRAP_CONTENT);
+//
+//			layoutParams.width = img_event_poster_url.getWidth();
+//			layoutParams.height = img_event_poster_url.getHeight();
+//
+//			pager.setLayoutParams(layoutParams);
 
 			final ImageView imageView = (ImageView) imageLayout
 					.findViewById(R.id.image);
@@ -789,7 +789,6 @@ public class EventDetailsActivity extends Activity implements
 
 					pager.setAdapter(new ImagePagerAdapter(InListApplication
 							.getGallery(), pager, ids));
-
 
 				}
 

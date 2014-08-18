@@ -119,6 +119,7 @@ public class AddCardActivity extends Activity implements
 								Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR)
 								.toString())) {
 					yearPos = i;
+					
 				}
 			}
 			sp_year.setSelection(yearPos);

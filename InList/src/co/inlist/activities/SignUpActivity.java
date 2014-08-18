@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -415,23 +417,34 @@ public class SignUpActivity extends Activity implements
 						Constant.SHRED_PR.KEY_LASTNAME, edt_su_lname.getText()
 								.toString().trim());
 
-				// startActivity(new Intent(SignUpActivity.this,
-				// HomeScreenActivity.class));
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						SignUpActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("To activate your account, please click the link in the activation email which has been sent to you.");
+				alert.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
 
-				Intent i = new Intent(getApplicationContext(),
-						HomeScreenActivity.class);
-				i.setAction(Intent.ACTION_SEND);
-				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent i = new Intent(getApplicationContext(),
+										HomeScreenActivity.class);
+								i.setAction(Intent.ACTION_SEND);
+								i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(i);
+								finish();
+								overridePendingTransition(
+										R.anim.enter_from_bottom,
+										R.anim.hold_bottom);
+							}
+						});
 
-				finish();
-				overridePendingTransition(R.anim.enter_from_bottom,
-						R.anim.hold_bottom);
+				alert.create();
+				alert.show();
 
 			} else {
-
 				UtilInList.validateDialog(SignUpActivity.this, result
-						.getJSONArray("errors").getString(0).toString(),	
+						.getJSONArray("errors").getString(0).toString(),
 						Constant.ERRORS.OOPS);
 			}
 
@@ -549,6 +562,11 @@ public class SignUpActivity extends Activity implements
 										.replace(" ", "%20")));
 						params.add(new BasicNameValuePair("access_token", ""
 								+ facebook.getAccessToken().toString().trim()));
+						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										SignUpActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
 
 						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
 								params, Constant.API
@@ -577,6 +595,11 @@ public class SignUpActivity extends Activity implements
 								"membership_question_answer", edt_su_ans
 										.getText().toString().trim()
 										.replace(" ", "%20")));
+						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										SignUpActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
 
 						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
 								params, Constant.API
@@ -589,7 +612,7 @@ public class SignUpActivity extends Activity implements
 
 			}
 		});
-		
+
 		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override

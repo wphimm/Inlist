@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/no_image"
@@ -14,18 +15,18 @@
         <RelativeLayout
             android:id="@+id/r2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content" >
 
-            <co.inlist.util.ResizableImageView
+            <ImageView
                 android:id="@+id/img"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:scaleType="fitXY" />
 
-            <co.inlist.util.ResizableImageView
+            <ImageView
                 android:id="@+id/img_overlay"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/event_details_overlay" />
 

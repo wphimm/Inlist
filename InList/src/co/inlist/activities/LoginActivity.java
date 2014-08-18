@@ -39,7 +39,6 @@ import co.inlist.facebook.android.Facebook;
 import co.inlist.facebook.android.Facebook.DialogListener;
 import co.inlist.facebook.android.FacebookError;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.serverutils.WebServiceDataCollectorAsyncTask;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.UtilInList;
@@ -219,17 +218,31 @@ public class LoginActivity extends Activity implements
 						public void run() {
 							try {
 
-								new WebServiceDataCollectorAsyncTask(
-										Constant.API
-												+ String.format(
-														Constant.ACTIONS.LOGIN_FB,
-														Constant.TAGS.VIP,
-														Constant.TAGS.REQUEST_TYPE_JSON,
-														UtilInList
-																.getDeviceId(LoginActivity.this),
-														facebook.getAccessToken()
-																.toString()),
-										LoginActivity.this).execute();
+								flagCard = false;
+								List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+								params.add(new BasicNameValuePair(
+										"device_id",
+										UtilInList
+												.getDeviceId(LoginActivity.this)));
+								params.add(new BasicNameValuePair(
+										"access_token", ""
+												+ facebook.getAccessToken()));
+								params.add(new BasicNameValuePair(
+										"device_type", "android"));
+								params.add(new BasicNameValuePair(
+										"PHPSESSIONID",
+										""
+												+ UtilInList
+														.ReadSharePrefrence(
+																LoginActivity.this,
+																Constant.SHRED_PR.KEY_SESSIONID)));
+
+								flagCard = false;
+								new WebServiceDataPosterAsyncTask(
+										LoginActivity.this, params,
+										Constant.API + Constant.ACTIONS.LOGIN_FB)
+										.execute();
 
 							} catch (Exception e) {
 
@@ -309,6 +322,8 @@ public class LoginActivity extends Activity implements
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
+
+		Log.e("result", ">>" + result);
 
 		if (flagCard) {
 

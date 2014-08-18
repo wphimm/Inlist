@@ -133,7 +133,7 @@ public class GalleryActivity extends Activity implements
 		@Override
 		public Object instantiateItem(View view, int position) {
 			final View imageLayout = inflater.inflate(
-					R.layout.item_pager_image, null);
+					R.layout.itempagerimage_gallery, null);
 
 			final ImageView imageView = (ImageView) imageLayout
 					.findViewById(R.id.image);

@@ -114,9 +114,11 @@ public class ReservedEventDetailsActivity extends Activity implements
 		map = InListApplication.getListReservedEvents().get(position);
 
 		options = new DisplayImageOptions.Builder()
-				.showStubImage(R.drawable.event_details_overlay)
+				.showImageOnLoading(R.drawable.event_details_overlay)
+				.resetViewBeforeLoading(true)
 				.showImageForEmptyUri(R.drawable.event_details_overlay)
-				.cacheInMemory().cacheOnDisc()
+				.showImageOnFail(R.drawable.event_details_overlay).cacheInMemory(true)
+				.cacheOnDisk(true).considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
@@ -777,7 +779,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 			}
 		});
 
-		
 		btnConfirm.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -795,7 +796,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 				}
 			}
 		});
-		
+
 		relativeActionBarConfirm.setOnClickListener(new OnClickListener() {
 
 			@Override

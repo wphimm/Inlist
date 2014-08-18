@@ -37,7 +37,7 @@ public class Constant {
 
 		public static final String USER_LIST = "user_list&user_id=%s";
 		public static final String LOGIN = "user/login/?apiMode=VIP&json=true";
-		public static final String LOGIN_FB = "/facebook/login/?apiMode=%s&%s=true&device_id=%s&access_token=%s";
+		public static final String LOGIN_FB = "/facebook/login/?apiMode=VIP&json=true";
 		public static final String FORGOT_PASSWORD = "request_password_reset/?apiMode=%s&json=%s&email=%S";
 		public static final String REGISTER_FB = "/facebook/register/?apiMode=VIP&json=true";
 		public static final String PREPARE_REGISTER = "common/prepare_registration/?json=true";

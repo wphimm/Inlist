@@ -59,10 +59,9 @@ public class CompletePurchaseActivity extends Activity implements
 		init();
 		actionBarAndButtonActions();
 
-		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
+		String strHTML = "&#8226; I will arrive on-time <br/>"
 				+ "&#8226; I will dress approprately for the venue <br/>"
-				+ "&#8226; I will arrive sober <br/>"
-				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
+				+ "&#8226; I will arrive sober";
 		txtPoints.setText(Html.fromHtml(strHTML));
 
 		// ***** Date Format ************************************//

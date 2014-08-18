@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -24,8 +25,11 @@ import android.widget.TextView;
 import co.inlist.activities.EventDetailsActivity;
 import co.inlist.activities.HomeScreenActivity;
 import co.inlist.activities.R;
-import co.inlist.imageloaders.ImageLoader;
 import co.inlist.util.UtilInList;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 @SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 public class EventsAdapter extends BaseAdapter implements
@@ -33,7 +37,8 @@ public class EventsAdapter extends BaseAdapter implements
 
 	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
 	Context context;
-	protected ImageLoader imageLoader;
+	DisplayImageOptions options;
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
 			typeLeaguegothic_condensedregular;
@@ -48,7 +53,14 @@ public class EventsAdapter extends BaseAdapter implements
 		this.context = context;
 		this.objAct = objAct;
 
-		imageLoader = new ImageLoader(context);
+		options = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.no_image)
+				.resetViewBeforeLoading(true)
+				.showImageForEmptyUri(R.drawable.no_image)
+				.showImageOnFail(R.drawable.no_image).cacheInMemory(true)
+				.cacheOnDisk(true).considerExifParams(true)
+				.bitmapConfig(Bitmap.Config.RGB_565).build();
+		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(context.getAssets(),
 				"akzidgrobeligex.ttf");
@@ -57,8 +69,8 @@ public class EventsAdapter extends BaseAdapter implements
 		typeLeaguegothic_condensedregular = Typeface.createFromAsset(
 				context.getAssets(), "leaguegothic_condensedregular.otf");
 		typeAvenir = Typeface
-				
-				.createFromAsset(context.getAssets(), "avenir.ttc");
+
+		.createFromAsset(context.getAssets(), "avenir.ttc");
 
 		mSectionLetters = getSectionLetters();
 	}
@@ -119,43 +131,40 @@ public class EventsAdapter extends BaseAdapter implements
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		ImageView img_event_poster_url;
+		View rowView = convertView;
 
-		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(
+		if (rowView == null) {
+			rowView = LayoutInflater.from(context).inflate(
 					R.layout.events_list_row, null);
+
+			ViewHolder viewHolder = new ViewHolder();
+			viewHolder.txt_event_title = (TextView) rowView
+					.findViewById(R.id.event_title);
+			viewHolder.txt_event_location_city = (TextView) rowView
+					.findViewById(R.id.event_location_city);
+			viewHolder.img_event_poster_url = (ImageView) rowView
+					.findViewById(R.id.img);
+			viewHolder.relativeMain = (RelativeLayout) rowView
+					.findViewById(R.id.main);
+
+			rowView.setTag(viewHolder);
 		}
 
-		TextView txt_event_title = (TextView) convertView
-				.findViewById(R.id.event_title);
-		TextView txt_event_location_city = (TextView) convertView
-				.findViewById(R.id.event_location_city);
-		img_event_poster_url = (ImageView) convertView.findViewById(R.id.img);
-		//img_event_poster_url = (ImageView) convertView.findViewById(R.id.img);
+		final ViewHolder holder = (ViewHolder) rowView.getTag();
 
-		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
-		txt_event_title.setText(locallist.get(position).get("event_title")
-				.toString().toUpperCase());
-		txt_event_location_city.setText(""
+		holder.txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+		holder.txt_event_title.setText(locallist.get(position)
+				.get("event_title").toString().toUpperCase());
+		holder.txt_event_location_city.setText(""
 				+ locallist.get(position).get("event_location_club") + ", "
 				+ locallist.get(position).get("event_location_city"));
 
-		txt_event_title.setTypeface(typeAkzidgrobemedex);
-		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
+		holder.txt_event_title.setTypeface(typeAkzidgrobemedex);
+		holder.txt_event_location_city.setTypeface(typeAkzidgrobemedex);
 
 		String image_url = locallist.get(position).get("event_poster_url");
-		// imageLoader.displayImage(image_url, img_event_poster_url, options);
-		imageLoader.DisplayImage(image_url, Color.BLACK, img_event_poster_url);
+		imageLoader.displayImage(image_url, holder.img_event_poster_url,options);
 
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-		layoutParams.width = img_event_poster_url.getWidth();
-		layoutParams.height = img_event_poster_url.getHeight();
-
-		//pager.setLayoutParams(layoutParams);
-		
 		if (position == (getCount() - 1)) {
 			if (UtilInList.isInternetConnectionExist(context
 					.getApplicationContext())) {
@@ -163,10 +172,10 @@ public class EventsAdapter extends BaseAdapter implements
 				HomeScreenActivity.flagIfProgress = false;
 				HomeScreenActivity.HomeScreenObj.new EventsAsyncTask(
 						context.getApplicationContext()).execute("");
-			} 
+			}
 		}
 
-		convertView.setOnClickListener(new View.OnClickListener() {
+		rowView.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -179,7 +188,13 @@ public class EventsAdapter extends BaseAdapter implements
 			}
 		});
 
-		return convertView;
+		return rowView;
+	}
+
+	static class ViewHolder {
+		ImageView img_event_poster_url;
+		TextView txt_event_title, txt_event_location_city;
+		RelativeLayout relativeMain;
 	}
 
 	@Override
