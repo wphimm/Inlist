@@ -6,6 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import twitter4j.StatusUpdate;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -63,7 +66,6 @@ public class PurchaseSummaryActivity extends Activity implements
 
 	Context context = this;
 	TextView txtEventTitle, txtDate, txtAddress, txtTable;
-	int position;
 	HashMap<String, String> map;
 	String sharingString = "I'm in\n";
 
@@ -77,24 +79,66 @@ public class PurchaseSummaryActivity extends Activity implements
 
 		actionBarAndButtonActions();
 
-		position = Integer.parseInt(UtilInList.ReadSharePrefrence(
-				PurchaseSummaryActivity.this,
-				Constant.SHRED_PR.KEY_CURRENT_POSITION).toString());
+		try {
+			JSONObject obj = new JSONObject(UtilInList.ReadSharePrefrence(
+					PurchaseSummaryActivity.this,
+					Constant.SHRED_PR.KEY_CURRENT_resultlistEvents).toString());
+			map = new HashMap<String, String>();
+			map.put("event_id", "" + obj.getString("event_id"));
+			map.put("event_title", "" + obj.getString("event_title"));
+			map.put("event_start_date", "" + obj.getString("event_start_date"));
+			map.put("event_start_time", "" + obj.getString("event_start_time"));
+			map.put("event_min_price", "" + obj.getString("event_min_price"));
+			map.put("card_required", "" + obj.getString("card_required"));
+			map.put("quote_allowed", "" + obj.getString("quote_allowed"));
+			map.put("event_description",
+					"" + obj.getString("event_description"));
 
-		map = InListApplication.getListEvents().get(position);
+			map.put("event_location_address",
+					"" + obj.getString("event_location_address"));
+			map.put("event_location_city",
+					"" + obj.getString("event_location_city"));
+			map.put("event_location_state",
+					"" + obj.getString("event_location_state"));
+			map.put("event_location_zip",
+					"" + obj.getString("event_location_zip"));
+			map.put("event_location_latitude",
+					"" + obj.getString("event_location_latitude"));
+			map.put("event_location_longitude",
+					"" + obj.getString("event_location_longitude"));
+			map.put("event_location_club",
+					"" + obj.getString("event_location_club"));
+			try {
+				map.put("event_end_time", "" + obj.getString("event_end_time"));
+				map.put("tables_total", "" + obj.getString("tables_total"));
+				map.put("tables_available",
+						"" + obj.getString("tables_available"));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			map.put("tax", "" + obj.getString("tax"));
+			map.put("gratuity", "" + obj.getString("gratuity"));
+
+			map.put("event_poster_url", "" + obj.getString("event_poster_url"));
+
+			map.put("atmosphere", "" + obj.getString("atmosphere"));
+			map.put("music_type", "" + obj.getString("music_type"));
+			map.put("payment_type", "" + obj.getString("payment_type"));
+
+		} catch (JSONException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		txtEventTitle.setText("" + map.get("event_title"));
 		txtAddress.setText("" + map.get("event_location_address") + "\n"
 				+ map.get("event_location_city") + ", "
 				+ map.get("event_location_state") + " "
 				+ map.get("event_location_zip"));
 
-		String strTable = ""
-				+ InListApplication
-						.getPricing()
-						.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-								PurchaseSummaryActivity.this,
-								Constant.SHRED_PR.KEY_PRICE_POSITION)
-								.toString())).get("club_section_name");
+		String strTable = UtilInList.ReadSharePrefrence(
+				PurchaseSummaryActivity.this,
+				Constant.SHRED_PR.KEY_PRICE_CLUB_SECTION_NAME);
 		txtTable.setText("" + strTable);
 
 		// ***** Date Format ************************************//
@@ -234,45 +278,44 @@ public class PurchaseSummaryActivity extends Activity implements
 
 		if (!facebook.isSessionValid()) {
 			facebook.authorize(PurchaseSummaryActivity.this, new String[] {
-					"email", "publish_stream", "status_update","publish_actions" },
-					new DialogListener() {
+					"email", "publish_stream", "status_update",
+					"publish_actions" }, new DialogListener() {
 
-						public void onCancel() {
-							// Function to handle cancel event
-							
-						}
+				public void onCancel() {
+					// Function to handle cancel event
 
-						public void onComplete(Bundle values) {
-							// Function to handle complete event
-							// Edit Preferences and update facebook acess_token
-							SharedPreferences.Editor editor = mPrefs.edit();
-							editor.putString("access_token",
-									facebook.getAccessToken());
-							editor.putLong("access_expires",
-									facebook.getAccessExpires());
-							editor.commit();
-							Log.d("complete", "here..");
-							postOnWall();
+				}
 
-						}
+				public void onComplete(Bundle values) {
+					// Function to handle complete event
+					// Edit Preferences and update facebook acess_token
+					SharedPreferences.Editor editor = mPrefs.edit();
+					editor.putString("access_token", facebook.getAccessToken());
+					editor.putLong("access_expires",
+							facebook.getAccessExpires());
+					editor.commit();
+					Log.d("complete", "here..");
+					postOnWall();
 
-						public void onError(DialogError error) {
-							// Function to handle error
-							/*
-							 * if (progressDialog.isShowing()) {
-							 * progressDialog.dismiss(); }
-							 */
-						}
+				}
 
-						public void onFacebookError(FacebookError fberror) {
-							// Function to handle Facebook errors
-							/*
-							 * if (progressDialog.isShowing()) {
-							 * progressDialog.dismiss(); }
-							 */
-						}
+				public void onError(DialogError error) {
+					// Function to handle error
+					/*
+					 * if (progressDialog.isShowing()) {
+					 * progressDialog.dismiss(); }
+					 */
+				}
 
-					});
+				public void onFacebookError(FacebookError fberror) {
+					// Function to handle Facebook errors
+					/*
+					 * if (progressDialog.isShowing()) {
+					 * progressDialog.dismiss(); }
+					 */
+				}
+
+			});
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import uk.co.senab.actionbarpulltorefresh.library.StickyListHeadersAdapter;
@@ -29,7 +30,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-import co.inlist.activities.InListApplication;
 import co.inlist.activities.ProfileActivity;
 import co.inlist.activities.R;
 import co.inlist.activities.ReservedEventDetailsActivity;
@@ -45,7 +45,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class ReservedEventsAdapter extends BaseAdapter implements
 		StickyListHeadersAdapter, SectionIndexer {
 
-	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
+	ArrayList<String> locallist = new ArrayList<String>();
 	Context context;
 	DisplayImageOptions options;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
@@ -56,8 +56,8 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 
 	private ArrayList<HashMap<String, String>> mSectionLetters;
 
-	public ReservedEventsAdapter(ArrayList<HashMap<String, String>> list,
-			Context context, Activity objAct) {
+	public ReservedEventsAdapter(ArrayList<String> list, Context context,
+			Activity objAct) {
 		// TODO Auto-generated constructor stub
 		locallist = list;
 		this.context = context;
@@ -81,30 +81,38 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 		typeAvenir = Typeface
 				.createFromAsset(context.getAssets(), "avenir.ttc");
 
-		mSectionLetters = getSectionLetters();
+		try {
+			mSectionLetters = getSectionLetters();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private ArrayList<HashMap<String, String>> getSectionLetters() {
+	private ArrayList<HashMap<String, String>> getSectionLetters()
+			throws JSONException {
 
 		ArrayList<HashMap<String, String>> letters = new ArrayList<HashMap<String, String>>();
 		for (int j = 0; j < locallist.size(); j++) {
 			boolean flag = true;
+			JSONObject jObj = new JSONObject(locallist.get(j));
 			for (int i = 0; i < j; i++) {
-				if (locallist.get(i).get("event_start_date")
-						.equals(locallist.get(j).get("event_start_date")))
+				JSONObject iObj = new JSONObject(locallist.get(i));
+				if (iObj.getString("event_start_date").equals(
+						jObj.getString("event_start_date")))
 					flag = false;
 			}
 			if (flag) {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("id", "" + j);
 				map.put("event_start_date",
-						"" + locallist.get(j).get("event_start_date"));
+						"" + jObj.getString("event_start_date"));
 				letters.add(map);
 			} else {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("id", "" + letters.get(letters.size() - 1).get("id"));
 				map.put("event_start_date",
-						"" + locallist.get(j).get("event_start_date"));
+						"" + jObj.getString("event_start_date"));
 				letters.add(map);
 			}
 		}
@@ -113,16 +121,26 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 		return letters;
 	}
 
-	public void add(HashMap<String, String> map) {
+	public void add(String map) {
 		// TODO Auto-generated method stub
 		locallist.add(map);
-		mSectionLetters = getSectionLetters();
+		try {
+			mSectionLetters = getSectionLetters();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		notifyDataSetChanged();
 	}
 
 	public void refresh() {
 		// TODO Auto-generated method stub
-		mSectionLetters = getSectionLetters();
+		try {
+			mSectionLetters = getSectionLetters();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		notifyDataSetChanged();
 	}
 
@@ -159,18 +177,25 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 		ImageView img_event_poster_url = (ImageView) convertView
 				.findViewById(R.id.img);
 
-		txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
-		txt_event_title.setText(locallist.get(position).get("event_title")
-				.toString().toUpperCase());
-		txt_event_location_city.setText(""
-				+ locallist.get(position).get("event_location_club") + ", "
-				+ locallist.get(position).get("event_location_city"));
+		JSONObject jObj;
+		try {
+			jObj = new JSONObject(locallist.get(position));
+			txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+			txt_event_title.setText(jObj.getString("event_title").toString()
+					.toUpperCase());
+			txt_event_location_city.setText(""
+					+ jObj.getString("event_location_club") + ", "
+					+ jObj.getString("event_location_city"));
 
-		txt_event_title.setTypeface(typeAkzidgrobemedex);
-		txt_event_location_city.setTypeface(typeAkzidgrobemedex);
+			txt_event_title.setTypeface(typeAkzidgrobemedex);
+			txt_event_location_city.setTypeface(typeAkzidgrobemedex);
 
-		String image_url = locallist.get(position).get("event_poster_url");
-		imageLoader.displayImage(image_url, img_event_poster_url, options);
+			String image_url = jObj.getString("event_poster_url");
+			imageLoader.displayImage(image_url, img_event_poster_url, options);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (position == (getCount() - 1)) {
 			if (UtilInList.isInternetConnectionExist(context
@@ -189,6 +214,7 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 				// TODO Auto-generated method stub
 				Intent i = new Intent(context,
 						ReservedEventDetailsActivity.class);
+				i.putExtra("resultlistReservedEvents", locallist.get(position));
 				i.putExtra("pos", position);
 				context.startActivity(i);
 				objAct.overridePendingTransition(R.anim.enter_from_left,
@@ -350,21 +376,31 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 		protected String doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
 
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					context,
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ "reservation/hide"
-							+ "/?apiMode=VIP&json=true"
-							+ "&reservation_id="
-							+ locallist.get(currentPos).get("order_id")
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(objAct,
-									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("Response In Activity-->", response);
+			JSONObject jObj;
+			String response = null;
+			try {
+				jObj = new JSONObject(locallist.get(currentPos));
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				Log.e("Name Value Pair", nameValuePairs.toString());
+				response = UtilInList.postData(
+						context,
+						nameValuePairs,
+						""
+								+ Constant.API
+								+ "reservation/hide"
+								+ "/?apiMode=VIP&json=true"
+								+ "&reservation_id="
+								+ jObj.getString("order_id")
+								+ "&PHPSESSIONID="
+								+ UtilInList.ReadSharePrefrence(objAct,
+										Constant.SHRED_PR.KEY_SESSIONID));
+				Log.e("Response In Activity-->", response);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			return response;
 		}
 
@@ -386,7 +422,7 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							InListApplication.getListReservedEvents().remove(
+							ProfileActivity.profObj.listReservedEvents.remove(
 									currentPos);
 							refresh();
 						}

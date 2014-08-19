@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -50,10 +51,57 @@ public class CompletePurchaseActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.complete_purchase);
 
-		map = InListApplication.getListEvents().get(
-				Integer.parseInt(UtilInList.ReadSharePrefrence(
-						CompletePurchaseActivity.this,
-						Constant.SHRED_PR.KEY_CURRENT_POSITION).toString()));
+		try {
+			JSONObject obj = new JSONObject(UtilInList.ReadSharePrefrence(
+					CompletePurchaseActivity.this,
+					Constant.SHRED_PR.KEY_CURRENT_resultlistEvents).toString());
+			map = new HashMap<String, String>();
+			map.put("event_id", "" + obj.getString("event_id"));
+			map.put("event_title", "" + obj.getString("event_title"));
+			map.put("event_start_date", "" + obj.getString("event_start_date"));
+			map.put("event_start_time", "" + obj.getString("event_start_time"));
+			map.put("event_min_price", "" + obj.getString("event_min_price"));
+			map.put("card_required", "" + obj.getString("card_required"));
+			map.put("quote_allowed", "" + obj.getString("quote_allowed"));
+			map.put("event_description",
+					"" + obj.getString("event_description"));
+
+			map.put("event_location_address",
+					"" + obj.getString("event_location_address"));
+			map.put("event_location_city",
+					"" + obj.getString("event_location_city"));
+			map.put("event_location_state",
+					"" + obj.getString("event_location_state"));
+			map.put("event_location_zip",
+					"" + obj.getString("event_location_zip"));
+			map.put("event_location_latitude",
+					"" + obj.getString("event_location_latitude"));
+			map.put("event_location_longitude",
+					"" + obj.getString("event_location_longitude"));
+			map.put("event_location_club",
+					"" + obj.getString("event_location_club"));
+			try {
+				map.put("event_end_time", "" + obj.getString("event_end_time"));
+				map.put("tables_total", "" + obj.getString("tables_total"));
+				map.put("tables_available",
+						"" + obj.getString("tables_available"));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			map.put("tax", "" + obj.getString("tax"));
+			map.put("gratuity", "" + obj.getString("gratuity"));
+
+			map.put("event_poster_url", "" + obj.getString("event_poster_url"));
+
+			map.put("atmosphere", "" + obj.getString("atmosphere"));
+			map.put("music_type", "" + obj.getString("music_type"));
+			map.put("payment_type", "" + obj.getString("payment_type"));
+
+		} catch (JSONException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		cpObj = this;
 
 		init();
@@ -111,14 +159,10 @@ public class CompletePurchaseActivity extends Activity implements
 
 		// ***** Date Format ************************************//
 
-		String strTable = ""
-				+ InListApplication
-						.getPricing()
-						.get(Integer.parseInt(UtilInList.ReadSharePrefrence(
-								CompletePurchaseActivity.this,
-								Constant.SHRED_PR.KEY_PRICE_POSITION)
-								.toString())).get("club_section_name") + ",\n"
-				+ map.get("event_title") + ",\n" + strDateTime;
+		String strTable = UtilInList.ReadSharePrefrence(
+				CompletePurchaseActivity.this,
+				Constant.SHRED_PR.KEY_PRICE_CLUB_SECTION_NAME)
+				+ ",\n" + map.get("event_title") + ",\n" + strDateTime;
 		txtTable.setText("" + strTable);
 
 		txtSubtotal.setText("$"
@@ -352,26 +396,12 @@ public class CompletePurchaseActivity extends Activity implements
 
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					String strCapacity = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															CompletePurchaseActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("table_capacity");
-					String strPriceId = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															CompletePurchaseActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("event_pricing_id");
+					String strCapacity = UtilInList.ReadSharePrefrence(
+							CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_TABLE_CAPACITY);
+					String strPriceId = UtilInList.ReadSharePrefrence(
+							CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_EVENT_PRICING_ID);
 
 					String strCardId = ""
 							+ UtilInList.ReadSharePrefrence(
@@ -456,26 +486,12 @@ public class CompletePurchaseActivity extends Activity implements
 
 				if (UtilInList
 						.isInternetConnectionExist(getApplicationContext())) {
-					String strCapacity = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															CompletePurchaseActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("table_capacity");
-					String strPriceId = ""
-							+ InListApplication
-									.getPricing()
-									.get(Integer
-											.parseInt(UtilInList
-													.ReadSharePrefrence(
-															CompletePurchaseActivity.this,
-															Constant.SHRED_PR.KEY_PRICE_POSITION)
-													.toString()))
-									.get("event_pricing_id");
+					String strCapacity = UtilInList.ReadSharePrefrence(
+							CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_TABLE_CAPACITY);
+					String strPriceId = UtilInList.ReadSharePrefrence(
+							CompletePurchaseActivity.this,
+							Constant.SHRED_PR.KEY_PRICE_EVENT_PRICING_ID);
 
 					String strCardId = ""
 							+ UtilInList.ReadSharePrefrence(

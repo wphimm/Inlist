@@ -2,10 +2,12 @@ package co.inlist.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -65,14 +67,16 @@ public class VipMemberShipActivity extends Activity implements
 	int selectedIncomePosition = -1;
 	int selectedMusicTypePosition = -1;
 
+	ArrayList<HashMap<String, String>> listMusic;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vip_membership_screen);
 
+		getData();
 		init();
-
 		actionBarAndButtonActions();
 
 		vmaObj = this;
@@ -83,9 +87,8 @@ public class VipMemberShipActivity extends Activity implements
 		imageUri = this.getContentResolver().insert(
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-		horizontalList.setAdapter(new HorizontalListAdapter(InListApplication
-				.getList_music_types(), getApplicationContext(),
-				horizontalList, -1));
+		horizontalList.setAdapter(new HorizontalListAdapter(listMusic,
+				getApplicationContext(), horizontalList, -1));
 
 		horizontalList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -94,8 +97,7 @@ public class VipMemberShipActivity extends Activity implements
 					int position, long id) {
 				// TODO Auto-generated method stub
 				selectedMusicTypePosition = position;
-				horizontalList.setAdapter(new HorizontalListAdapter(
-						InListApplication.getList_music_types(),
+				horizontalList.setAdapter(new HorizontalListAdapter(listMusic,
 						getApplicationContext(), horizontalList, position));
 				if (position > 0)
 					horizontalList.setSelection(position - 1);
@@ -133,7 +135,8 @@ public class VipMemberShipActivity extends Activity implements
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
 
-				txtIncome1.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome1.setTextColor(getResources().getColor(
+						R.color.light_yellow));
 				txtIncome2.setTextColor(getResources().getColor(R.color.black));
 				txtIncome3.setTextColor(getResources().getColor(R.color.black));
 				txtIncome4.setTextColor(getResources().getColor(R.color.black));
@@ -162,9 +165,10 @@ public class VipMemberShipActivity extends Activity implements
 				img3.getLayoutParams().height = height;
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
-				
+
 				txtIncome1.setTextColor(getResources().getColor(R.color.black));
-				txtIncome2.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome2.setTextColor(getResources().getColor(
+						R.color.light_yellow));
 				txtIncome3.setTextColor(getResources().getColor(R.color.black));
 				txtIncome4.setTextColor(getResources().getColor(R.color.black));
 
@@ -191,10 +195,11 @@ public class VipMemberShipActivity extends Activity implements
 				img1.getLayoutParams().height = height;
 				img4.getLayoutParams().width = width;
 				img4.getLayoutParams().height = height;
-				
+
 				txtIncome1.setTextColor(getResources().getColor(R.color.black));
 				txtIncome2.setTextColor(getResources().getColor(R.color.black));
-				txtIncome3.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome3.setTextColor(getResources().getColor(
+						R.color.light_yellow));
 				txtIncome4.setTextColor(getResources().getColor(R.color.black));
 
 				resetText();
@@ -220,11 +225,12 @@ public class VipMemberShipActivity extends Activity implements
 				img3.getLayoutParams().height = height;
 				img1.getLayoutParams().width = width;
 				img1.getLayoutParams().height = height;
-				
+
 				txtIncome1.setTextColor(getResources().getColor(R.color.black));
 				txtIncome2.setTextColor(getResources().getColor(R.color.black));
 				txtIncome3.setTextColor(getResources().getColor(R.color.black));
-				txtIncome4.setTextColor(getResources().getColor(R.color.light_yellow));
+				txtIncome4.setTextColor(getResources().getColor(
+						R.color.light_yellow));
 
 				resetText();
 			}
@@ -239,6 +245,39 @@ public class VipMemberShipActivity extends Activity implements
 				v.showContextMenu();
 			}
 		});
+
+	}
+
+	private void getData() {
+		// TODO Auto-generated method stub
+		String result1 = UtilInList.ReadSharePrefrence(VipMemberShipActivity.this,
+				Constant.SHRED_PR.KEY_RESULT_MUSIC);
+		try {
+			/*
+			 * Prepare registration response write in file mode private
+			 */
+			JSONObject result = new JSONObject(result1);
+			String str_temp = result.getString("status");
+			if (str_temp.equals("success")) {
+				JSONObject jObjectData = new JSONObject(
+						result.getString("data"));
+				JSONArray data = jObjectData.getJSONArray("music_types");
+				Log.e("Length of json array ----->", "" + data.length());
+				listMusic.clear();
+				for (int i = 0; i < data.length(); i++) {
+					JSONObject obj = data.getJSONObject(i);
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("music_type_id",
+							"" + obj.getString("music_type_id"));
+					map.put("title", "" + obj.getString("title"));
+					listMusic.add(map);
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -659,9 +698,8 @@ public class VipMemberShipActivity extends Activity implements
 						params.add(new BasicNameValuePair("income_bracket_id",
 								"" + (selectedIncomePosition + 1)));
 						params.add(new BasicNameValuePair("music_type_id", ""
-								+ InListApplication.getList_music_types()
-										.get(selectedMusicTypePosition)
-										.get("music_type_id")));
+								+ listMusic.get(selectedMusicTypePosition).get(
+										"music_type_id")));
 						params.add(new BasicNameValuePair("favorite_clubs", ""
 								+ editMostFrequentedClubs.getText().toString()
 										.trim()));
@@ -689,7 +727,7 @@ public class VipMemberShipActivity extends Activity implements
 
 			}
 		});
-		
+
 		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -716,9 +754,8 @@ public class VipMemberShipActivity extends Activity implements
 						params.add(new BasicNameValuePair("income_bracket_id",
 								"" + (selectedIncomePosition + 1)));
 						params.add(new BasicNameValuePair("music_type_id", ""
-								+ InListApplication.getList_music_types()
-										.get(selectedMusicTypePosition)
-										.get("music_type_id")));
+								+ listMusic.get(selectedMusicTypePosition).get(
+										"music_type_id")));
 						params.add(new BasicNameValuePair("favorite_clubs", ""
 								+ editMostFrequentedClubs.getText().toString()
 										.trim()));

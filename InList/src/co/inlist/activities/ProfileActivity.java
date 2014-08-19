@@ -48,6 +48,8 @@ public class ProfileActivity extends Activity implements
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
 			typeLeaguegothic_condensedregular;
 
+	public ArrayList<String> listReservedEvents = new ArrayList<String>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -221,7 +223,7 @@ public class ProfileActivity extends Activity implements
 			if (flagReset) {
 				pageNo = 1;
 			} else {
-				pageNo = ((int) (InListApplication.getListEvents().size() / 10)) + 1;
+				pageNo = ((int) (listReservedEvents.size() / 10)) + 1;
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -257,7 +259,7 @@ public class ProfileActivity extends Activity implements
 
 			if (result != null) {
 				if (flagReset) {
-					InListApplication.getListReservedEvents().clear();
+					listReservedEvents.clear();
 				}
 
 				try {
@@ -324,10 +326,9 @@ public class ProfileActivity extends Activity implements
 									"" + obj.getString("music_type"));
 
 							if (flagReset) {
-								InListApplication.getListReservedEvents().add(
-										map);
+								listReservedEvents.add("" + obj);
 							} else {
-								adapterReservedEvents.add(map);
+								adapterReservedEvents.add("" + obj);
 							}
 
 						}
@@ -345,8 +346,8 @@ public class ProfileActivity extends Activity implements
 
 				if (flagReset) {
 					adapterReservedEvents = new ReservedEventsAdapter(
-							InListApplication.getListReservedEvents(),
-							ProfileActivity.this, ProfileActivity.this);
+							listReservedEvents, ProfileActivity.this,
+							ProfileActivity.this);
 					mPullToRefreshLayout.setAdapter(adapterReservedEvents);
 
 				}
@@ -378,7 +379,7 @@ public class ProfileActivity extends Activity implements
 	public void onTaskComplete(JSONObject jObject) {
 		// TODO Auto-generated method stub
 
-		InListApplication.getListReservedEvents().clear();
+		listReservedEvents.clear();
 		try {
 			String str_temp = jObject.getString("status");
 			if (str_temp.equals("success")) {
@@ -435,11 +436,9 @@ public class ProfileActivity extends Activity implements
 					map.put("atmosphere", "" + obj.getString("atmosphere"));
 					map.put("music_type", "" + obj.getString("music_type"));
 
-					InListApplication.getListReservedEvents().add(map);
+					listReservedEvents.add(""+obj);
 				}
 
-				Log.i("size:", ""
-						+ InListApplication.getListReservedEvents().size());
 			} else {
 
 				UtilInList.validateDialog(ProfileActivity.this, jObject
@@ -451,8 +450,7 @@ public class ProfileActivity extends Activity implements
 			e.printStackTrace();
 		}
 
-		adapterReservedEvents = new ReservedEventsAdapter(
-				InListApplication.getListReservedEvents(),
+		adapterReservedEvents = new ReservedEventsAdapter(listReservedEvents,
 				ProfileActivity.this, ProfileActivity.this);
 		mPullToRefreshLayout.setAdapter(adapterReservedEvents);
 	}
@@ -506,7 +504,7 @@ public class ProfileActivity extends Activity implements
 						R.anim.hold_bottom);
 			}
 		});
-		
+
 		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override

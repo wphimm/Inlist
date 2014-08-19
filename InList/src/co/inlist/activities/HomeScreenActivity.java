@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,9 +39,6 @@ import co.inlist.adapter.TitleNavigationAdapter;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
@@ -62,13 +58,61 @@ public class HomeScreenActivity extends Activity implements
 	private Context context = this;
 	public static boolean flagReset, flagIfProgress;
 
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-	DisplayImageOptions options;
+	private ArrayList<String> listEvents = new ArrayList<String>();
+	private ArrayList<HashMap<String, String>> party_area = new ArrayList<HashMap<String, String>>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_homescreen);
+
+		getData();
+		onCreateData();
+	}
+
+	private void getData() {
+		// TODO Auto-generated method stub
+		String result=UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+				Constant.SHRED_PR.KEY_RESULT_PARTY_AREA);
+		if (result != null) {
+			try {
+				JSONObject jObject = new JSONObject(result);
+				String str_temp = jObject.getString("status");
+
+				party_area.clear();
+
+				if (str_temp.equals("success")) {
+					JSONArray data = jObject.getJSONArray("data");
+					Log.e("Length of json array ----->", "" + data.length());
+					for (int i = 0; i < data.length(); i++) {
+						JSONObject obj = data.getJSONObject(i);
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("party_area_id",
+								"" + obj.getString("party_area_id"));
+						map.put("title", "" + obj.getString("title"));
+						map.put("icon", "" + obj.getString("icon"));
+						map.put("latitude", "" + obj.getString("latitude"));
+						map.put("longitude", "" + obj.getString("longitude"));
+						map.put("timezone", "" + obj.getString("timezone"));
+						map.put("is_dst", "" + obj.getString("is_dst"));
+						map.put("timezone_text",
+								"" + obj.getString("timezone_text"));
+						map.put("order", "" + obj.getString("order"));
+						map.put("status", "" + obj.getString("status"));
+						map.put("distance", "" + obj.getString("distance"));
+
+						party_area.add(map);
+					}
+				}
+			} catch (JSONException e) { // TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void onCreateData() {
+		// TODO Auto-generated method stub
+
 		actionBar = getActionBar();
 		// Hide the action bar title
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -77,15 +121,11 @@ public class HomeScreenActivity extends Activity implements
 
 		// title drop down adapter
 		adapter = new TitleNavigationAdapter(getApplicationContext(),
-				InListApplication.getParty_area());
+				party_area);
 		// assigning the spinner navigation
 		actionBar.setListNavigationCallbacks(adapter, this);
 
 		HomeScreenObj = this;
-
-		options = new DisplayImageOptions.Builder().showStubImage(0)
-				.showImageForEmptyUri(0).cacheInMemory(true).cacheOnDisc(true)
-				.bitmapConfig(Bitmap.Config.RGB_565).build();
 
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
 		mPullToRefreshLayout.setDivider(null);
@@ -94,7 +134,6 @@ public class HomeScreenActivity extends Activity implements
 		ActionBarPullToRefresh.from(this).options(Options.create().build())
 				.allChildrenArePullable().listener(this)
 				.setup(mPullToRefreshLayout);
-
 	}
 
 	@Override
@@ -275,12 +314,12 @@ public class HomeScreenActivity extends Activity implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// Action to be taken after selecting a spinner item
 
-		if (InListApplication.getParty_area().get(itemPosition).get("status")
-				.equals("0")) {
+		if (party_area.get(itemPosition).get("status").equals("0")) {
 			UtilInList.validateDialog(HomeScreenActivity.this, "" + ""
 					+ Constant.ERRORS.NO_EVENTS_FOUND, Constant.ERRORS.OOPS);
 			return false;
 		}
+
 		selected_position = itemPosition;
 
 		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
@@ -324,9 +363,8 @@ public class HomeScreenActivity extends Activity implements
 							+ Constant.ACTIONS.PARTY_AREA_SET
 							+ "?apiMode=VIP&json=true"
 							+ "&party_area_id="
-							+ InListApplication.getParty_area()
-									.get(selected_position)
-									.get("party_area_id")
+							+ party_area.get(selected_position).get(
+									"party_area_id")
 							+ "&PHPSESSIONID="
 							+ UtilInList.ReadSharePrefrence(
 									HomeScreenActivity.this,
@@ -461,7 +499,7 @@ public class HomeScreenActivity extends Activity implements
 			if (flagReset) {
 				pageNo = 1;
 			} else {
-				pageNo = ((int) (InListApplication.getListEvents().size() / 10)) + 1;
+				pageNo = ((int) (listEvents.size() / 10)) + 1;
 			}
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -502,9 +540,14 @@ public class HomeScreenActivity extends Activity implements
 
 			if (result != null) {
 				if (flagReset) {
-					InListApplication.getListEvents().clear();
+					listEvents.clear();
 				}
-				reload(result);
+				try {
+					reload(result);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 
@@ -512,7 +555,7 @@ public class HomeScreenActivity extends Activity implements
 
 	}
 
-	public void reload(String result) {
+	public void reload(String result) throws JSONException {
 		// TODO Auto-generated method stub
 		try {
 			JSONObject jObject = new JSONObject(result);
@@ -524,65 +567,14 @@ public class HomeScreenActivity extends Activity implements
 				Log.e("Length of json array ----->", "" + data.length());
 				for (int i = 0; i < data.length(); i++) {
 					JSONObject obj = data.getJSONObject(i);
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("event_id", "" + obj.getString("event_id"));
-					map.put("event_title", "" + obj.getString("event_title"));
-					map.put("event_start_date",
-							"" + obj.getString("event_start_date"));
-					map.put("event_start_time",
-							"" + obj.getString("event_start_time"));
-					map.put("event_min_price",
-							"" + obj.getString("event_min_price"));
-					map.put("card_required",
-							"" + obj.getString("card_required"));
-					map.put("quote_allowed",
-							"" + obj.getString("quote_allowed"));
-					map.put("event_description",
-							"" + obj.getString("event_description"));
-
-					map.put("event_location_address",
-							"" + obj.getString("event_location_address"));
-					map.put("event_location_city",
-							"" + obj.getString("event_location_city"));
-					map.put("event_location_state",
-							"" + obj.getString("event_location_state"));
-					map.put("event_location_zip",
-							"" + obj.getString("event_location_zip"));
-					map.put("event_location_latitude",
-							"" + obj.getString("event_location_latitude"));
-					map.put("event_location_longitude",
-							"" + obj.getString("event_location_longitude"));
-					map.put("event_location_club",
-							"" + obj.getString("event_location_club"));
-					try {
-						map.put("event_end_time",
-								"" + obj.getString("event_end_time"));
-						map.put("tables_total",
-								"" + obj.getString("tables_total"));
-						map.put("tables_available",
-								"" + obj.getString("tables_available"));
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-
-					map.put("tax", "" + obj.getString("tax"));
-					map.put("gratuity", "" + obj.getString("gratuity"));
-
-					map.put("event_poster_url",
-							"" + obj.getString("event_poster_url"));
-
-					map.put("atmosphere", "" + obj.getString("atmosphere"));
-					map.put("music_type", "" + obj.getString("music_type"));
-					map.put("payment_type", "" + obj.getString("payment_type"));
 
 					if (flagReset) {
-						InListApplication.getListEvents().add(map);
+						listEvents.add("" + obj);
 					} else {
-						adapterEvents.add(map);
+						adapterEvents.add("" + obj);
 					}
 				}
 
-				Log.i("size:", "" + InListApplication.getListEvents().size());
 			} else {
 
 				UtilInList.validateDialog(HomeScreenActivity.this, jObject
@@ -595,8 +587,7 @@ public class HomeScreenActivity extends Activity implements
 		}
 
 		if (flagReset) {
-			adapterEvents = new EventsAdapter(
-					InListApplication.getListEvents(), this,
+			adapterEvents = new EventsAdapter(listEvents, this,
 					HomeScreenActivity.this);
 			mPullToRefreshLayout.setAdapter(adapterEvents);
 

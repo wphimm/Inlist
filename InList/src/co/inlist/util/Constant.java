@@ -149,13 +149,22 @@ public class Constant {
 		public static final String KEY_BILLING = "billing";
 		public static final String KEY_LOGIN_FROM = "login_from";
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
-		public static final String KEY_PRICE_POSITION = "price_position";
+		//public static final String KEY_PRICE_POSITION = "price_position";
+		public static final String KEY_PRICE_TABLE_CAPACITY = "table_capacity";
+		public static final String KEY_PRICE_EVENT_PRICING_ID = "event_pricing_id";
+		public static final String KEY_PRICE_CLUB_SECTION_NAME = "club_section_name";
 		public static final String KEY_YOUR_MINIMUM = "your_minimum";
 		public static final String KEY_VIP_STATUS = "vip_status";
 
 		public static final String KEY_EVENT_ID = "event_id";
-		public static final String KEY_CURRENT_POSITION = "current_position";
+		public static final String KEY_CURRENT_resultlistEvents = "resultlistEvents";
+		//public static final String KEY_CURRENT_POSITION = "current_position";
 
+		public static final String KEY_RESULT_PARTY_AREA = "party_area";
+		public static final String KEY_RESULT_MUSIC = "music";
+		public static final String KEY_RESULT_GALLERY = "gallery";
+		
+		
 		// Credit Card Details:
 		public static final String KEY_USER_CARD_ADDED = "user_card_added";
 		public static final String KEY_USER_CARD_ID = "user_card_id";

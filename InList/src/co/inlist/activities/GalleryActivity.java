@@ -3,6 +3,10 @@ package co.inlist.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,12 +17,15 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import co.inlist.util.Constant;
+import co.inlist.util.UtilInList;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,6 +40,7 @@ public class GalleryActivity extends Activity implements
 	Context context = this;
 
 	LinearLayout linearFooter;
+	private ArrayList<HashMap<String, String>> localGallery = new ArrayList<HashMap<String, String>>();
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -45,11 +53,14 @@ public class GalleryActivity extends Activity implements
 				.showImageForEmptyUri(0).cacheInMemory().cacheOnDisc()
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 
+		getData();
+		localGallery = EventDetailsActivity.edObj.gallery;
+
 		linearFooter = (LinearLayout) findViewById(R.id.footer);
 		pager = (ViewPager) findViewById(R.id.pager);
-		pager.setAdapter(new ImagePagerAdapter(InListApplication.getGallery()));
+		pager.setAdapter(new ImagePagerAdapter(localGallery));
 
-		for (int i = 0; i < InListApplication.getGallery().size(); i++) {
+		for (int i = 0; i < localGallery.size(); i++) {
 			ImageView image = new ImageView(GalleryActivity.this);
 			if (i == 0) {
 				image.setBackgroundResource(R.drawable.pageview_dot_active);
@@ -70,7 +81,7 @@ public class GalleryActivity extends Activity implements
 			public void onPageSelected(int pos) {
 				// TODO Auto-generated method stub
 				linearFooter.removeAllViews();
-				for (int i = 0; i < InListApplication.getGallery().size(); i++) {
+				for (int i = 0; i < localGallery.size(); i++) {
 					ImageView image = new ImageView(GalleryActivity.this);
 					if (i == pos) {
 						image.setBackgroundResource(R.drawable.pageview_dot_active);
@@ -100,6 +111,37 @@ public class GalleryActivity extends Activity implements
 		});
 
 		actionBarAndButtonActions();
+	}
+
+	private void getData() {
+		// TODO Auto-generated method stub
+		String result = UtilInList.ReadSharePrefrence(GalleryActivity.this,
+				Constant.SHRED_PR.KEY_RESULT_GALLERY);
+		try {
+			JSONObject jObject = new JSONObject(result);
+			String str_temp = jObject.getString("status");
+			if (str_temp.equals("success")) {
+				JSONObject jObjectData = new JSONObject(
+						jObject.getString("data"));
+				JSONArray data = jObjectData.getJSONArray("gallery");
+				Log.e("Length of json array ----->", "" + data.length());
+
+				localGallery.clear();
+
+				for (int i = 0; i < data.length(); i++) {
+					JSONObject obj = data.getJSONObject(i);
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("thumbnail", "" + obj.getString("thumbnail"));
+					map.put("source", "" + obj.getString("source"));
+					map.put("description", "" + obj.getString("description"));
+
+					localGallery.add(map);
+				}
+			}
+
+		} catch (JSONException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private class ImagePagerAdapter extends PagerAdapter {

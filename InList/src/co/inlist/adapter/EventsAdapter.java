@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import uk.co.senab.actionbarpulltorefresh.library.StickyListHeadersAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,7 +38,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class EventsAdapter extends BaseAdapter implements
 		StickyListHeadersAdapter, SectionIndexer {
 
-	ArrayList<HashMap<String, String>> locallist = new ArrayList<HashMap<String, String>>();
+	ArrayList<String> locallist = new ArrayList<String>();
 	Context context;
 	DisplayImageOptions options;
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
@@ -46,8 +49,8 @@ public class EventsAdapter extends BaseAdapter implements
 
 	private ArrayList<HashMap<String, String>> mSectionLetters;
 
-	public EventsAdapter(ArrayList<HashMap<String, String>> list,
-			Context context, Activity objAct) {
+	public EventsAdapter(ArrayList<String> list, Context context,
+			Activity objAct) throws JSONException {
 		// TODO Auto-generated constructor stub
 		locallist = list;
 		this.context = context;
@@ -75,27 +78,30 @@ public class EventsAdapter extends BaseAdapter implements
 		mSectionLetters = getSectionLetters();
 	}
 
-	private ArrayList<HashMap<String, String>> getSectionLetters() {
+	private ArrayList<HashMap<String, String>> getSectionLetters()
+			throws JSONException {
 
 		ArrayList<HashMap<String, String>> letters = new ArrayList<HashMap<String, String>>();
 		for (int j = 0; j < locallist.size(); j++) {
+			JSONObject jObj = new JSONObject(locallist.get(j));
 			boolean flag = true;
 			for (int i = 0; i < j; i++) {
-				if (locallist.get(i).get("event_start_date")
-						.equals(locallist.get(j).get("event_start_date")))
+				JSONObject iObj = new JSONObject(locallist.get(i));
+				if (iObj.getString("event_start_date").equals(
+						jObj.getString("event_start_date")))
 					flag = false;
 			}
 			if (flag) {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("id", "" + j);
 				map.put("event_start_date",
-						"" + locallist.get(j).get("event_start_date"));
+						"" + jObj.getString("event_start_date"));
 				letters.add(map);
 			} else {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("id", "" + letters.get(letters.size() - 1).get("id"));
 				map.put("event_start_date",
-						"" + locallist.get(j).get("event_start_date"));
+						"" + jObj.getString("event_start_date"));
 				letters.add(map);
 			}
 		}
@@ -104,7 +110,7 @@ public class EventsAdapter extends BaseAdapter implements
 		return letters;
 	}
 
-	public void add(HashMap<String, String> map) {
+	public void add(String map) throws JSONException {
 		// TODO Auto-generated method stub
 		locallist.add(map);
 		mSectionLetters = getSectionLetters();
@@ -151,19 +157,28 @@ public class EventsAdapter extends BaseAdapter implements
 		}
 
 		final ViewHolder holder = (ViewHolder) rowView.getTag();
+		JSONObject jObj;
+		try {
+			jObj = new JSONObject(locallist.get(position));
 
-		holder.txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
-		holder.txt_event_title.setText(locallist.get(position)
-				.get("event_title").toString().toUpperCase());
-		holder.txt_event_location_city.setText(""
-				+ locallist.get(position).get("event_location_club") + ", "
-				+ locallist.get(position).get("event_location_city"));
+			holder.txt_event_title.setShadowLayer(2, 2, 0, Color.BLACK);
+			holder.txt_event_title.setText(jObj.getString("event_title")
+					.toString().toUpperCase());
+			holder.txt_event_location_city.setText(""
+					+ jObj.getString("event_location_club") + ", "
+					+ jObj.getString("event_location_city"));
 
-		holder.txt_event_title.setTypeface(typeAkzidgrobemedex);
-		holder.txt_event_location_city.setTypeface(typeAkzidgrobemedex);
+			holder.txt_event_title.setTypeface(typeAkzidgrobemedex);
+			holder.txt_event_location_city.setTypeface(typeAkzidgrobemedex);
 
-		String image_url = locallist.get(position).get("event_poster_url");
-		imageLoader.displayImage(image_url, holder.img_event_poster_url,options);
+			String image_url = jObj.getString("event_poster_url");
+			imageLoader.displayImage(image_url, holder.img_event_poster_url,
+					options);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (position == (getCount() - 1)) {
 			if (UtilInList.isInternetConnectionExist(context
@@ -181,7 +196,7 @@ public class EventsAdapter extends BaseAdapter implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(context, EventDetailsActivity.class);
-				i.putExtra("pos", position);
+				i.putExtra("resultlistEvents", ""+locallist.get(position));
 				context.startActivity(i);
 				objAct.overridePendingTransition(R.anim.enter_from_left,
 						R.anim.hold_bottom);

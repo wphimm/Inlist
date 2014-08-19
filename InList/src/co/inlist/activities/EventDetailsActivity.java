@@ -92,7 +92,7 @@ public class EventDetailsActivity extends Activity implements
 	private TextView txtcity;
 
 	private GoogleMap googleMap, zoomMap;
-	int position;
+	String resultlistEvents;
 	HashMap<String, String> map;
 	Context context = this;
 	ViewPager pager;
@@ -102,6 +102,8 @@ public class EventDetailsActivity extends Activity implements
 	GestureDetector tapGestureDetector;
 
 	Double latitude, longitude;
+	public ArrayList<String> pricing = new ArrayList<String>();
+	public ArrayList<HashMap<String, String>> gallery = new ArrayList<HashMap<String, String>>();
 
 	@SuppressWarnings({ "deprecation", "unused" })
 	@Override
@@ -111,22 +113,86 @@ public class EventDetailsActivity extends Activity implements
 		setContentView(R.layout.event_details);
 
 		init();
+		onCreateData();
+	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		actionBarAndButtonActions();
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Timer();
+		myTimerTask = new MyTimerTask();
+		timer.schedule(myTimerTask, 3000, 1000);
+	}
+
+	private void onCreateData() {
+		// TODO Auto-generated method stub
 		edObj = this;
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			position = extras.getInt("pos");
+			resultlistEvents = extras.getString("resultlistEvents");
 		}
 
-		map = InListApplication.getListEvents().get(position);
+		try {
+			JSONObject obj = new JSONObject(resultlistEvents);
+			map = new HashMap<String, String>();
+			map.put("event_id", "" + obj.getString("event_id"));
+			map.put("event_title", "" + obj.getString("event_title"));
+			map.put("event_start_date", "" + obj.getString("event_start_date"));
+			map.put("event_start_time", "" + obj.getString("event_start_time"));
+			map.put("event_min_price", "" + obj.getString("event_min_price"));
+			map.put("card_required", "" + obj.getString("card_required"));
+			map.put("quote_allowed", "" + obj.getString("quote_allowed"));
+			map.put("event_description",
+					"" + obj.getString("event_description"));
+
+			map.put("event_location_address",
+					"" + obj.getString("event_location_address"));
+			map.put("event_location_city",
+					"" + obj.getString("event_location_city"));
+			map.put("event_location_state",
+					"" + obj.getString("event_location_state"));
+			map.put("event_location_zip",
+					"" + obj.getString("event_location_zip"));
+			map.put("event_location_latitude",
+					"" + obj.getString("event_location_latitude"));
+			map.put("event_location_longitude",
+					"" + obj.getString("event_location_longitude"));
+			map.put("event_location_club",
+					"" + obj.getString("event_location_club"));
+			try {
+				map.put("event_end_time", "" + obj.getString("event_end_time"));
+				map.put("tables_total", "" + obj.getString("tables_total"));
+				map.put("tables_available",
+						"" + obj.getString("tables_available"));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			map.put("tax", "" + obj.getString("tax"));
+			map.put("gratuity", "" + obj.getString("gratuity"));
+
+			map.put("event_poster_url", "" + obj.getString("event_poster_url"));
+
+			map.put("atmosphere", "" + obj.getString("atmosphere"));
+			map.put("music_type", "" + obj.getString("music_type"));
+			map.put("payment_type", "" + obj.getString("payment_type"));
+
+		} catch (JSONException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.event_details_overlay)
 				.resetViewBeforeLoading(true)
 				.showImageForEmptyUri(R.drawable.event_details_overlay)
-				.showImageOnFail(R.drawable.event_details_overlay).cacheInMemory(true)
-				.cacheOnDisk(true).considerExifParams(true)
+				.showImageOnFail(R.drawable.event_details_overlay)
+				.cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
@@ -320,7 +386,7 @@ public class EventDetailsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (InListApplication.getGallery().size() > 0) {
+				if (gallery.size() > 0) {
 					startActivity(new Intent(EventDetailsActivity.this,
 							GalleryActivity.class));
 					overridePendingTransition(R.anim.enter_from_left,
@@ -358,7 +424,6 @@ public class EventDetailsActivity extends Activity implements
 				}
 			}
 		}, 500);
-
 	}
 
 	private void init() {
@@ -389,7 +454,7 @@ public class EventDetailsActivity extends Activity implements
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
 			// Your Code here
-			if (InListApplication.getGallery().size() > 0) {
+			if (gallery.size() > 0) {
 				startActivity(new Intent(EventDetailsActivity.this,
 						GalleryActivity.class));
 				overridePendingTransition(R.anim.enter_from_left,
@@ -399,12 +464,12 @@ public class EventDetailsActivity extends Activity implements
 		}
 	}
 
-	public class MyAdapter extends ArrayAdapter<HashMap<String, String>> {
+	public class MyAdapter extends ArrayAdapter<String> {
 
-		ArrayList<HashMap<String, String>> local;
+		ArrayList<String> local;
 
 		public MyAdapter(Context context, int textViewResourceId,
-				ArrayList<HashMap<String, String>> spinner_data1) {
+				ArrayList<String> spinner_data1) {
 			super(context, textViewResourceId, spinner_data1);
 			local = spinner_data1;
 		}
@@ -419,7 +484,14 @@ public class EventDetailsActivity extends Activity implements
 			}
 			TextView label = (TextView) convertView
 					.findViewById(R.id.spinnerTarget);
-			label.setText(local.get(position).get("club_section_name"));
+			JSONObject jObj;
+			try {
+				jObj = new JSONObject(local.get(position));
+				label.setText(jObj.getString("club_section_name"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			return convertView;
 		}
@@ -433,7 +505,15 @@ public class EventDetailsActivity extends Activity implements
 			}
 			TextView label = (TextView) convertView
 					.findViewById(R.id.spinnerTarget);
-			label.setText(local.get(position).get("club_section_name"));
+
+			JSONObject jObj;
+			try {
+				jObj = new JSONObject(local.get(position));
+				label.setText(jObj.getString("club_section_name"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			return convertView;
 		}
@@ -500,14 +580,15 @@ public class EventDetailsActivity extends Activity implements
 
 			final View imageLayout = inflater.inflate(pageId, null);
 
-//			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-//					RelativeLayout.LayoutParams.WRAP_CONTENT,
-//					RelativeLayout.LayoutParams.WRAP_CONTENT);
-//
-//			layoutParams.width = img_event_poster_url.getWidth();
-//			layoutParams.height = img_event_poster_url.getHeight();
-//
-//			pager.setLayoutParams(layoutParams);
+			// RelativeLayout.LayoutParams layoutParams = new
+			// RelativeLayout.LayoutParams(
+			// RelativeLayout.LayoutParams.WRAP_CONTENT,
+			// RelativeLayout.LayoutParams.WRAP_CONTENT);
+			//
+			// layoutParams.width = img_event_poster_url.getWidth();
+			// layoutParams.height = img_event_poster_url.getHeight();
+			//
+			// pager.setLayoutParams(layoutParams);
 
 			final ImageView imageView = (ImageView) imageLayout
 					.findViewById(R.id.image);
@@ -597,19 +678,6 @@ public class EventDetailsActivity extends Activity implements
 		return false;
 	}
 
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		actionBarAndButtonActions();
-		if (timer != null) {
-			timer.cancel();
-		}
-		timer = new Timer();
-		myTimerTask = new MyTimerTask();
-		timer.schedule(myTimerTask, 3000, 1000);
-	}
-
 	class MyTimerTask extends TimerTask {
 
 		@Override
@@ -624,10 +692,8 @@ public class EventDetailsActivity extends Activity implements
 					// pager.setCurrentItem(pagerPosition);
 
 					if (pagerPosition == 0) {
-						pager.setCurrentItem(InListApplication.getGallery()
-								.size(), false);
-					} else if (pagerPosition == InListApplication.getGallery()
-							.size() + 1) {
+						pager.setCurrentItem(gallery.size(), false);
+					} else if (pagerPosition == gallery.size() + 1) {
 						pager.setCurrentItem(1, false);
 						pagerPosition = 0;
 					} else {
@@ -725,8 +791,11 @@ public class EventDetailsActivity extends Activity implements
 				// TODO: handle exception
 			}
 
-			InListApplication.getGallery().clear();
-			InListApplication.getPricing().clear();
+			UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+					Constant.SHRED_PR.KEY_RESULT_GALLERY, "" + result);
+
+			gallery.clear();
+			pricing.clear();
 
 			try {
 				JSONObject jObject = new JSONObject(result);
@@ -745,7 +814,7 @@ public class EventDetailsActivity extends Activity implements
 						map.put("description",
 								"" + obj.getString("description"));
 
-						InListApplication.getGallery().add(map);
+						gallery.add(map);
 					}
 
 					JSONArray data1 = jObjectData.getJSONArray("pricing");
@@ -774,21 +843,19 @@ public class EventDetailsActivity extends Activity implements
 						map.put("to_pay_in_app",
 								"" + obj.getString("to_pay_in_app"));
 
-						InListApplication.getPricing().add(map);
+						pricing.add("" + obj);
 					}
 
 					spinnerTable.setAdapter(new MyAdapter(
 							EventDetailsActivity.this,
-							R.layout.spinnertable_row, InListApplication
-									.getPricing()));
+							R.layout.spinnertable_row, pricing));
 
-					int[] ids = new int[InListApplication.getGallery().size()];
+					int[] ids = new int[gallery.size()];
 					for (int i = 0; i < ids.length; i++) {
 						ids[i] = R.layout.item_pager_image;
 					}
 
-					pager.setAdapter(new ImagePagerAdapter(InListApplication
-							.getGallery(), pager, ids));
+					pager.setAdapter(new ImagePagerAdapter(gallery, pager, ids));
 
 				}
 
@@ -822,18 +889,38 @@ public class EventDetailsActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (spinnerTable.getSelectedItemPosition() >= 0) {
+					JSONObject jObj;
+					try {
+						jObj = new JSONObject(pricing.get(spinnerTable
+								.getSelectedItemPosition()));
+
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_TABLE_CAPACITY, ""
+										+ jObj.getString("table_capacity"));
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_EVENT_PRICING_ID,
+								"" + jObj.getString("event_pricing_id"));
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_CLUB_SECTION_NAME,
+								"" + jObj.getString("club_section_name"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_EVENT_ID,
 							"" + map.get("event_id"));
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_YOUR_MINIMUM,
 							"" + map.get("event_min_price"));
+
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_PRICE_POSITION, ""
-									+ spinnerTable.getSelectedItemPosition());
-					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_CURRENT_POSITION, ""
-									+ position);
+							Constant.SHRED_PR.KEY_CURRENT_resultlistEvents, ""
+									+ resultlistEvents);
 
 					if (UtilInList.ReadSharePrefrence(
 							EventDetailsActivity.this,
@@ -890,18 +977,38 @@ public class EventDetailsActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (spinnerTable.getSelectedItemPosition() >= 0) {
+					JSONObject jObj;
+					try {
+						jObj = new JSONObject(pricing.get(spinnerTable
+								.getSelectedItemPosition()));
+
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_TABLE_CAPACITY, ""
+										+ jObj.getString("table_capacity"));
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_EVENT_PRICING_ID,
+								"" + jObj.getString("event_pricing_id"));
+						UtilInList.WriteSharePrefrence(
+								EventDetailsActivity.this,
+								Constant.SHRED_PR.KEY_PRICE_CLUB_SECTION_NAME,
+								"" + jObj.getString("club_section_name"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_EVENT_ID,
 							"" + map.get("event_id"));
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_YOUR_MINIMUM,
 							"" + map.get("event_min_price"));
+
 					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_PRICE_POSITION, ""
-									+ spinnerTable.getSelectedItemPosition());
-					UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
-							Constant.SHRED_PR.KEY_CURRENT_POSITION, ""
-									+ position);
+							Constant.SHRED_PR.KEY_CURRENT_resultlistEvents, ""
+									+ resultlistEvents);
 
 					if (UtilInList.ReadSharePrefrence(
 							EventDetailsActivity.this,

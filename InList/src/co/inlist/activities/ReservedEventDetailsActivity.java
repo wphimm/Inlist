@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -82,6 +83,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 	String strAction = "";
 
 	private GoogleMap googleMap, zoomMap;
+	String resultlistReservedEvents;
 	int position;
 	HashMap<String, String> map;
 	Context context = this;
@@ -102,7 +104,9 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			position = extras.getInt("pos");
+			resultlistReservedEvents = extras
+					.getString("resultlistReservedEvents");
+			position=extras.getInt("pos");
 		}
 
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
@@ -111,14 +115,58 @@ public class ReservedEventDetailsActivity extends Activity implements
 				+ "&#8226; I understand this sale is final. Certain changes can be made in exchange for credit.<br/>";
 		txtPoints.setText(Html.fromHtml(strHTML));
 
-		map = InListApplication.getListReservedEvents().get(position);
+		JSONObject obj;
+		try {
+			obj = new JSONObject(resultlistReservedEvents);
+			map = new HashMap<String, String>();
+			map.put("order_id", "" + obj.getString("order_id"));
+			map.put("event_id", "" + obj.getString("event_id"));
+			map.put("event_title", "" + obj.getString("event_title"));
+			map.put("event_start_date", "" + obj.getString("event_start_date"));
+			map.put("event_start_time", "" + obj.getString("event_start_time"));
+			map.put("event_min_price", "" + obj.getString("event_min_price"));
+			map.put("event_description", "" + obj.getString("event_description"));
+
+			map.put("event_location_address",
+					"" + obj.getString("event_location_address"));
+			map.put("event_location_city",
+					"" + obj.getString("event_location_city"));
+			map.put("event_location_state",
+					"" + obj.getString("event_location_state"));
+			map.put("event_location_zip", "" + obj.getString("event_location_zip"));
+			map.put("event_location_latitude",
+					"" + obj.getString("event_location_latitude"));
+			map.put("event_location_longitude",
+					"" + obj.getString("event_location_longitude"));
+			map.put("event_location_club",
+					"" + obj.getString("event_location_club"));
+			try {
+				map.put("event_end_time", "" + obj.getString("event_end_time"));
+				map.put("tables_total", "" + obj.getString("tables_total"));
+				map.put("tables_available", "" + obj.getString("tables_available"));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			map.put("tax", "" + obj.getString("tax"));
+			map.put("gratuity", "" + obj.getString("gratuity"));
+
+			map.put("event_poster_url", "" + obj.getString("event_poster_url"));
+
+			map.put("atmosphere", "" + obj.getString("atmosphere"));
+			map.put("music_type", "" + obj.getString("music_type"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.event_details_overlay)
 				.resetViewBeforeLoading(true)
 				.showImageForEmptyUri(R.drawable.event_details_overlay)
-				.showImageOnFail(R.drawable.event_details_overlay).cacheInMemory(true)
-				.cacheOnDisk(true).considerExifParams(true)
+				.showImageOnFail(R.drawable.event_details_overlay)
+				.cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565).build();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
@@ -877,7 +925,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							InListApplication.getListReservedEvents().remove(
+							ProfileActivity.profObj.listReservedEvents.remove(
 									position);
 							finish();
 							overridePendingTransition(R.anim.hold_top,

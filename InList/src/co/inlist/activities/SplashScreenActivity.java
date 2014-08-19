@@ -1,15 +1,12 @@
 package co.inlist.activities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -31,12 +28,15 @@ import com.parse.PushService;
 public class SplashScreenActivity extends Activity {
 
 	public static final int SPLASH_TIMEOUT = 2000;
+	public static SplashScreenActivity objSplash;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.splash_screen);
+
+		objSplash = this;
 
 		try {
 			Parse.initialize(this, Constant.YOUR_APP_ID,
@@ -154,6 +154,9 @@ public class SplashScreenActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result1);
 
+			UtilInList.WriteSharePrefrence(SplashScreenActivity.this,
+					Constant.SHRED_PR.KEY_RESULT_MUSIC, "" + result1);
+
 			try {
 				/*
 				 * Prepare registration response write in file mode private
@@ -165,19 +168,6 @@ public class SplashScreenActivity extends Activity {
 
 				String str_temp = result.getString("status");
 				if (str_temp.equals("success")) {
-					JSONObject jObjectData = new JSONObject(
-							result.getString("data"));
-					JSONArray data = jObjectData.getJSONArray("music_types");
-					Log.e("Length of json array ----->", "" + data.length());
-					InListApplication.getList_music_types().clear();
-					for (int i = 0; i < data.length(); i++) {
-						JSONObject obj = data.getJSONObject(i);
-						HashMap<String, String> map = new HashMap<String, String>();
-						map.put("music_type_id",
-								"" + obj.getString("music_type_id"));
-						map.put("title", "" + obj.getString("title"));
-						InListApplication.getList_music_types().add(map);
-					}
 
 					UtilInList.WriteSharePrefrence(
 							SplashScreenActivity.this,
@@ -239,44 +229,9 @@ public class SplashScreenActivity extends Activity {
 			super.onPostExecute(result);
 			// fragment_addconnection_search
 
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
+			UtilInList.WriteSharePrefrence(SplashScreenActivity.this,
+					Constant.SHRED_PR.KEY_RESULT_PARTY_AREA, "" + result);
 
-					InListApplication.getParty_area().clear();
-
-					if (str_temp.equals("success")) {
-						JSONArray data = jObject.getJSONArray("data");
-						Log.e("Length of json array ----->", "" + data.length());
-						for (int i = 0; i < data.length(); i++) {
-							JSONObject obj = data.getJSONObject(i);
-							HashMap<String, String> map = new HashMap<String, String>();
-							map.put("party_area_id",
-									"" + obj.getString("party_area_id"));
-							map.put("title", "" + obj.getString("title"));
-							map.put("icon", "" + obj.getString("icon"));
-							map.put("latitude", "" + obj.getString("latitude"));
-							map.put("longitude",
-									"" + obj.getString("longitude"));
-							map.put("timezone", "" + obj.getString("timezone"));
-							map.put("is_dst", "" + obj.getString("is_dst"));
-							map.put("timezone_text",
-									"" + obj.getString("timezone_text"));
-							map.put("order", "" + obj.getString("order"));
-							map.put("status", "" + obj.getString("status"));
-							map.put("distance", "" + obj.getString("distance"));
-
-							InListApplication.getParty_area().add(map);
-						}
-
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
 			checkPrefsAndSplash();
 		}
 
