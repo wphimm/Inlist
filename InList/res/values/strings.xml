@@ -101,7 +101,7 @@
     <string name="cp">COMPLETE PURCHASE</string>
     <string name="tandc">TERMS &amp; CONDITIONS</string>
     <string name="agreed">I have agreed to the Terms and Conditions, and that:</string>
-    <string name="quote">To request quote for this event, please enter number of Gentlemen/Ladies:</string>
+    <string name="quote">To request quote for this event, please enter number of Seats:</string>
 
     <!-- Forgot Password -->
     <string name="forget_pass_content">Enter your email address and we\'ll send you a link to reset your password.</string>

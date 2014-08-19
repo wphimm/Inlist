@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +107,7 @@ public class ReservedEventDetailsActivity extends Activity implements
 		if (extras != null) {
 			resultlistReservedEvents = extras
 					.getString("resultlistReservedEvents");
-			position=extras.getInt("pos");
+			position = extras.getInt("pos");
 		}
 
 		String strHTML = "&#8226; I will arrive on-time before 12.30AM <br/>"
@@ -125,7 +126,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 			map.put("event_start_date", "" + obj.getString("event_start_date"));
 			map.put("event_start_time", "" + obj.getString("event_start_time"));
 			map.put("event_min_price", "" + obj.getString("event_min_price"));
-			map.put("event_description", "" + obj.getString("event_description"));
+			map.put("event_description",
+					"" + obj.getString("event_description"));
 
 			map.put("event_location_address",
 					"" + obj.getString("event_location_address"));
@@ -133,7 +135,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 					"" + obj.getString("event_location_city"));
 			map.put("event_location_state",
 					"" + obj.getString("event_location_state"));
-			map.put("event_location_zip", "" + obj.getString("event_location_zip"));
+			map.put("event_location_zip",
+					"" + obj.getString("event_location_zip"));
 			map.put("event_location_latitude",
 					"" + obj.getString("event_location_latitude"));
 			map.put("event_location_longitude",
@@ -143,7 +146,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 			try {
 				map.put("event_end_time", "" + obj.getString("event_end_time"));
 				map.put("tables_total", "" + obj.getString("tables_total"));
-				map.put("tables_available", "" + obj.getString("tables_available"));
+				map.put("tables_available",
+						"" + obj.getString("tables_available"));
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -159,7 +163,6 @@ public class ReservedEventDetailsActivity extends Activity implements
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
 
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.event_details_overlay)
@@ -703,6 +706,38 @@ public class ReservedEventDetailsActivity extends Activity implements
 
 			actionBarAndButtonActions();
 
+			if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
+				new PushNotificationTest().execute();
+			}
+
+		}
+
+	}
+
+	class PushNotificationTest extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params1) {
+			// TODO Auto-generated method stub
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("screen", "APN_RESERVATION_ENTRY"));
+			params.add(new BasicNameValuePair("reservation_id", ""
+					+ map.get("order_id")));
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							ReservedEventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			String response = UtilInList.postData(getApplicationContext(),
+					params, "" + Constant.API
+							+ Constant.ACTIONS.PUSHNOTIFICATIONS_TEST);
+
+			Log.e("Response In Activity-->", "+++++" + response);
+			return null;
 		}
 
 	}
@@ -925,8 +960,8 @@ public class ReservedEventDetailsActivity extends Activity implements
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							ProfileActivity.profObj.listReservedEvents.remove(
-									position);
+							ProfileActivity.profObj.listReservedEvents
+									.remove(position);
 							finish();
 							overridePendingTransition(R.anim.hold_top,
 									R.anim.exit_in_left);

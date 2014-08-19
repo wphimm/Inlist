@@ -13,19 +13,19 @@ import android.widget.ImageButton;
 @SuppressLint("SetJavaScriptEnabled")
 public class TermsConditionsActivity extends Activity implements
 		ActionBar.OnNavigationListener {
-	
+
 	WebView webView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.terms_conditions);
 
 		actionBarAndButtonActions();
-		
+
 		webView = (WebView) findViewById(R.id.webview);
 		webView.getSettings().setJavaScriptEnabled(true);
-		webView.loadUrl(Constant.API+"terms/?noContainer=true");
+		webView.loadUrl(Constant.TERMS_CONDITIONS);
 	}
 
 	/**

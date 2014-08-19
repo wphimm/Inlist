@@ -42,7 +42,7 @@ public class CompletePurchaseActivity extends Activity implements
 	RelativeLayout relativeCost, relativeQuote;
 	TextView txtPoints, txtTable, txtTotal, txtDate, txtCardNum, txtCardName,
 			txtSubtotal, txtTax, txtGratuity, txt_MinimumDetails;
-	EditText editMen, editWomen;
+	EditText editSeats;
 	boolean flagQuote = false;
 
 	@Override
@@ -222,40 +222,15 @@ public class CompletePurchaseActivity extends Activity implements
 		}
 		// ***************************************** //
 
-		editMen.addTextChangedListener(new TextWatcher() {
+		editSeats.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				// TODO Auto-generated method stub
-				editMen.setHintTextColor(getResources().getColor(
+				editSeats.setHintTextColor(getResources().getColor(
 						R.color.white_dull));
-				editMen.setHint("");
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		editWomen.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				// TODO Auto-generated method stub
-				editWomen.setHintTextColor(getResources().getColor(
-						R.color.white_dull));
-				editWomen.setHint("");
+				editSeats.setHint("");
 			}
 
 			@Override
@@ -289,8 +264,7 @@ public class CompletePurchaseActivity extends Activity implements
 		txtGratuity = (TextView) findViewById(R.id.txt_gratuity);
 		txt_MinimumDetails = (TextView) findViewById(R.id.txtMinimumDetails);
 
-		editMen = (EditText) findViewById(R.id.editMen);
-		editWomen = (EditText) findViewById(R.id.editWomen);
+		editSeats = (EditText) findViewById(R.id.editSeats);
 	}
 
 	/**
@@ -583,10 +557,8 @@ public class CompletePurchaseActivity extends Activity implements
 										CompletePurchaseActivity.this,
 										Constant.SHRED_PR.KEY_EVENT_ID)
 										.toString()));
-						params.add(new BasicNameValuePair("men", ""
-								+ editMen.getText().toString().trim()));
-						params.add(new BasicNameValuePair("women", ""
-								+ editWomen.getText().toString().trim()));
+						params.add(new BasicNameValuePair("seats", ""
+								+ editSeats.getText().toString().trim()));
 						params.add(new BasicNameValuePair("device_type",
 								"android"));
 						params.add(new BasicNameValuePair("PHPSESSIONID", ""
@@ -626,9 +598,7 @@ public class CompletePurchaseActivity extends Activity implements
 										Constant.SHRED_PR.KEY_EVENT_ID)
 										.toString()));
 						params.add(new BasicNameValuePair("men", ""
-								+ editMen.getText().toString().trim()));
-						params.add(new BasicNameValuePair("women", ""
-								+ editWomen.getText().toString().trim()));
+								+ editSeats.getText().toString().trim()));
 						params.add(new BasicNameValuePair("device_type",
 								"android"));
 						params.add(new BasicNameValuePair("PHPSESSIONID", ""
@@ -655,17 +625,10 @@ public class CompletePurchaseActivity extends Activity implements
 
 	protected boolean isValidate() {
 		// TODO Auto-generated method stub
-		if (editMen.getText().toString().trim().length() == 0) {
-			editMen.setText("");
-			editMen.setHintTextColor(getResources().getColor(R.color.light_red));
-			editMen.setHint("Men");
-			return false;
-		}
-		if (editWomen.getText().toString().trim().length() == 0) {
-			editWomen.setText("");
-			editWomen.setHintTextColor(getResources().getColor(
-					R.color.light_red));
-			editWomen.setHint("Women");
+		if (editSeats.getText().toString().trim().length() == 0) {
+			editSeats.setText("");
+			editSeats.setHintTextColor(getResources().getColor(R.color.light_red));
+			editSeats.setHint("Seats");
 			return false;
 		}
 		return true;

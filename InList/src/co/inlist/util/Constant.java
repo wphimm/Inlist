@@ -6,6 +6,7 @@ public class Constant {
 
 	public static final String API = "https://www.inlistdev.com/";
 	// public static final String API_LIVE = "http://www.inlist.com/";
+	public static final String TERMS_CONDITIONS = "http://www.inlistdev.com/terms/?noContainer=true";
 	public static final String STATUS = "status";
 	public static final String SUCCESS = "1";
 	public static final String FAIL = "0";
@@ -44,7 +45,7 @@ public class Constant {
 		public static final String CHANGE_PASSWORD = "user/login/save/?apiMode=VIP&json=true";
 		public static final String PUSHNOTIFICATIONS_INFO = "push_notifications/?apiMode=VIP&json=true";
 		public static final String PUSHNOTIFICATIONS = "push_notifications/";
-		public static final String PUSHNOTIFICATIONS_TEST = "push_notifications/test/?apiMode=VIP&json=true";
+		public static final String PUSHNOTIFICATIONS_TEST = "push_notifications/test/?json=true";
 		public static final String USER_INVITE = "user/invite/";
 		public static final String LOGOUT = "user/logout/?apiMode=VIP&json=true";
 		public static final String PROFILE = "user/small_details/";
@@ -149,7 +150,7 @@ public class Constant {
 		public static final String KEY_BILLING = "billing";
 		public static final String KEY_LOGIN_FROM = "login_from";
 		public static final String KEY_ADDCARD_FROM = "addcard_from";
-		//public static final String KEY_PRICE_POSITION = "price_position";
+		// public static final String KEY_PRICE_POSITION = "price_position";
 		public static final String KEY_PRICE_TABLE_CAPACITY = "table_capacity";
 		public static final String KEY_PRICE_EVENT_PRICING_ID = "event_pricing_id";
 		public static final String KEY_PRICE_CLUB_SECTION_NAME = "club_section_name";
@@ -158,13 +159,12 @@ public class Constant {
 
 		public static final String KEY_EVENT_ID = "event_id";
 		public static final String KEY_CURRENT_resultlistEvents = "resultlistEvents";
-		//public static final String KEY_CURRENT_POSITION = "current_position";
+		// public static final String KEY_CURRENT_POSITION = "current_position";
 
 		public static final String KEY_RESULT_PARTY_AREA = "party_area";
 		public static final String KEY_RESULT_MUSIC = "music";
 		public static final String KEY_RESULT_GALLERY = "gallery";
-		
-		
+
 		// Credit Card Details:
 		public static final String KEY_USER_CARD_ADDED = "user_card_added";
 		public static final String KEY_USER_CARD_ID = "user_card_id";

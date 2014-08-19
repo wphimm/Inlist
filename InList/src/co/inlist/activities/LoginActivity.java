@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -41,6 +42,7 @@ import co.inlist.facebook.android.FacebookError;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
+import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 @SuppressLint("SimpleDateFormat")
@@ -241,7 +243,8 @@ public class LoginActivity extends Activity implements
 								flagCard = false;
 								new WebServiceDataPosterAsyncTask(
 										LoginActivity.this, params,
-										Constant.API + Constant.ACTIONS.LOGIN_FB)
+										Constant.API
+												+ Constant.ACTIONS.LOGIN_FB)
 										.execute();
 
 							} catch (Exception e) {
@@ -387,18 +390,9 @@ public class LoginActivity extends Activity implements
 				e.printStackTrace();
 			}
 
-			if (UtilInList.ReadSharePrefrence(LoginActivity.this,
-					Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
-				finish();
-				overridePendingTransition(R.anim.enter_from_bottom,
-						R.anim.hold_bottom);
-			} else {
-				startActivity(new Intent(LoginActivity.this,
-						HomeScreenActivity.class));
-				LeadingActivity.laObj.finish();
-				finish();
-				overridePendingTransition(R.anim.enter_from_bottom,
-						R.anim.hold_bottom);
+			// Push Notification Test:
+			if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
+				new PushNotificationTest(LoginActivity.this).execute();
 			}
 
 		} else {
@@ -466,6 +460,87 @@ public class LoginActivity extends Activity implements
 				e.printStackTrace();
 			}
 		}
+	}
+
+	class PushNotificationTest extends AsyncTask<Void, String, String> {
+
+		private MyProgressbar dialog;;
+		
+		public PushNotificationTest(Context context) {
+			// TODO Auto-generated constructor stub
+			dialog = new MyProgressbar(context);
+			
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+		
+		@Override
+		protected String doInBackground(Void... params1) {
+			// TODO Auto-generated method stub
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("screen", "APN_USER_LOGIN"));
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			String response = UtilInList.postData(getApplicationContext(),
+					params, "" + Constant.API
+							+ Constant.ACTIONS.PUSHNOTIFICATIONS_TEST);
+
+			Log.e("Response In Activity-->", "+++++" + response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result1) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result1);
+
+			try {
+				dialog.dismiss();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			try {
+				JSONObject result = new JSONObject(result1);
+				if (result.getString("success").equals("true")) {
+					
+					if (UtilInList.ReadSharePrefrence(LoginActivity.this,
+							Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
+						finish();
+						overridePendingTransition(R.anim.enter_from_bottom,
+								R.anim.hold_bottom);
+					} else {
+						startActivity(new Intent(LoginActivity.this,
+								HomeScreenActivity.class));
+						LeadingActivity.laObj.finish();
+						finish();
+						overridePendingTransition(R.anim.enter_from_bottom,
+								R.anim.hold_bottom);
+					}
+					
+				} else {
+					UtilInList.validateDialog(LoginActivity.this, result
+							.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
+			}
+		}
+
 	}
 
 	private void actionBarAndButtonActions() {

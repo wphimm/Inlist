@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -202,142 +201,6 @@ public class NotificationsSettingsActivity extends Activity implements
 		return false;
 	}
 
-	public class Push_notificationsAsyncTask extends
-			AsyncTask<String, String, String> {
-
-		private MyProgressbar dialog;
-
-		public Push_notificationsAsyncTask(Context context) {
-			dialog = new MyProgressbar(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			dialog.setMessage("Loading...");
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// TODO Auto-generated method stub
-
-			String strSwitch, strType;
-			if (flagDaily) {
-				strType = "daily";
-				if (UtilInList
-						.ReadSharePrefrence(NotificationsSettingsActivity.this,
-								Constant.SHRED_PR.KEY_DAILY).toString()
-						.equals("1")) {
-					strSwitch = "disable";
-				} else {
-					strSwitch = "enable";
-				}
-			} else {
-				strType = "billing";
-				if (UtilInList
-						.ReadSharePrefrence(NotificationsSettingsActivity.this,
-								Constant.SHRED_PR.KEY_BILLING).toString()
-						.equals("1")) {
-					strSwitch = "disable";
-				} else {
-					strSwitch = "enable";
-				}
-			}
-
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			Log.e("Name Value Pair", nameValuePairs.toString());
-			String response = UtilInList.postData(
-					getApplicationContext(),
-					nameValuePairs,
-					""
-							+ Constant.API
-							+ Constant.ACTIONS.PUSHNOTIFICATIONS
-							+ strSwitch
-							+ "/?apiMode=VIP&json=true"
-							+ "&type="
-							+ strType
-							+ "&PHPSESSIONID="
-							+ UtilInList.ReadSharePrefrence(
-									NotificationsSettingsActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID));
-			Log.e("Response In Activity-->", response);
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// fragment_addconnection_search
-
-			try {
-				if (dialog != null) {
-					if (dialog.isShowing()) {
-						dialog.dismiss();
-					}
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-			if (result != null) {
-				try {
-					JSONObject jObject = new JSONObject(result);
-					String str_temp = jObject.getString("status");
-
-					if (str_temp.equals("success")) {
-						if (flagDaily) {
-							if (UtilInList
-									.ReadSharePrefrence(
-											NotificationsSettingsActivity.this,
-											Constant.SHRED_PR.KEY_DAILY)
-									.toString().equals("1")) {
-								btnDailyNotification
-										.setBackgroundResource(R.drawable.off);
-								UtilInList.WriteSharePrefrence(
-										NotificationsSettingsActivity.this,
-										Constant.SHRED_PR.KEY_DAILY, "0");
-
-							} else {
-								btnDailyNotification
-										.setBackgroundResource(R.drawable.on);
-								UtilInList.WriteSharePrefrence(
-										NotificationsSettingsActivity.this,
-										Constant.SHRED_PR.KEY_DAILY, "1");
-							}
-						} else {
-							if (UtilInList
-									.ReadSharePrefrence(
-											NotificationsSettingsActivity.this,
-											Constant.SHRED_PR.KEY_BILLING)
-									.toString().equals("1")) {
-								UtilInList.WriteSharePrefrence(
-										NotificationsSettingsActivity.this,
-										Constant.SHRED_PR.KEY_BILLING, "0");
-								btnBillingIssues
-										.setBackgroundResource(R.drawable.off);
-							} else {
-								btnBillingIssues
-										.setBackgroundResource(R.drawable.on);
-								UtilInList.WriteSharePrefrence(
-										NotificationsSettingsActivity.this,
-										Constant.SHRED_PR.KEY_BILLING, "1");
-							}
-						}
-					}
-
-				} catch (JSONException e) { // TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
 	@Override
 	public void onTaskComplete(JSONObject result) {
 		// TODO Auto-generated method stub
@@ -374,10 +237,13 @@ public class NotificationsSettingsActivity extends Activity implements
 								Constant.SHRED_PR.KEY_BILLING, "0");
 						btnBillingIssues.setBackgroundResource(R.drawable.off);
 					} else {
-						btnBillingIssues.setBackgroundResource(R.drawable.on);
-						UtilInList.WriteSharePrefrence(
-								NotificationsSettingsActivity.this,
-								Constant.SHRED_PR.KEY_BILLING, "1");
+
+						if (UtilInList
+								.isInternetConnectionExist(getApplicationContext())) {
+							new PushNotificationTest(
+									NotificationsSettingsActivity.this)
+									.execute();
+						}
 					}
 				}
 
@@ -388,6 +254,81 @@ public class NotificationsSettingsActivity extends Activity implements
 			}
 		} catch (Exception e) {
 			Log.v("", "Exception : " + e);
+		}
+
+	}
+
+	class PushNotificationTest extends AsyncTask<Void, String, String> {
+
+		private MyProgressbar dialog;;
+
+		public PushNotificationTest(Context context) {
+			// TODO Auto-generated constructor stub
+			dialog = new MyProgressbar(context);
+
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params1) {
+			// TODO Auto-generated method stub
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("screen", "APN_USER_BILLING"));
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							NotificationsSettingsActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			String response = UtilInList.postData(getApplicationContext(),
+					params, "" + Constant.API
+							+ Constant.ACTIONS.PUSHNOTIFICATIONS_TEST);
+
+			Log.e("Response In Activity-->", "+++++" + response);
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result1) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result1);
+
+			try {
+				dialog.dismiss();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			try {
+				JSONObject result = new JSONObject(result1);
+				if (result.getString("success").equals("true")) {
+
+				} else {
+					UtilInList.validateDialog(
+							NotificationsSettingsActivity.this, result
+									.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
+			}
+			
+			btnBillingIssues.setBackgroundResource(R.drawable.on);
+			UtilInList.WriteSharePrefrence(
+					NotificationsSettingsActivity.this,
+					Constant.SHRED_PR.KEY_BILLING, "1");
+			
 		}
 
 	}

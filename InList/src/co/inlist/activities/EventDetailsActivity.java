@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -543,8 +544,6 @@ public class EventDetailsActivity extends Activity implements
 
 				public void onPageSelected(int position) {
 
-					Log.e("pos:", "" + position);
-
 					int pageCount = getCount();
 					if (position == 0) {
 						pager.setCurrentItem(pageCount - 2, false);
@@ -862,6 +861,38 @@ public class EventDetailsActivity extends Activity implements
 			} catch (JSONException e) { // TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+			if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
+				new PushNotificationTest().execute();
+			}
+
+		}
+
+	}
+
+	class PushNotificationTest extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params1) {
+			// TODO Auto-generated method stub
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+			params.add(new BasicNameValuePair("screen", "APN_EVENT_ENTRY"));
+			params.add(new BasicNameValuePair("event_id", ""+map.get("event_id")));
+			params.add(new BasicNameValuePair("device_id", ""
+					+ UtilInList.getDeviceId(getApplicationContext())));
+			params.add(new BasicNameValuePair("device_type", "android"));
+			params.add(new BasicNameValuePair("PHPSESSIONID", ""
+					+ UtilInList.ReadSharePrefrence(
+							EventDetailsActivity.this,
+							Constant.SHRED_PR.KEY_SESSIONID)));
+
+			String response = UtilInList.postData(getApplicationContext(),
+					params, "" + Constant.API
+							+ Constant.ACTIONS.PUSHNOTIFICATIONS_TEST);
+
+			Log.e("Response In Activity-->", "+++++" + response);
+			return null;
 		}
 
 	}
