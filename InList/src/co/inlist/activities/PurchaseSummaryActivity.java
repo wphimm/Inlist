@@ -65,7 +65,7 @@ public class PurchaseSummaryActivity extends Activity implements
 	private Button btnFacebook, btnTwitter;
 
 	Context context = this;
-	TextView txtEventTitle, txtDate, txtAddress, txtTable;
+	TextView txtEventTitle, txtDate, txtAddress, txtTable, txtVenue;
 	HashMap<String, String> map;
 	String sharingString = "I'm in\n";
 
@@ -131,6 +131,7 @@ public class PurchaseSummaryActivity extends Activity implements
 		}
 
 		txtEventTitle.setText("" + map.get("event_title"));
+		txtVenue.setText(""+map.get("event_location_club"));
 		txtAddress.setText("" + map.get("event_location_address") + "\n"
 				+ map.get("event_location_city") + ", "
 				+ map.get("event_location_state") + " "
@@ -172,7 +173,7 @@ public class PurchaseSummaryActivity extends Activity implements
 		// ***** Date Format ************************************//
 
 		sharingString += "" + txtEventTitle.getText().toString() + "\n"
-				+ txtDate.getText().toString() + "\n\nVENUE\n"
+				+ txtDate.getText().toString() + "\n"+txtVenue.getText().toString()+"\n"
 				+ txtAddress.getText().toString() + "\n\n"
 				+ txtTable.getText().toString();
 
@@ -217,6 +218,7 @@ public class PurchaseSummaryActivity extends Activity implements
 		txtDate = (TextView) findViewById(R.id.txt_date);
 		txtAddress = (TextView) findViewById(R.id.txt_address);
 		txtTable = (TextView) findViewById(R.id.txt_table);
+		txtVenue = (TextView) findViewById(R.id.txtVenue);
 
 		btnFacebook = (Button) findViewById(R.id.btnFacebook);
 		btnTwitter = (Button) findViewById(R.id.btnTwitter);

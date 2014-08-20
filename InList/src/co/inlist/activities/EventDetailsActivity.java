@@ -17,7 +17,10 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -36,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -44,6 +48,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -77,7 +82,7 @@ public class EventDetailsActivity extends Activity implements
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	DisplayImageOptions options;
 
-	private RelativeLayout relativeThumb;
+	private RelativeLayout relativeThumb, relativeConcierge;
 	private ImageButton btnDirection;
 	private TextView txt_event_title;
 	private TextView txt_event_location_city;
@@ -396,6 +401,15 @@ public class EventDetailsActivity extends Activity implements
 			}
 		});
 
+		relativeConcierge.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				makeDialogAlert();
+			}
+		});
+
 		tapGestureDetector = new GestureDetector(this, new TapGestureListener());
 		pager.setOnTouchListener(new OnTouchListener() {
 
@@ -427,10 +441,110 @@ public class EventDetailsActivity extends Activity implements
 		}, 500);
 	}
 
+	private void makeDialogAlert() {
+
+		final Dialog dialog = new Dialog(context);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.concierge_dialog_screen);
+		dialog.show();
+
+		LinearLayout linearCall = (LinearLayout) dialog
+				.findViewById(R.id.linearCall);
+		LinearLayout linearEmail = (LinearLayout) dialog
+				.findViewById(R.id.linearEmail);
+
+		linearCall.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						EventDetailsActivity.this);
+				alert.setTitle("Confirmation Required");
+				alert.setMessage("Are you sure you want to call the concierge at 8887057714 ?");
+				alert.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent callIntent = new Intent(
+										Intent.ACTION_CALL);
+								callIntent.setData(Uri.parse("tel:8887057714"));
+								startActivity(callIntent);
+							}
+						});
+				alert.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+
+			}
+		});
+
+		linearEmail.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				String strSubject = ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_FIRSTNAME)
+						+ " "
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_LASTNAME)
+						+ " Re: General Questions";
+
+				String strExtra = "\n\n\n\n\nContact Information:\n\n"
+						+ ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_FIRSTNAME)
+						+ " "
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_LASTNAME)
+						+ "\n"
+						+ ""
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_EMAIL)
+						+ "\n"
+						+ UtilInList.ReadSharePrefrence(
+								getApplicationContext(),
+								Constant.SHRED_PR.KEY_PHONE) + "\n\n";
+
+				Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				emailIntent.setType("message/rfc822");
+				
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						strSubject);
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, ""
+						+ strExtra);
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						new String[] { "concierge@inlist.com" });
+				startActivity(Intent.createChooser(emailIntent, "Email:"));
+			}
+		});
+	}
+
 	private void init() {
 		// TODO Auto-generated method stub
 		scrollMain = (ScrollView) findViewById(R.id.scrollmain);
 		relativeThumb = (RelativeLayout) findViewById(R.id.r1);
+		relativeConcierge = (RelativeLayout) findViewById(R.id.relativeConcierge);
 		relative_google_map = (RelativeLayout) findViewById(R.id.relative_google_map);
 		relative_zoom_map = (RelativeLayout) findViewById(R.id.relative_zoom_map);
 		txt_event_title = (TextView) findViewById(R.id.event_title);
@@ -878,13 +992,13 @@ public class EventDetailsActivity extends Activity implements
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 			params.add(new BasicNameValuePair("screen", "APN_EVENT_ENTRY"));
-			params.add(new BasicNameValuePair("event_id", ""+map.get("event_id")));
+			params.add(new BasicNameValuePair("event_id", ""
+					+ map.get("event_id")));
 			params.add(new BasicNameValuePair("device_id", ""
 					+ UtilInList.getDeviceId(getApplicationContext())));
 			params.add(new BasicNameValuePair("device_type", "android"));
 			params.add(new BasicNameValuePair("PHPSESSIONID", ""
-					+ UtilInList.ReadSharePrefrence(
-							EventDetailsActivity.this,
+					+ UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_SESSIONID)));
 
 			String response = UtilInList.postData(getApplicationContext(),

@@ -681,6 +681,11 @@ public class SignUpActivity extends Activity implements
 										.replace(" ", "%20")));
 						params.add(new BasicNameValuePair("access_token", ""
 								+ facebook.getAccessToken().toString().trim()));
+						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										SignUpActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
 
 						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
 								params, Constant.API
@@ -709,6 +714,11 @@ public class SignUpActivity extends Activity implements
 								"membership_question_answer", edt_su_ans
 										.getText().toString().trim()
 										.replace(" ", "%20")));
+						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										SignUpActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
 
 						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
 								params, Constant.API

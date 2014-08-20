@@ -156,6 +156,7 @@ public class SplashScreenActivity extends Activity {
 
 			UtilInList.WriteSharePrefrence(SplashScreenActivity.this,
 					Constant.SHRED_PR.KEY_RESULT_MUSIC, "" + result1);
+			Log.i("result1", ">>"+result1);
 
 			try {
 				/*

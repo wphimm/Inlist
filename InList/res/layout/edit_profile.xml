@@ -29,6 +29,7 @@
                     android:layout_height="match_parent"
                     android:hint="@string/fname"
                     android:singleLine="true"
+                    android:inputType="textCapWords"
                     android:textColor="@color/light_yellow"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -44,6 +45,7 @@
                     android:id="@+id/editLast"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                     android:inputType="textCapWords"
                     android:hint="@string/lname"
                     android:singleLine="true"
                     android:textColor="@color/light_yellow"

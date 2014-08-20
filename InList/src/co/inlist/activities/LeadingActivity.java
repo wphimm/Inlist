@@ -263,12 +263,10 @@ public class LeadingActivity extends FragmentActivity {
 					pagerPosition++;
 					if (pagerPosition == 4)
 						pagerPosition = 0;
-					if (pagerPosition == 0)
-						vpPager.setScrollDurationFactor(4);
-					else
-						vpPager.setScrollDurationFactor(1);
+
+					vpPager.setScrollDurationFactor(4);
 					vpPager.setCurrentItem(pagerPosition);
-					
+
 				}
 			});
 		}

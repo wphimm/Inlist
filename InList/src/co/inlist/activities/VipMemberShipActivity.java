@@ -67,7 +67,7 @@ public class VipMemberShipActivity extends Activity implements
 	int selectedIncomePosition = -1;
 	int selectedMusicTypePosition = -1;
 
-	ArrayList<HashMap<String, String>> listMusic;
+	ArrayList<HashMap<String, String>> listMusic=new ArrayList<HashMap<String,String>>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +252,8 @@ public class VipMemberShipActivity extends Activity implements
 		// TODO Auto-generated method stub
 		String result1 = UtilInList.ReadSharePrefrence(VipMemberShipActivity.this,
 				Constant.SHRED_PR.KEY_RESULT_MUSIC);
+		Log.i("result1", ">>"+result1);
+		
 		try {
 			/*
 			 * Prepare registration response write in file mode private

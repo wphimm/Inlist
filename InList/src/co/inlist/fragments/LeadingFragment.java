@@ -79,7 +79,7 @@ public class LeadingFragment extends Fragment {
 		case 3:
 			img.setBackgroundResource(R.drawable.onboarding_image3);
 			tvLabel.setText(Html
-					.fromHtml("<p><h3><font color=\"#ffffff\">Made by the nightlife, for the </font>"
+					.fromHtml("<p><h3><font color=\"#ffffff\">Made by nightlife, for </font>"
 							+ "<font color=\"#DFBB6A\">nightlife</font>"
 							+ "<font color=\"#ffffff\">.</font><h3></p>"));
 			break;

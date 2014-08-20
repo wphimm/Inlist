@@ -61,7 +61,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/t2"
+            android:id="@+id/txtVenue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -73,7 +73,7 @@
             android:id="@+id/txt_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/t2"
+            android:layout_below="@+id/txtVenue"
             android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
             android:text="1234 Washington Ave,\nMiami Beach FL 12345"
