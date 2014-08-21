@@ -422,8 +422,13 @@ public class ReservedEventsAdapter extends BaseAdapter implements
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							ProfileActivity.profObj.listReservedEvents.remove(
-									currentPos);
+							if (ProfileActivity.profObj.selectedArchieve) {
+								ProfileActivity.profObj.listArchieveEvents
+										.remove(currentPos);
+							} else {
+								ProfileActivity.profObj.listReservedEvents
+										.remove(currentPos);
+							}
 							refresh();
 						}
 					} catch (Exception e) {

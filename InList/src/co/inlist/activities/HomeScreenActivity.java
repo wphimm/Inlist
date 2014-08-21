@@ -601,7 +601,11 @@ public class HomeScreenActivity extends Activity implements
 		finish();
 		if (UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
 				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
-
+			try {
+				LeadingActivity.laObj.finish();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		} else {
 			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 		}

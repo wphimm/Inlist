@@ -960,8 +960,13 @@ public class ReservedEventDetailsActivity extends Activity implements
 						JSONObject jObject = new JSONObject(result);
 						String str_temp = jObject.getString("status");
 						if (str_temp.equals("success")) {
-							ProfileActivity.profObj.listReservedEvents
-									.remove(position);
+							if (ProfileActivity.profObj.selectedArchieve) {
+								ProfileActivity.profObj.listArchieveEvents
+										.remove(position);
+							} else {
+								ProfileActivity.profObj.listReservedEvents
+										.remove(position);
+							}
 							finish();
 							overridePendingTransition(R.anim.hold_top,
 									R.anim.exit_in_left);

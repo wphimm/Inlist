@@ -39,10 +39,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ArrayAdapter;
@@ -133,6 +133,13 @@ public class EventDetailsActivity extends Activity implements
 		timer = new Timer();
 		myTimerTask = new MyTimerTask();
 		timer.schedule(myTimerTask, 3000, 1000);
+
+		if (UtilInList.ReadSharePrefrence(EventDetailsActivity.this,
+				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+			relativeConcierge.setVisibility(View.VISIBLE);
+		} else {
+			relativeConcierge.setVisibility(View.GONE);
+		}
 	}
 
 	private void onCreateData() {
@@ -366,6 +373,7 @@ public class EventDetailsActivity extends Activity implements
 							(float) 1.0);
 					animation.setDuration(500);
 
+					relativeConcierge.setVisibility(View.GONE);
 					relative_zoom_map.setVisibility(View.VISIBLE);
 					relative_zoom_map.setAnimation(animation);
 				}
@@ -496,6 +504,13 @@ public class EventDetailsActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
+				String sharingString = ""
+						+ txt_event_title.getText().toString() + "\n"
+						+ txt_date_time.getText().toString() + "\n"
+						+ map.get("event_location_club") + "\n"
+						+ txtaddress.getText().toString() + "\n"
+						+ txtcity.getText().toString();
+
 				String strSubject = ""
 						+ UtilInList.ReadSharePrefrence(
 								getApplicationContext(),
@@ -506,7 +521,8 @@ public class EventDetailsActivity extends Activity implements
 								Constant.SHRED_PR.KEY_LASTNAME)
 						+ " Re: General Questions";
 
-				String strExtra = "\n\n\n\n\nContact Information:\n\n"
+				String strExtra = sharingString
+						+ "\n\n\n\n\nContact Information:\n\n"
 						+ ""
 						+ UtilInList.ReadSharePrefrence(
 								getApplicationContext(),
@@ -528,7 +544,7 @@ public class EventDetailsActivity extends Activity implements
 				Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
 				emailIntent.setType("message/rfc822");
-				
+
 				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 						strSubject);
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, ""
@@ -778,6 +794,7 @@ public class EventDetailsActivity extends Activity implements
 			relative_zoom_map.setVisibility(View.GONE);
 			scrollMain.setVisibility(View.VISIBLE);
 			relative_google_map.setVisibility(View.VISIBLE);
+			relativeConcierge.setVisibility(View.VISIBLE);
 		} else {
 			super.onBackPressed();
 			finish();
@@ -838,6 +855,7 @@ public class EventDetailsActivity extends Activity implements
 				relative_zoom_map.setVisibility(View.GONE);
 				scrollMain.setVisibility(View.VISIBLE);
 				relative_google_map.setVisibility(View.VISIBLE);
+				relativeConcierge.setVisibility(View.VISIBLE);
 			} else {
 				finish();
 				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);

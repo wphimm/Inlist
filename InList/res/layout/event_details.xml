@@ -403,14 +403,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="40dp"
         android:padding="10dp" >
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_concierge"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_concierge_onclick"
             android:clickable="false"
             android:focusable="false" />
     </RelativeLayout>

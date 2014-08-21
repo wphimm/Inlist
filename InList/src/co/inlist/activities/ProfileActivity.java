@@ -1,7 +1,10 @@
 package co.inlist.activities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -11,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -27,13 +31,13 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.adapter.ReservedEventsAdapter;
-import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
+@SuppressLint("SimpleDateFormat")
 public class ProfileActivity extends Activity implements
-		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
+		ActionBar.OnNavigationListener {
 
 	TextView txtName, txtEmail, txtPhone;
 	public static ProfileActivity profObj;
@@ -44,11 +48,15 @@ public class ProfileActivity extends Activity implements
 	View viewCategories, viewArchive;
 	private static PullToRefreshLayout mPullToRefreshLayout;
 	ReservedEventsAdapter adapterReservedEvents;
+	ReservedEventsAdapter adapterArchieveEvents;
 
 	Typeface typeAkzidgrobeligex, typeAkzidgrobemedex, typeAvenir,
 			typeLeaguegothic_condensedregular;
 
 	public ArrayList<String> listReservedEvents = new ArrayList<String>();
+	public ArrayList<String> listArchieveEvents = new ArrayList<String>();
+	String todaysDate = "";
+	public boolean selectedArchieve = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,20 @@ public class ProfileActivity extends Activity implements
 
 		}
 
+		Calendar c = Calendar.getInstance();
+		int dd = c.get(Calendar.DATE);
+		int MM = c.get(Calendar.MONTH) + 1;
+		int yyyy = c.get(Calendar.YEAR);
+		String strMM = "" + MM;
+		if (MM < 10)
+			strMM = "0" + MM;
+		todaysDate = strMM + "/" + dd + "/" + yyyy;
+
+		adapterReservedEvents = new ReservedEventsAdapter(listReservedEvents,
+				ProfileActivity.this, ProfileActivity.this);
+		adapterArchieveEvents = new ReservedEventsAdapter(listArchieveEvents,
+				ProfileActivity.this, ProfileActivity.this);
+
 		Handler hn = new Handler();
 		hn.postDelayed(new Runnable() {
 
@@ -130,6 +152,17 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				viewCategories.setVisibility(View.VISIBLE);
 				viewArchive.setVisibility(View.GONE);
+
+				selectedArchieve = false;
+				adapterReservedEvents = new ReservedEventsAdapter(
+						listReservedEvents, ProfileActivity.this,
+						ProfileActivity.this);
+				if (listReservedEvents.size() == 0) {
+					mPullToRefreshLayout.setVisibility(View.GONE);
+				} else {
+					mPullToRefreshLayout.setVisibility(View.VISIBLE);
+					mPullToRefreshLayout.setAdapter(adapterReservedEvents);
+				}
 			}
 		});
 
@@ -140,6 +173,17 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				viewArchive.setVisibility(View.VISIBLE);
 				viewCategories.setVisibility(View.GONE);
+
+				selectedArchieve = true;
+				adapterArchieveEvents = new ReservedEventsAdapter(
+						listArchieveEvents, ProfileActivity.this,
+						ProfileActivity.this);
+				if (listArchieveEvents.size() == 0) {
+					mPullToRefreshLayout.setVisibility(View.GONE);
+				} else {
+					mPullToRefreshLayout.setVisibility(View.VISIBLE);
+					mPullToRefreshLayout.setAdapter(adapterArchieveEvents);
+				}
 			}
 		});
 
@@ -163,7 +207,10 @@ public class ProfileActivity extends Activity implements
 		super.onResume();
 		try {
 			if (adapterReservedEvents != null) {
-				adapterReservedEvents.refresh();
+				if (selectedArchieve)
+					adapterArchieveEvents.refresh();
+				else
+					adapterReservedEvents.refresh();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -223,7 +270,8 @@ public class ProfileActivity extends Activity implements
 			if (flagReset) {
 				pageNo = 1;
 			} else {
-				pageNo = ((int) (listReservedEvents.size() / 10)) + 1;
+				pageNo = ((int) ((listReservedEvents.size() + listArchieveEvents
+						.size()) / 10)) + 1;
 			}
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -272,65 +320,53 @@ public class ProfileActivity extends Activity implements
 						Log.e("Length of json array ----->", "" + data.length());
 						for (int i = 0; i < data.length(); i++) {
 							JSONObject obj = data.getJSONObject(i);
-							HashMap<String, String> map = new HashMap<String, String>();
-							map.put("order_id", "" + obj.getString("order_id"));
-							map.put("event_id", "" + obj.getString("event_id"));
-							map.put("event_title",
-									"" + obj.getString("event_title"));
-							map.put("event_start_date",
-									"" + obj.getString("event_start_date"));
-							map.put("event_start_time",
-									"" + obj.getString("event_start_time"));
-							map.put("event_min_price",
-									"" + obj.getString("event_min_price"));
-							map.put("event_description",
-									"" + obj.getString("event_description"));
 
-							map.put("event_location_address",
-									""
-											+ obj.getString("event_location_address"));
-							map.put("event_location_city",
-									"" + obj.getString("event_location_city"));
-							map.put("event_location_state",
-									"" + obj.getString("event_location_state"));
-							map.put("event_location_zip",
-									"" + obj.getString("event_location_zip"));
-							map.put("event_location_latitude",
-									""
-											+ obj.getString("event_location_latitude"));
-							map.put("event_location_longitude",
-									""
-											+ obj.getString("event_location_longitude"));
-							map.put("event_location_club",
-									"" + obj.getString("event_location_club"));
-							try {
-								map.put("event_end_time",
-										"" + obj.getString("event_end_time"));
-								map.put("tables_total",
-										"" + obj.getString("tables_total"));
-								map.put("tables_available",
-										"" + obj.getString("tables_available"));
-							} catch (Exception e) {
-								// TODO: handle exception
+							boolean flag = true;
+							for (int j = 0; j < listReservedEvents.size(); j++) {
+								JSONObject jObj = new JSONObject(
+										listReservedEvents.get(j));
+								if (obj.getString("order_id").equals(
+										jObj.getString("order_id")))
+									flag = false;
+							}
+							for (int j = 0; j < listArchieveEvents.size(); j++) {
+								JSONObject jObj = new JSONObject(
+										listArchieveEvents.get(j));
+								if (obj.getString("order_id").equals(
+										jObj.getString("order_id")))
+									flag = false;
 							}
 
-							map.put("tax", "" + obj.getString("tax"));
-							map.put("gratuity", "" + obj.getString("gratuity"));
+							if (flag) {
+								SimpleDateFormat sdf = new SimpleDateFormat(
+										"MM/dd/yyyy");
+								try {
+									Date date1 = sdf
+											.parse(""
+													+ obj.getString("event_start_date"));
+									Date date2 = sdf.parse(todaysDate);
 
-							map.put("event_poster_url",
-									"" + obj.getString("event_poster_url"));
+									if (date1.compareTo(date2) >= 0) {
+										// Upcoming Events:
+										if (flagReset) {
+											listReservedEvents.add("" + obj);
+										} else {
+											adapterReservedEvents.add("" + obj);
+										}
+									} else {
+										// Archieve Events:
+										if (flagReset) {
+											listArchieveEvents.add("" + obj);
+										} else {
+											adapterArchieveEvents.add("" + obj);
+										}
+									}
 
-							map.put("atmosphere",
-									"" + obj.getString("atmosphere"));
-							map.put("music_type",
-									"" + obj.getString("music_type"));
-
-							if (flagReset) {
-								listReservedEvents.add("" + obj);
-							} else {
-								adapterReservedEvents.add("" + obj);
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
-
 						}
 
 					} else {
@@ -344,14 +380,35 @@ public class ProfileActivity extends Activity implements
 					e.printStackTrace();
 				}
 
-				if (flagReset) {
-					adapterReservedEvents = new ReservedEventsAdapter(
-							listReservedEvents, ProfileActivity.this,
-							ProfileActivity.this);
-					mPullToRefreshLayout.setAdapter(adapterReservedEvents);
-
+				Log.e("size:", "" + listReservedEvents.size() + "::"
+						+ listArchieveEvents.size());
+				if (selectedArchieve) {
+					if (flagReset) {
+						adapterArchieveEvents = new ReservedEventsAdapter(
+								listArchieveEvents, ProfileActivity.this,
+								ProfileActivity.this);
+						if (listArchieveEvents.size() == 0) {
+							mPullToRefreshLayout.setVisibility(View.GONE);
+						} else {
+							mPullToRefreshLayout.setVisibility(View.VISIBLE);
+							mPullToRefreshLayout
+									.setAdapter(adapterArchieveEvents);
+						}
+					}
+				} else {
+					if (flagReset) {
+						adapterReservedEvents = new ReservedEventsAdapter(
+								listReservedEvents, ProfileActivity.this,
+								ProfileActivity.this);
+						if (listReservedEvents.size() == 0) {
+							mPullToRefreshLayout.setVisibility(View.GONE);
+						} else {
+							mPullToRefreshLayout.setVisibility(View.VISIBLE);
+							mPullToRefreshLayout
+									.setAdapter(adapterReservedEvents);
+						}
+					}
 				}
-
 			}
 
 		}
@@ -373,86 +430,6 @@ public class ProfileActivity extends Activity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onTaskComplete(JSONObject jObject) {
-		// TODO Auto-generated method stub
-
-		listReservedEvents.clear();
-		try {
-			String str_temp = jObject.getString("status");
-			if (str_temp.equals("success")) {
-				JSONObject jObjectData = new JSONObject(
-						jObject.getString("data"));
-				JSONArray data = jObjectData.getJSONArray("entries");
-				Log.e("Length of json array ----->", "" + data.length());
-				for (int i = 0; i < data.length(); i++) {
-					JSONObject obj = data.getJSONObject(i);
-					HashMap<String, String> map = new HashMap<String, String>();
-					map.put("order_id", "" + obj.getString("order_id"));
-					map.put("event_id", "" + obj.getString("event_id"));
-					map.put("event_title", "" + obj.getString("event_title"));
-					map.put("event_start_date",
-							"" + obj.getString("event_start_date"));
-					map.put("event_start_time",
-							"" + obj.getString("event_start_time"));
-					map.put("event_min_price",
-							"" + obj.getString("event_min_price"));
-					map.put("event_description",
-							"" + obj.getString("event_description"));
-
-					map.put("event_location_address",
-							"" + obj.getString("event_location_address"));
-					map.put("event_location_city",
-							"" + obj.getString("event_location_city"));
-					map.put("event_location_state",
-							"" + obj.getString("event_location_state"));
-					map.put("event_location_zip",
-							"" + obj.getString("event_location_zip"));
-					map.put("event_location_latitude",
-							"" + obj.getString("event_location_latitude"));
-					map.put("event_location_longitude",
-							"" + obj.getString("event_location_longitude"));
-					map.put("event_location_club",
-							"" + obj.getString("event_location_club"));
-					try {
-						map.put("event_end_time",
-								"" + obj.getString("event_end_time"));
-						map.put("tables_total",
-								"" + obj.getString("tables_total"));
-						map.put("tables_available",
-								"" + obj.getString("tables_available"));
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-
-					map.put("tax", "" + obj.getString("tax"));
-					map.put("gratuity", "" + obj.getString("gratuity"));
-
-					map.put("event_poster_url",
-							"" + obj.getString("event_poster_url"));
-
-					map.put("atmosphere", "" + obj.getString("atmosphere"));
-					map.put("music_type", "" + obj.getString("music_type"));
-
-					listReservedEvents.add(""+obj);
-				}
-
-			} else {
-
-				UtilInList.validateDialog(ProfileActivity.this, jObject
-						.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
-			}
-
-		} catch (JSONException e) { // TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		adapterReservedEvents = new ReservedEventsAdapter(listReservedEvents,
-				ProfileActivity.this, ProfileActivity.this);
-		mPullToRefreshLayout.setAdapter(adapterReservedEvents);
 	}
 
 	@Override
