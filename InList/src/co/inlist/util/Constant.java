@@ -156,6 +156,7 @@ public class Constant {
 		public static final String KEY_PRICE_CLUB_SECTION_NAME = "club_section_name";
 		public static final String KEY_YOUR_MINIMUM = "your_minimum";
 		public static final String KEY_VIP_STATUS = "vip_status";
+		public static final String KEY_TERMS_FROM = "terms_from";
 
 		public static final String KEY_EVENT_ID = "event_id";
 		public static final String KEY_CURRENT_resultlistEvents = "resultlistEvents";

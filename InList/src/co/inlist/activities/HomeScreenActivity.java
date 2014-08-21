@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,13 +37,16 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import co.inlist.adapter.EventsAdapter;
 import co.inlist.adapter.TitleNavigationAdapter;
+import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
 import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
 @SuppressLint("NewApi")
 public class HomeScreenActivity extends Activity implements
-		ActionBar.OnNavigationListener, OnRefreshListener {
+		ActionBar.OnNavigationListener, OnRefreshListener,
+		AsyncTaskCompleteListener {
 
 	// action bar
 	private static ActionBar actionBar;
@@ -70,9 +74,16 @@ public class HomeScreenActivity extends Activity implements
 		onCreateData();
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		invalidateOptionsMenu();
+	}
+
 	private void getData() {
 		// TODO Auto-generated method stub
-		String result=UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+		String result = UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
 				Constant.SHRED_PR.KEY_RESULT_PARTY_AREA);
 		if (result != null) {
 			try {
@@ -151,6 +162,40 @@ public class HomeScreenActivity extends Activity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+		menu.clear();
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_actions, menu);
+
+		MenuItem action_profile = menu.findItem(R.id.action_profile);
+		MenuItem action_settings = menu.findItem(R.id.action_settings);
+		MenuItem action_terms = menu.findItem(R.id.action_terms);
+		MenuItem action_login = menu.findItem(R.id.action_login);
+		MenuItem action_signup = menu.findItem(R.id.action_signup);
+		MenuItem action_concierge = menu.findItem(R.id.action_concierge);
+
+		action_profile.setVisible(true);
+		action_settings.setVisible(true);
+		action_terms.setVisible(true);
+		action_login.setVisible(true);
+		action_signup.setVisible(true);
+		action_concierge.setVisible(true);
+
+		if (UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+				Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+			action_login.setVisible(false);
+			action_signup.setVisible(false);
+			action_terms.setTitle("Logout");
+
+		} else {
+			action_concierge.setVisible(false);
+		}
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 	/**
 	 * On selecting action bar icons
 	 * */
@@ -200,6 +245,103 @@ public class HomeScreenActivity extends Activity implements
 
 			} else {
 				makeAlert();
+			}
+			return true;
+
+		case R.id.action_login:
+
+			UtilInList.WriteSharePrefrence(HomeScreenActivity.this,
+					Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
+
+			startActivity(new Intent(HomeScreenActivity.this,
+					LoginActivity.class));
+			overridePendingTransition(R.anim.enter_from_bottom,
+					R.anim.hold_bottom);
+
+			return true;
+
+		case R.id.action_signup:
+
+			startActivity(new Intent(HomeScreenActivity.this,
+					SignUpActivity.class));
+			overridePendingTransition(R.anim.enter_from_bottom,
+					R.anim.hold_bottom);
+
+			return true;
+
+		case R.id.action_terms:
+
+			if (UtilInList.ReadSharePrefrence(HomeScreenActivity.this,
+					Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
+
+				AlertDialog.Builder alert = new AlertDialog.Builder(
+						HomeScreenActivity.this);
+				alert.setTitle(Constant.AppName);
+				alert.setMessage("Are you sure you want to logout?");
+				alert.setPositiveButton("YES",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								if (UtilInList
+										.isInternetConnectionExist(getApplicationContext())) {
+
+									List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+									params.add(new BasicNameValuePair(
+											"device_id",
+											""
+													+ UtilInList
+															.getDeviceId(getApplicationContext())));
+									params.add(new BasicNameValuePair(
+											"device_type", "android"));
+									params.add(new BasicNameValuePair(
+											"PHPSESSIONID",
+											""
+													+ UtilInList
+															.ReadSharePrefrence(
+																	HomeScreenActivity.this,
+																	Constant.SHRED_PR.KEY_SESSIONID)));
+
+									new WebServiceDataPosterAsyncTask(
+											HomeScreenActivity.this,
+											params,
+											Constant.API
+													+ "user/logout/?apiMode=VIP&json=true")
+											.execute();
+
+								} else {
+									UtilInList.validateDialog(
+											HomeScreenActivity.this, ""
+													+ Constant.network_error,
+											Constant.AppName);
+								}
+
+							}
+						});
+				alert.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.cancel();
+							}
+						});
+				alert.create();
+				alert.show();
+
+			} else {
+				
+				UtilInList.WriteSharePrefrence(
+						HomeScreenActivity.this,
+						Constant.SHRED_PR.KEY_TERMS_FROM, "1");
+				startActivity(new Intent(HomeScreenActivity.this,
+						TermsConditionsActivity.class));
+				overridePendingTransition(R.anim.enter_from_bottom,
+						R.anim.hold_bottom);
 			}
 
 			return true;
@@ -622,6 +764,30 @@ public class HomeScreenActivity extends Activity implements
 		} else {
 			UtilInList.validateDialog(HomeScreenActivity.this, "" + ""
 					+ Constant.network_error, Constant.ERRORS.OOPS);
+		}
+	}
+
+	@Override
+	public void onTaskComplete(JSONObject result) {
+		// TODO Auto-generated method stub
+		try {
+			if (result.getString("success").equals("true")) {
+
+				UtilInList.WriteSharePrefrence(HomeScreenActivity.this,
+						Constant.SHRED_PR.KEY_LOGIN_STATUS, "false");
+
+				UtilInList.WriteSharePrefrence(HomeScreenActivity.this,
+						Constant.SHRED_PR.KEY_USER_CARD_ADDED, "0");
+
+				invalidateOptionsMenu();
+
+			} else {
+				UtilInList.validateDialog(HomeScreenActivity.this, result
+						.getJSONArray("errors").getString(0),
+						Constant.ERRORS.OOPS);
+			}
+		} catch (Exception e) {
+			Log.v("", "Exception : " + e);
 		}
 	}
 

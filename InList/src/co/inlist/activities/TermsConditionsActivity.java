@@ -1,6 +1,7 @@
 package co.inlist.activities;
 
 import co.inlist.util.Constant;
+import co.inlist.util.UtilInList;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -37,8 +38,16 @@ public class TermsConditionsActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case android.R.id.home:
-			finish();
-			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+			if (UtilInList
+					.ReadSharePrefrence(TermsConditionsActivity.this,
+							Constant.SHRED_PR.KEY_TERMS_FROM).toString()
+					.equals("1")) {
+				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+			} else {
+				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+			}
 			return true;
 
 		default:
@@ -74,8 +83,15 @@ public class TermsConditionsActivity extends Activity implements
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
-		finish();
-		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+		if (UtilInList
+				.ReadSharePrefrence(TermsConditionsActivity.this,
+						Constant.SHRED_PR.KEY_TERMS_FROM).toString()
+				.equals("1")) {
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+		} else {
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+		}
 	}
-
 }

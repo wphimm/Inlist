@@ -37,7 +37,7 @@
                 android:layout_weight="1.5"
                 android:hint="@string/cvv"
                 android:inputType="numberPassword"
-                android:maxLength="3"
+                android:maxLength="4"
                 android:textColor="@color/light_yellow" />
         </LinearLayout>
 

@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.adapter.ReservedEventsAdapter;
@@ -39,9 +40,10 @@ import co.inlist.util.UtilInList;
 public class ProfileActivity extends Activity implements
 		ActionBar.OnNavigationListener {
 
-	TextView txtName, txtEmail, txtPhone;
+	TextView txtName, txtEmail, txtPhone, txtNoEvents, txtSomething;
 	public static ProfileActivity profObj;
 	RelativeLayout relativeCategories, relativeArchive, relativeVip;
+	LinearLayout linearNoEvents;
 	private TextView txt_vip_membership_req;
 
 	public static boolean flagReset, flagIfProgress;
@@ -74,6 +76,8 @@ public class ProfileActivity extends Activity implements
 		txtEmail.setTypeface(typeAkzidgrobemedex);
 		txtPhone.setTypeface(typeAkzidgrobemedex);
 		txt_vip_membership_req.setTypeface(typeAkzidgrobemedex);
+		txtNoEvents.setTypeface(typeAkzidgrobeligex);
+		txtSomething.setTypeface(typeAkzidgrobemedex);
 
 		txtName.setText(""
 				+ UtilInList.ReadSharePrefrence(getApplicationContext(),
@@ -152,6 +156,7 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				viewCategories.setVisibility(View.VISIBLE);
 				viewArchive.setVisibility(View.GONE);
+				txtNoEvents.setText("NO UPCOMING EVENTS");
 
 				selectedArchieve = false;
 				adapterReservedEvents = new ReservedEventsAdapter(
@@ -173,6 +178,7 @@ public class ProfileActivity extends Activity implements
 				// TODO Auto-generated method stub
 				viewArchive.setVisibility(View.VISIBLE);
 				viewCategories.setVisibility(View.GONE);
+				txtNoEvents.setText("NO ARCHIVE EVENTS");
 
 				selectedArchieve = true;
 				adapterArchieveEvents = new ReservedEventsAdapter(
@@ -222,9 +228,12 @@ public class ProfileActivity extends Activity implements
 		txtName = (TextView) findViewById(R.id.txtName);
 		txtEmail = (TextView) findViewById(R.id.txtEmail);
 		txtPhone = (TextView) findViewById(R.id.txtPhone);
+		txtNoEvents = (TextView) findViewById(R.id.txtNoEvents);
+		txtSomething = (TextView) findViewById(R.id.txtSomething);
 		relativeCategories = (RelativeLayout) findViewById(R.id.linearCategory);
 		relativeArchive = (RelativeLayout) findViewById(R.id.linearArchive);
 		relativeVip = (RelativeLayout) findViewById(R.id.relativeVIP);
+		linearNoEvents = (LinearLayout) findViewById(R.id.linearNoEvents);
 		viewCategories = (View) findViewById(R.id.viewCategories);
 		viewArchive = (View) findViewById(R.id.viewArchive);
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
@@ -232,7 +241,7 @@ public class ProfileActivity extends Activity implements
 		mPullToRefreshLayout.setDividerHeight(0);
 
 		typeAkzidgrobeligex = Typeface.createFromAsset(getAssets(),
-				"akzidgrobeligex.ttf");
+				"akzidgrobemedex.ttf");
 		typeAkzidgrobemedex = Typeface.createFromAsset(getAssets(),
 				"helve_unbold.ttf");
 		typeLeaguegothic_condensedregular = Typeface.createFromAsset(

@@ -20,6 +20,7 @@ import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
+import com.crittercism.app.Crittercism;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
@@ -35,6 +36,9 @@ public class SplashScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.splash_screen);
+
+		Crittercism.initialize(getApplicationContext(),
+				"53f5d8ba07229a6bcc000008");
 
 		objSplash = this;
 
@@ -156,7 +160,7 @@ public class SplashScreenActivity extends Activity {
 
 			UtilInList.WriteSharePrefrence(SplashScreenActivity.this,
 					Constant.SHRED_PR.KEY_RESULT_MUSIC, "" + result1);
-			Log.i("result1", ">>"+result1);
+			Log.i("result1", ">>" + result1);
 
 			try {
 				/*

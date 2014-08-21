@@ -380,8 +380,7 @@ public class SignUpActivity extends Activity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			overridePendingTransition(R.anim.enter_from_bottom,
-					R.anim.hold_bottom);
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 			return true;
 
 		default:
@@ -739,7 +738,7 @@ public class SignUpActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		finish();
-		overridePendingTransition(R.anim.enter_from_bottom, R.anim.hold_bottom);
+		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
 	}
 
 }

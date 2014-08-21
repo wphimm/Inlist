@@ -9,9 +9,14 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +40,83 @@ public class InviteActivity extends Activity implements
 		setContentView(R.layout.invite_person_screen);
 
 		init();
-
 		actionBarAndButtonActions();
+
+		editFirst.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				editFirst.setHintTextColor(getResources().getColor(
+						R.color.black_shadow));
+				editFirst.setHint("Invitee's First Name");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		editLast.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				editLast.setHintTextColor(getResources().getColor(
+						R.color.black_shadow));
+				editLast.setHint("Invitee's Last Name");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		editEmail.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				editEmail.setHintTextColor(getResources().getColor(
+						R.color.black_shadow));
+				editEmail.setHint("Invitee's Email Address");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
 	}
 
 	private void init() {
@@ -44,6 +124,12 @@ public class InviteActivity extends Activity implements
 		editFirst = (EditText) findViewById(R.id.edt_invite_first_name);
 		editLast = (EditText) findViewById(R.id.edt_invite_last_name);
 		editEmail = (EditText) findViewById(R.id.edt_invite_e_mail);
+
+		editFirst.setHintTextColor(getResources()
+				.getColor(R.color.black_shadow));
+		editLast.setHintTextColor(getResources().getColor(R.color.black_shadow));
+		editEmail.setHintTextColor(getResources()
+				.getColor(R.color.black_shadow));
 	}
 
 	/**
@@ -130,13 +216,36 @@ public class InviteActivity extends Activity implements
 
 					try {
 						if (jObject.getString("success").equals("true")) {
-							UtilInList.validateDialog(
-									InviteActivity.this,
-									jObject.getJSONArray("messages").getString(
-											0), Constant.AppName);
-							editFirst.setText("");
-							editLast.setText("");
-							editEmail.setText("");
+
+							AlertDialog.Builder alert = new AlertDialog.Builder(
+									InviteActivity.this);
+							alert.setTitle(Constant.AppName);
+							alert.setMessage("Your invitation was successfully sent");
+							alert.setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Handler hn = new Handler();
+											hn.postDelayed(new Runnable() {
+
+												@Override
+												public void run() {
+													// TODO Auto-generated
+													// method stub
+													finish();
+													overridePendingTransition(
+															R.anim.hold_top,
+															R.anim.exit_in_left);
+												}
+											}, 200);
+										}
+									});
+
+							alert.create();
+							alert.show();
 
 						} else {
 							UtilInList
@@ -161,24 +270,32 @@ public class InviteActivity extends Activity implements
 	private boolean isValid() {
 		// TODO Auto-generated method stub
 		if (editFirst.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(InviteActivity.this, "" + ""
-					+ Constant.ERRORS.PLZ_FIRST_NAME, Constant.ERRORS.OOPS);
+			editFirst.setText("");
+			editFirst.setHintTextColor(getResources().getColor(
+					R.color.light_red));
+			editFirst.setHint("Valid First Name");
 			return false;
 		}
 		if (editLast.getText().toString().trim().length() < 2) {
-			UtilInList.validateDialog(InviteActivity.this, "" + ""
-					+ Constant.ERRORS.PLZ_LAST_NAME, Constant.ERRORS.OOPS);
+			editLast.setText("");
+			editLast.setHintTextColor(getResources()
+					.getColor(R.color.light_red));
+			editLast.setHint("Valid Last Name");
 			return false;
 		}
 		if (editEmail.getText().toString().trim().length() == 0) {
-			UtilInList.validateDialog(InviteActivity.this, "" + ""
-					+ Constant.ERRORS.PLZ_EMAIL, Constant.ERRORS.OOPS);
+			editEmail.setText("");
+			editEmail.setHintTextColor(getResources().getColor(
+					R.color.light_red));
+			editEmail.setHint("Valid Email Address");
 			return false;
 		}
 		if ((android.util.Patterns.EMAIL_ADDRESS.matcher(editEmail.getText()
 				.toString().trim()).matches()) == false) {
-			UtilInList.validateDialog(InviteActivity.this, "" + ""
-					+ Constant.ERRORS.PLZ_VALID_EMAIL, Constant.ERRORS.OOPS);
+			editEmail.setText("");
+			editEmail.setHintTextColor(getResources().getColor(
+					R.color.light_red));
+			editEmail.setHint("Valid Email Address");
 			return false;
 		}
 		return true;
@@ -214,47 +331,112 @@ public class InviteActivity extends Activity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
-				imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
-				imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
-
 				if (isValid()) {
-					if (UtilInList
-							.isInternetConnectionExist(getApplicationContext())) {
-						new InviteAsyncTask(InviteActivity.this).execute("");
-					} else {
-						UtilInList.validateDialog(InviteActivity.this, "" + ""
-								+ Constant.network_error, Constant.ERRORS.OOPS);
+					AlertDialog.Builder alert = new AlertDialog.Builder(
+							InviteActivity.this);
+					alert.setTitle(Constant.AppName);
+					alert.setMessage("Are you sure you want to send invitation?");
+					alert.setPositiveButton("YES",
+							new DialogInterface.OnClickListener() {
 
-					}
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+									imm.hideSoftInputFromWindow(
+											editFirst.getWindowToken(), 0);
+									imm.hideSoftInputFromWindow(
+											editLast.getWindowToken(), 0);
+									imm.hideSoftInputFromWindow(
+											editEmail.getWindowToken(), 0);
+
+									if (UtilInList
+											.isInternetConnectionExist(getApplicationContext())) {
+										new InviteAsyncTask(InviteActivity.this)
+												.execute("");
+									} else {
+										UtilInList
+												.validateDialog(
+														InviteActivity.this,
+														""
+																+ ""
+																+ Constant.network_error,
+														Constant.ERRORS.OOPS);
+
+									}
+								}
+							});
+					alert.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									dialog.cancel();
+								}
+							});
+					alert.create();
+					alert.show();
 				}
 
 			}
 		});
-		
+
 		relativeActionBar.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(editFirst.getWindowToken(), 0);
-				imm.hideSoftInputFromWindow(editLast.getWindowToken(), 0);
-				imm.hideSoftInputFromWindow(editEmail.getWindowToken(), 0);
-
 				if (isValid()) {
-					if (UtilInList
-							.isInternetConnectionExist(getApplicationContext())) {
-						new InviteAsyncTask(InviteActivity.this).execute("");
-					} else {
-						UtilInList.validateDialog(InviteActivity.this, "" + ""
-								+ Constant.network_error, Constant.ERRORS.OOPS);
+					AlertDialog.Builder alert = new AlertDialog.Builder(
+							InviteActivity.this);
+					alert.setTitle(Constant.AppName);
+					alert.setMessage("Are you sure you want to send invitation?");
+					alert.setPositiveButton("YES",
+							new DialogInterface.OnClickListener() {
 
-					}
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+									imm.hideSoftInputFromWindow(
+											editFirst.getWindowToken(), 0);
+									imm.hideSoftInputFromWindow(
+											editLast.getWindowToken(), 0);
+									imm.hideSoftInputFromWindow(
+											editEmail.getWindowToken(), 0);
+
+									if (UtilInList
+											.isInternetConnectionExist(getApplicationContext())) {
+										new InviteAsyncTask(InviteActivity.this)
+												.execute("");
+									} else {
+										UtilInList
+												.validateDialog(
+														InviteActivity.this,
+														""
+																+ ""
+																+ Constant.network_error,
+														Constant.ERRORS.OOPS);
+
+									}
+								}
+							});
+					alert.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									dialog.cancel();
+								}
+							});
+					alert.create();
+					alert.show();
 				}
-
 			}
 		});
 

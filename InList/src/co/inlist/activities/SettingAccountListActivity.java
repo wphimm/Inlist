@@ -91,6 +91,9 @@ public class SettingAccountListActivity extends Activity implements
 					overridePendingTransition(R.anim.enter_from_left,
 							R.anim.hold_bottom);
 				} else if (position == 4) {
+					UtilInList.WriteSharePrefrence(
+							SettingAccountListActivity.this,
+							Constant.SHRED_PR.KEY_TERMS_FROM, "0");
 					startActivity(new Intent(SettingAccountListActivity.this,
 							TermsConditionsActivity.class));
 					overridePendingTransition(R.anim.enter_from_left,
@@ -112,7 +115,7 @@ public class SettingAccountListActivity extends Activity implements
 							.execute("");
 				}
 			}
-		}, 200);
+		},100);
 
 		actionBarAndButtonActions();
 
