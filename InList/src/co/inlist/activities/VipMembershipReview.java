@@ -31,7 +31,6 @@ public class VipMembershipReview extends Activity implements
 
 		case android.R.id.home:
 			ProfileActivity.profObj.finish();
-			VipMemberShipActivity.vmaObj.finish();
 			finish();
 			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			return true;
@@ -74,7 +73,6 @@ public class VipMembershipReview extends Activity implements
 				// TODO Auto-generated method stub
 
 				ProfileActivity.profObj.finish();
-				VipMemberShipActivity.vmaObj.finish();
 				finish();
 				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			}
@@ -87,7 +85,6 @@ public class VipMembershipReview extends Activity implements
 				// TODO Auto-generated method stub
 
 				ProfileActivity.profObj.finish();
-				VipMemberShipActivity.vmaObj.finish();
 				finish();
 				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
 			}

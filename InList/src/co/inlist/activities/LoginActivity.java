@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -96,7 +97,13 @@ public class LoginActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				loginToFacebook();
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					loginToFacebook();
+				} else {
+					UtilInList.validateDialog(LoginActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
+				}
 			}
 		});
 
@@ -323,155 +330,187 @@ public class LoginActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
 
-		Log.e("result", ">>" + result);
+		Log.e("result", ">>>" + result1.toString().length());
 
-		if (flagCard) {
-
+		if (result1.toString().length() > 0) {
+			JSONObject result = null;
 			try {
-				if (result.getString("success").toString().equals("true")) {
+				result = new JSONObject(result1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (flagCard) {
+				try {
+					if (result.getString("success").toString().equals("true")) {
 
-					JSONArray data = result.getJSONArray("data");
-					for (int i = 0; i < data.length(); i++) {
-						JSONObject obj = data.getJSONObject(i);
+						JSONArray data = result.getJSONArray("data");
+						for (int i = 0; i < data.length(); i++) {
+							JSONObject obj = data.getJSONObject(i);
 
-						if (obj.getString("is_default").equals("1")) {
+							if (obj.getString("is_default").equals("1")) {
 
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_ADDED, "1");
+								UtilInList.WriteSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_ADDED,
+										"1");
 
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_ID,
-									obj.getString("user_card_id"));
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_NUMBER, ""
-											+ obj.getString("card_number"));
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_CVV, "111");
+								UtilInList.WriteSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_ID,
+										obj.getString("user_card_id"));
+								UtilInList.WriteSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_NUMBER,
+										"" + obj.getString("card_number"));
+								UtilInList.WriteSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_USER_CARD_CVV,
+										"111");
 
-							UtilInList
-									.WriteSharePrefrence(
-											LoginActivity.this,
-											Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME,
-											"" + obj.getString("card_name"));
+								UtilInList
+										.WriteSharePrefrence(
+												LoginActivity.this,
+												Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME,
+												"" + obj.getString("card_name"));
 
-							String strDate = "" + obj.get("card_exp_date");
-							SimpleDateFormat sdf = new SimpleDateFormat(
-									"yyyy-MM-dd");
-							Date date1;
-							String strYear = null, strMonth = null;
-							try {
-								date1 = sdf.parse(strDate);
-								SimpleDateFormat format = new SimpleDateFormat(
-										"yyyy");
-								strYear = format.format(date1);
-								SimpleDateFormat format1 = new SimpleDateFormat(
-										"MM");
-								strMonth = format1.format(date1);
+								String strDate = "" + obj.get("card_exp_date");
+								SimpleDateFormat sdf = new SimpleDateFormat(
+										"yyyy-MM-dd");
+								Date date1;
+								String strYear = null, strMonth = null;
+								try {
+									date1 = sdf.parse(strDate);
+									SimpleDateFormat format = new SimpleDateFormat(
+											"yyyy");
+									strYear = format.format(date1);
+									SimpleDateFormat format1 = new SimpleDateFormat(
+											"MM");
+									strMonth = format1.format(date1);
 
-							} catch (java.text.ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								} catch (java.text.ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
+								UtilInList
+										.WriteSharePrefrence(
+												LoginActivity.this,
+												Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH,
+												"" + strMonth);
+
+								UtilInList
+										.WriteSharePrefrence(
+												LoginActivity.this,
+												Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR,
+												"" + strYear);
 							}
-
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH,
-									"" + strMonth);
-
-							UtilInList.WriteSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR,
-									"" + strYear);
 						}
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
-			// Push Notification Test:
-			if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
-				new PushNotificationTest(LoginActivity.this).execute();
-			}
+				// Push Notification Test:
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					new PushNotificationTest(LoginActivity.this).execute();
+				}
 
+			} else {
+				try {
+					if (result.getString("success").toString().equals("true")) {
+
+						Log.v("",
+								">>> chk this : "
+										+ result.getJSONObject("data")
+												.getString("last_name"));
+
+						UtilInList.WriteSharePrefrence(LoginActivity.this,
+								Constant.SHRED_PR.KEY_LOGIN_STATUS, "true");
+						UtilInList.WriteSharePrefrence(
+								LoginActivity.this,
+								Constant.SHRED_PR.KEY_USERID,
+								result.getJSONObject("data").getString(
+										"user_id"));
+						UtilInList
+								.WriteSharePrefrence(LoginActivity.this,
+										Constant.SHRED_PR.KEY_EMAIL, result
+												.getJSONObject("data")
+												.getString("email"));
+						UtilInList.WriteSharePrefrence(
+								LoginActivity.this,
+								Constant.SHRED_PR.KEY_FIRSTNAME,
+								result.getJSONObject("data").getString(
+										"first_name"));
+						UtilInList.WriteSharePrefrence(
+								LoginActivity.this,
+								Constant.SHRED_PR.KEY_LASTNAME,
+								result.getJSONObject("data").getString(
+										"last_name"));
+						UtilInList
+								.WriteSharePrefrence(LoginActivity.this,
+										Constant.SHRED_PR.KEY_PHONE, result
+												.getJSONObject("data")
+												.getString("phone"));
+						UtilInList.WriteSharePrefrence(
+								LoginActivity.this,
+								Constant.SHRED_PR.KEY_SESSIONID,
+								result.getJSONObject("session")
+										.getJSONObject("userInfo")
+										.getString("sessionId"));
+						UtilInList.WriteSharePrefrence(
+								LoginActivity.this,
+								Constant.SHRED_PR.KEY_VIP_STATUS,
+								result.getJSONObject("session")
+										.getJSONObject("userInfo")
+										.getString("vip_status"));
+						UtilInList.WriteSharePrefrence(LoginActivity.this,
+								Constant.SHRED_PR.KEY_CURRENT_PASSWORD,
+								edt_lgn_pwd.getText().toString().trim());
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						flagCard = true;
+						new WebServiceDataPosterAsyncTask(LoginActivity.this,
+								params, Constant.API
+										+ Constant.ACTIONS.CARD_GET).execute();
+
+					} else {
+						UtilInList.validateDialog(LoginActivity.this, result
+								.getJSONArray("errors").getString(0),
+								Constant.ERRORS.OOPS);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		} else {
-			try {
-				if (result.getString("success").toString().equals("true")) {
-
-					Log.v("",
-							">>> chk this : "
-									+ result.getJSONObject("data").getString(
-											"last_name"));
-
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_LOGIN_STATUS, "true");
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_USERID,
-							result.getJSONObject("data").getString("user_id"));
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_EMAIL,
-							result.getJSONObject("data").getString("email"));
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_FIRSTNAME,
-							result.getJSONObject("data")
-									.getString("first_name"));
-					UtilInList
-							.WriteSharePrefrence(
-									LoginActivity.this,
-									Constant.SHRED_PR.KEY_LASTNAME,
-									result.getJSONObject("data").getString(
-											"last_name"));
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_PHONE,
-							result.getJSONObject("data").getString("phone"));
-					UtilInList.WriteSharePrefrence(
+			UtilInList
+					.validateDialog(
 							LoginActivity.this,
-							Constant.SHRED_PR.KEY_SESSIONID,
-							result.getJSONObject("session")
-									.getJSONObject("userInfo")
-									.getString("sessionId"));
-					UtilInList.WriteSharePrefrence(
-							LoginActivity.this,
-							Constant.SHRED_PR.KEY_VIP_STATUS,
-							result.getJSONObject("session")
-									.getJSONObject("userInfo")
-									.getString("vip_status"));
-					UtilInList.WriteSharePrefrence(LoginActivity.this,
-							Constant.SHRED_PR.KEY_CURRENT_PASSWORD, edt_lgn_pwd
-									.getText().toString().trim());
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					flagCard = true;
-					new WebServiceDataPosterAsyncTask(LoginActivity.this,
-							params, Constant.API + Constant.ACTIONS.CARD_GET)
-							.execute();
-
-				} else {
-					UtilInList.validateDialog(LoginActivity.this, result
-							.getJSONArray("errors").getString(0),
+							"Login failed. Please restart your application and try again",
 							Constant.ERRORS.OOPS);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
 	class PushNotificationTest extends AsyncTask<Void, String, String> {
 
 		private MyProgressbar dialog;;
-		
+
 		public PushNotificationTest(Context context) {
 			// TODO Auto-generated constructor stub
 			dialog = new MyProgressbar(context);
-			
+
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
@@ -480,7 +519,7 @@ public class LoginActivity extends Activity implements
 			dialog.setCanceledOnTouchOutside(false);
 			dialog.show();
 		}
-		
+
 		@Override
 		protected String doInBackground(Void... params1) {
 			// TODO Auto-generated method stub
@@ -512,11 +551,11 @@ public class LoginActivity extends Activity implements
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
+
 			try {
 				JSONObject result = new JSONObject(result1);
 				if (result.getString("success").equals("true")) {
-					
+
 					if (UtilInList.ReadSharePrefrence(LoginActivity.this,
 							Constant.SHRED_PR.KEY_LOGIN_FROM).equals("1")) {
 						finish();
@@ -530,7 +569,7 @@ public class LoginActivity extends Activity implements
 						overridePendingTransition(R.anim.enter_from_bottom,
 								R.anim.hold_bottom);
 					}
-					
+
 				} else {
 					UtilInList.validateDialog(LoginActivity.this, result
 							.getJSONArray("errors").getString(0),
@@ -568,42 +607,52 @@ public class LoginActivity extends Activity implements
 				imm.hideSoftInputFromWindow(edt_lgn_e_mail.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(edt_lgn_pwd.getWindowToken(), 0);
 
-				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-					edt_lgn_e_mail.setText("");
-					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_e_mail.setHint("Email Invalid");
-				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
-						edt_lgn_e_mail.getText().toString().trim()).matches() == false) {
-					edt_lgn_e_mail.setText("");
-					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_e_mail.setHint("Email Invalid");
-				} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-					edt_lgn_pwd.setText("");
-					edt_lgn_pwd.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_pwd.setHint("Password Incorrect");
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
+						edt_lgn_e_mail.setText("");
+						edt_lgn_e_mail.setHintTextColor(getResources()
+								.getColor(R.color.light_red));
+						edt_lgn_e_mail.setHint("Email Invalid");
+					} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+							edt_lgn_e_mail.getText().toString().trim())
+							.matches() == false) {
+						edt_lgn_e_mail.setText("");
+						edt_lgn_e_mail.setHintTextColor(getResources()
+								.getColor(R.color.light_red));
+						edt_lgn_e_mail.setHint("Email Invalid");
+					} else if (edt_lgn_pwd.getText().toString().trim()
+							.equals("")) {
+						edt_lgn_pwd.setText("");
+						edt_lgn_pwd.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_lgn_pwd.setHint("Password Incorrect");
+					} else {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(LoginActivity.this)));
+						params.add(new BasicNameValuePair("login", ""
+								+ edt_lgn_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_lgn_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						flagCard = false;
+						new WebServiceDataPosterAsyncTask(LoginActivity.this,
+								params, Constant.API + Constant.ACTIONS.LOGIN)
+								.execute();
+
+					}
 				} else {
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("device_id", UtilInList
-							.getDeviceId(LoginActivity.this)));
-					params.add(new BasicNameValuePair("login", ""
-							+ edt_lgn_e_mail.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", edt_lgn_pwd
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					flagCard = false;
-					new WebServiceDataPosterAsyncTask(LoginActivity.this,
-							params, Constant.API + Constant.ACTIONS.LOGIN)
-							.execute();
-
+					UtilInList.validateDialog(LoginActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
 				}
 			}
 		});
@@ -617,43 +666,54 @@ public class LoginActivity extends Activity implements
 				imm.hideSoftInputFromWindow(edt_lgn_e_mail.getWindowToken(), 0);
 				imm.hideSoftInputFromWindow(edt_lgn_pwd.getWindowToken(), 0);
 
-				if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
-					edt_lgn_e_mail.setText("");
-					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_e_mail.setHint("Email Invalid");
-				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
-						edt_lgn_e_mail.getText().toString().trim()).matches() == false) {
-					edt_lgn_e_mail.setText("");
-					edt_lgn_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_e_mail.setHint("Email Invalid");
-				} else if (edt_lgn_pwd.getText().toString().trim().equals("")) {
-					edt_lgn_pwd.setText("");
-					edt_lgn_pwd.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_lgn_pwd.setHint("Password Incorrect");
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					if (edt_lgn_e_mail.getText().toString().trim().equals("")) {
+						edt_lgn_e_mail.setText("");
+						edt_lgn_e_mail.setHintTextColor(getResources()
+								.getColor(R.color.light_red));
+						edt_lgn_e_mail.setHint("Email Invalid");
+					} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+							edt_lgn_e_mail.getText().toString().trim())
+							.matches() == false) {
+						edt_lgn_e_mail.setText("");
+						edt_lgn_e_mail.setHintTextColor(getResources()
+								.getColor(R.color.light_red));
+						edt_lgn_e_mail.setHint("Email Invalid");
+					} else if (edt_lgn_pwd.getText().toString().trim()
+							.equals("")) {
+						edt_lgn_pwd.setText("");
+						edt_lgn_pwd.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_lgn_pwd.setHint("Password Incorrect");
+					} else {
+
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+						params.add(new BasicNameValuePair("device_id",
+								UtilInList.getDeviceId(LoginActivity.this)));
+						params.add(new BasicNameValuePair("login", ""
+								+ edt_lgn_e_mail.getText().toString().trim()));
+						params.add(new BasicNameValuePair("password",
+								edt_lgn_pwd.getText().toString().trim()));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
+						params.add(new BasicNameValuePair("PHPSESSIONID", ""
+								+ UtilInList.ReadSharePrefrence(
+										LoginActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+						flagCard = false;
+						new WebServiceDataPosterAsyncTask(LoginActivity.this,
+								params, Constant.API + Constant.ACTIONS.LOGIN)
+								.execute();
+
+					}
 				} else {
-
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-					params.add(new BasicNameValuePair("device_id", UtilInList
-							.getDeviceId(LoginActivity.this)));
-					params.add(new BasicNameValuePair("login", ""
-							+ edt_lgn_e_mail.getText().toString().trim()));
-					params.add(new BasicNameValuePair("password", edt_lgn_pwd
-							.getText().toString().trim()));
-					params.add(new BasicNameValuePair("device_type", "android"));
-					params.add(new BasicNameValuePair("PHPSESSIONID", ""
-							+ UtilInList.ReadSharePrefrence(LoginActivity.this,
-									Constant.SHRED_PR.KEY_SESSIONID)));
-
-					flagCard = false;
-					new WebServiceDataPosterAsyncTask(LoginActivity.this,
-							params, Constant.API + Constant.ACTIONS.LOGIN)
-							.execute();
-
+					UtilInList.validateDialog(LoginActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
 				}
+
 			}
 		});
 

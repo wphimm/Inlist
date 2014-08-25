@@ -1,21 +1,31 @@
 package co.inlist.activities;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +34,9 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -42,14 +54,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import co.inlist.adapter.HorizontalListAdapter;
-import co.inlist.interfaces.AsyncTaskCompleteListener;
-import co.inlist.serverutils.WebServiceDataPosterAsyncTask;
+import co.inlist.facebook.android.AsyncFacebookRunner;
+import co.inlist.facebook.android.AsyncFacebookRunner.RequestListener;
+import co.inlist.facebook.android.DialogError;
+import co.inlist.facebook.android.Facebook;
+import co.inlist.facebook.android.Facebook.DialogListener;
+import co.inlist.facebook.android.FacebookError;
 import co.inlist.util.Constant;
 import co.inlist.util.HorizontalListView;
+import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
+import com.parse.entity.mime.HttpMultipartMode;
+import com.parse.entity.mime.MultipartEntity;
+import com.parse.entity.mime.content.FileBody;
+import com.parse.entity.mime.content.StringBody;
+
 public class VipMemberShipActivity extends Activity implements
-		ActionBar.OnNavigationListener, AsyncTaskCompleteListener {
+		ActionBar.OnNavigationListener {
 
 	ImageView img1, img2, img3, img4, imgProfile;
 	TextView txtIncome1, txtIncome2, txtIncome3, txtIncome4;
@@ -63,11 +85,16 @@ public class VipMemberShipActivity extends Activity implements
 	static String camera_pathname = "";
 	Bitmap bmp;
 
-	public static VipMemberShipActivity vmaObj;
 	int selectedIncomePosition = -1;
 	int selectedMusicTypePosition = -1;
 
-	ArrayList<HashMap<String, String>> listMusic=new ArrayList<HashMap<String,String>>();
+	ArrayList<HashMap<String, String>> listMusic = new ArrayList<HashMap<String, String>>();
+
+	// Facebook:
+	private Facebook facebook = new Facebook(Constant.FB_API_KEY);
+	private AsyncFacebookRunner mAsyncRunner;
+	private SharedPreferences mPrefs;
+	boolean flagFB = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +106,6 @@ public class VipMemberShipActivity extends Activity implements
 		init();
 		actionBarAndButtonActions();
 
-		vmaObj = this;
-
 		String fileName = "Camera_Example.jpg";
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.Images.Media.TITLE, fileName);
@@ -89,6 +114,16 @@ public class VipMemberShipActivity extends Activity implements
 
 		horizontalList.setAdapter(new HorizontalListAdapter(listMusic,
 				getApplicationContext(), horizontalList, -1));
+
+		Handler hn = new Handler();
+		hn.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				alert();
+			}
+		}, 200);
 
 		horizontalList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -248,12 +283,43 @@ public class VipMemberShipActivity extends Activity implements
 
 	}
 
+	private void alert() {
+		// TODO Auto-generated method stub
+		AlertDialog.Builder alert = new AlertDialog.Builder(
+				VipMemberShipActivity.this);
+		alert.setTitle(Constant.AppName);
+		alert.setMessage("Optional: We suggest linking your Facebook to expedite your VIP application. We will not ask permission to post to your wall, we will only receive your publication information");
+		alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					loginToFacebook();
+				} else {
+					UtilInList.validateDialog(VipMemberShipActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
+				}
+			}
+		});
+		alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.cancel();
+			}
+		});
+		alert.create();
+		alert.show();
+	}
+
 	private void getData() {
 		// TODO Auto-generated method stub
-		String result1 = UtilInList.ReadSharePrefrence(VipMemberShipActivity.this,
-				Constant.SHRED_PR.KEY_RESULT_MUSIC);
-		Log.i("result1", ">>"+result1);
-		
+		String result1 = UtilInList.ReadSharePrefrence(
+				VipMemberShipActivity.this, Constant.SHRED_PR.KEY_RESULT_MUSIC);
+		Log.i("result1", ">>" + result1);
+
 		try {
 			/*
 			 * Prepare registration response write in file mode private
@@ -309,6 +375,7 @@ public class VipMemberShipActivity extends Activity implements
 		editOtherClub = (EditText) findViewById(R.id.editOtherClub);
 
 		horizontalList = (HorizontalListView) findViewById(R.id.listview);
+		mAsyncRunner = new AsyncFacebookRunner(facebook);
 	}
 
 	@Override
@@ -355,6 +422,7 @@ public class VipMemberShipActivity extends Activity implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		flagFB = false;
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
 
@@ -588,8 +656,18 @@ public class VipMemberShipActivity extends Activity implements
 		switch (item.getItemId()) {
 
 		case android.R.id.home:
-			finish();
-			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+			if (UtilInList
+					.ReadSharePrefrence(VipMemberShipActivity.this,
+							Constant.SHRED_PR.KEY_ADDCARD_FROM).toString()
+					.equals("1")) {
+				finish();
+				overridePendingTransition(R.anim.hold_top,
+						R.anim.exit_in_bottom);
+
+			} else {
+				finish();
+				overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+			}
 			return true;
 
 		default:
@@ -597,32 +675,13 @@ public class VipMemberShipActivity extends Activity implements
 		}
 	}
 
-	@Override
-	public void onTaskComplete(JSONObject result) {
-		// TODO Auto-generated method stub
-		try {
-			if (result.getString("success").equals("true")) {
-
-				startActivity(new Intent(VipMemberShipActivity.this,
-						VipMembershipReview.class));
-				overridePendingTransition(R.anim.enter_from_left,
-						R.anim.hold_bottom);
-
-			} else {
-
-				UtilInList.validateDialog(VipMemberShipActivity.this, result
-						.getJSONArray("errors").getString(0),
-						Constant.ERRORS.OOPS);
-
-			}
-		} catch (Exception e) {
-			Log.v("", "Exception : " + e);
-		}
-
-	}
-
 	private boolean isValidate() {
 		// TODO Auto-generated method stub
+		if (camera_pathname.length() == 0) {
+			UtilInList.validateDialog(VipMemberShipActivity.this,
+					Constant.ERRORS.PLZ_PHOTO, Constant.ERRORS.OOPS);
+			return false;
+		}
 		if (selectedIncomePosition == -1) {
 			UtilInList.validateDialog(VipMemberShipActivity.this,
 					Constant.ERRORS.PLZ_ANNUAL_INCOME, Constant.ERRORS.OOPS);
@@ -672,7 +731,14 @@ public class VipMemberShipActivity extends Activity implements
 		ImageButton action_button = (ImageButton) actionBar.getCustomView()
 				.findViewById(R.id.btn_action_bar);
 
-		action_button.setBackgroundResource(R.drawable.submit_onclick);
+		if (UtilInList
+				.ReadSharePrefrence(VipMemberShipActivity.this,
+						Constant.SHRED_PR.KEY_ADDCARD_FROM).toString()
+				.equals("1")) {
+			action_button.setBackgroundResource(R.drawable.continue_actionbar);
+		} else {
+			action_button.setBackgroundResource(R.drawable.submit_onclick);
+		}
 
 		action_button.setOnClickListener(new OnClickListener() {
 
@@ -691,33 +757,7 @@ public class VipMemberShipActivity extends Activity implements
 					if (UtilInList
 							.isInternetConnectionExist(getApplicationContext())) {
 
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-						params.add(new BasicNameValuePair("user_id", ""
-								+ UtilInList.ReadSharePrefrence(
-										VipMemberShipActivity.this,
-										Constant.SHRED_PR.KEY_USERID)));
-						params.add(new BasicNameValuePair("income_bracket_id",
-								"" + (selectedIncomePosition + 1)));
-						params.add(new BasicNameValuePair("music_type_id", ""
-								+ listMusic.get(selectedMusicTypePosition).get(
-										"music_type_id")));
-						params.add(new BasicNameValuePair("favorite_clubs", ""
-								+ editMostFrequentedClubs.getText().toString()
-										.trim()));
-						params.add(new BasicNameValuePair("other_memberships",
-								"" + editOtherClub.getText().toString().trim()));
-						params.add(new BasicNameValuePair("device_type",
-								"android"));
-						params.add(new BasicNameValuePair("PHPSESSIONID", ""
-								+ UtilInList.ReadSharePrefrence(
-										VipMemberShipActivity.this,
-										Constant.SHRED_PR.KEY_SESSIONID)));
-
-						new WebServiceDataPosterAsyncTask(
-								VipMemberShipActivity.this, params,
-								Constant.API + Constant.ACTIONS.REQUEST_VIP)
-								.execute();
+						new UploadImage(VipMemberShipActivity.this).execute();
 
 					} else {
 						UtilInList.validateDialog(VipMemberShipActivity.this,
@@ -747,33 +787,7 @@ public class VipMemberShipActivity extends Activity implements
 					if (UtilInList
 							.isInternetConnectionExist(getApplicationContext())) {
 
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-						params.add(new BasicNameValuePair("user_id", ""
-								+ UtilInList.ReadSharePrefrence(
-										VipMemberShipActivity.this,
-										Constant.SHRED_PR.KEY_USERID)));
-						params.add(new BasicNameValuePair("income_bracket_id",
-								"" + (selectedIncomePosition + 1)));
-						params.add(new BasicNameValuePair("music_type_id", ""
-								+ listMusic.get(selectedMusicTypePosition).get(
-										"music_type_id")));
-						params.add(new BasicNameValuePair("favorite_clubs", ""
-								+ editMostFrequentedClubs.getText().toString()
-										.trim()));
-						params.add(new BasicNameValuePair("other_memberships",
-								"" + editOtherClub.getText().toString().trim()));
-						params.add(new BasicNameValuePair("device_type",
-								"android"));
-						params.add(new BasicNameValuePair("PHPSESSIONID", ""
-								+ UtilInList.ReadSharePrefrence(
-										VipMemberShipActivity.this,
-										Constant.SHRED_PR.KEY_SESSIONID)));
-
-						new WebServiceDataPosterAsyncTask(
-								VipMemberShipActivity.this, params,
-								Constant.API + Constant.ACTIONS.REQUEST_VIP)
-								.execute();
+						new UploadImage(VipMemberShipActivity.this).execute();
 
 					} else {
 						UtilInList.validateDialog(VipMemberShipActivity.this,
@@ -787,12 +801,346 @@ public class VipMemberShipActivity extends Activity implements
 		});
 	}
 
+	public class UploadImage extends AsyncTask<String, String, String> {
+
+		private MyProgressbar dialog;
+		Context context;
+
+		public UploadImage(Context context) {
+			dialog = new MyProgressbar(context);
+			this.context = context;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			String response = "";
+			try {
+
+				HttpClient client = UtilInList.getNewHttpClient();
+				HttpResponse response1 = null;
+
+				HttpPost poster = new HttpPost("" + Constant.API
+						+ Constant.ACTIONS.REQUEST_VIP);
+
+				FileBody fbody = null;
+				MultipartEntity entity = new MultipartEntity(
+						HttpMultipartMode.BROWSER_COMPATIBLE);
+
+				Log.i("filePath", "" + camera_pathname);
+				if (flagFB) {
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+					byte[] imageBytes = baos.toByteArray();
+					String encodedImage = Base64.encodeToString(imageBytes,
+							Base64.DEFAULT);
+					entity.addPart("photo", new StringBody(encodedImage));
+				} else {
+					File image = new File(camera_pathname);
+					fbody = new FileBody(image, "image/jpeg");
+					entity.addPart("photo", fbody);
+				}
+
+				entity.addPart(
+						"user_id",
+						new StringBody(""
+								+ UtilInList.ReadSharePrefrence(
+										VipMemberShipActivity.this,
+										Constant.SHRED_PR.KEY_USERID)));
+				entity.addPart("income_bracket_id", new StringBody(""
+						+ (selectedIncomePosition + 1)));
+				entity.addPart(
+						"music_type_id",
+						new StringBody(""
+								+ listMusic.get(selectedMusicTypePosition).get(
+										"music_type_id")));
+				entity.addPart("favorite_clubs", new StringBody(""
+						+ editMostFrequentedClubs.getText().toString().trim()));
+				entity.addPart("other_memberships", new StringBody(""
+						+ editOtherClub.getText().toString().trim()));
+				entity.addPart("device_type", new StringBody("android"));
+				entity.addPart(
+						"PHPSESSIONID",
+						new StringBody(""
+								+ UtilInList.ReadSharePrefrence(
+										VipMemberShipActivity.this,
+										Constant.SHRED_PR.KEY_SESSIONID)));
+
+				// ************* Common Data: *****************//
+				entity.addPart("common_appVersion", new StringBody(""
+						+ UtilInList.getCommon_appVersion(context)));
+				entity.addPart("common_deviceId", new StringBody(""
+						+ UtilInList.getDeviceId(context)));
+				try {
+					entity.addPart("common_locationLatitude", new StringBody(""
+							+ SplashScreenActivity.objSplash.gps.getLatitude()));
+					entity.addPart(
+							"common_locationLongitude",
+							new StringBody(""
+									+ SplashScreenActivity.objSplash.gps
+											.getLongitude()));
+
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				// ******************************************* //
+
+				poster.setEntity(entity);
+				response1 = client.execute(poster);
+
+				BufferedReader rd = new BufferedReader(new InputStreamReader(
+						response1.getEntity().getContent()));
+				String line = null;
+				while ((line = rd.readLine()) != null) {
+					response += line;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Log.d("Resp Upload", "" + response);
+
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result1) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result1);
+
+			try {
+				dialog.dismiss();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			JSONObject result = null;
+			try {
+				result = new JSONObject(result1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				if (result.getString("success").equals("true")) {
+
+					if (UtilInList
+							.ReadSharePrefrence(VipMemberShipActivity.this,
+									Constant.SHRED_PR.KEY_ADDCARD_FROM)
+							.toString().equals("1")) {
+						startActivity(new Intent(VipMemberShipActivity.this,
+								CompletePurchaseActivity.class));
+						overridePendingTransition(R.anim.hold_top,
+								R.anim.exit_in_bottom);
+						finish();
+
+					} else {
+						startActivity(new Intent(VipMemberShipActivity.this,
+								VipMembershipReview.class));
+						overridePendingTransition(R.anim.enter_from_left,
+								R.anim.hold_bottom);
+						finish();
+					}
+
+				} else {
+
+					UtilInList.validateDialog(VipMemberShipActivity.this,
+							result.getJSONArray("errors").getString(0),
+							Constant.ERRORS.OOPS);
+
+				}
+			} catch (Exception e) {
+				Log.v("", "Exception : " + e);
+			}
+		}
+
+	}
+
+	public void loginToFacebook() {
+
+		mPrefs = getPreferences(MODE_PRIVATE);
+
+		long expires = mPrefs.getLong("access_expires", 0);
+
+		if (expires != 0) {
+			facebook.setAccessExpires(expires);
+		}
+
+		if (!facebook.isSessionValid()) {
+			facebook.authorize(VipMemberShipActivity.this, new String[] {
+					"email", "publish_stream" }, new DialogListener() {
+
+				@Override
+				public void onCancel() {
+					try {
+						facebook.logout(VipMemberShipActivity.this);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void onComplete(Bundle values) {
+					// Function to handle complete event
+					// Edit Preferences and update facebook acess_token
+					SharedPreferences.Editor editor = mPrefs.edit();
+					editor.putString("access_token", facebook.getAccessToken());
+					editor.putLong("access_expires",
+							facebook.getAccessExpires());
+					editor.commit();
+					getProfileInformation();
+				}
+
+				@Override
+				public void onError(DialogError error) {
+				}
+
+				@Override
+				public void onFacebookError(FacebookError fberror) {
+				}
+
+			});
+
+		} else {
+			getProfileInformation();
+		}
+	}
+
+	public void getProfileInformation() {
+
+		mAsyncRunner.request("me", new RequestListener() {
+
+			@Override
+			public void onComplete(String response, Object state) {
+				// TODO Auto-generated method stub
+				try {
+					final JSONObject jObj = new JSONObject(response);
+
+					Log.v("", "chk facebook response : " + jObj.toString());
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								String fbId = jObj.getString("id");
+								new SetImage(VipMemberShipActivity.this, fbId)
+										.execute();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+
+				} catch (Exception e) {
+
+					Log.v("", "Exception : " + e);
+				}
+
+			}
+
+			@Override
+			public void onIOException(IOException e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFileNotFoundException(FileNotFoundException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onMalformedURLException(MalformedURLException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFacebookError(FacebookError e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+	}
+
+	class SetImage extends AsyncTask<Void, Bitmap, Bitmap> {
+
+		private MyProgressbar dialog;
+		Context context;
+		String fbId;
+
+		public SetImage(Context context, String fbId) {
+			// TODO Auto-generated constructor stub
+			dialog = new MyProgressbar(context);
+			this.context = context;
+			this.fbId = fbId;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			dialog.setMessage("Loading...");
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected Bitmap doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			camera_pathname = "https://graph.facebook.com/" + fbId
+					+ "/picture?type=large";
+			flagFB = true;
+			return UtilInList.getBitmapFromURL(camera_pathname);
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			try {
+				dialog.dismiss();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			bmp = result;
+			imgProfile.setImageBitmap(bmp);
+
+		}
+
+	}
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
-		finish();
-		overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+		if (UtilInList
+				.ReadSharePrefrence(VipMemberShipActivity.this,
+						Constant.SHRED_PR.KEY_ADDCARD_FROM).toString()
+				.equals("1")) {
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_bottom);
+
+		} else {
+			finish();
+			overridePendingTransition(R.anim.hold_top, R.anim.exit_in_left);
+		}
 	}
 
 }

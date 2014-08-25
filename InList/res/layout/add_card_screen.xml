@@ -28,6 +28,8 @@
                 android:hint="@string/card_num"
                 android:inputType="number"
                 android:maxLength="19"
+                android:nextFocusForward="@+id/edt_card_num_cvv"
+                android:nextFocusRight="@+id/edt_card_num_cvv"
                 android:textColor="@color/light_yellow" />
 
             <EditText
@@ -46,8 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:inputType="textCapWords"
             android:hint="@string/card_name"
+            android:inputType="textCapWords"
             android:textColor="@color/light_yellow" />
 
         <LinearLayout

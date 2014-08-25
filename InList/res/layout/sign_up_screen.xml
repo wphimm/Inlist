@@ -72,9 +72,11 @@
                         android:layout_margin="3dp"
                         android:layout_weight="1"
                         android:hint="@string/fname"
+                        android:inputType="textCapWords"
+                        android:nextFocusForward="@+id/edt_su_lname"
+                        android:nextFocusRight="@+id/edt_su_lname"
                         android:shadowColor="@color/light_yellow"
                         android:singleLine="true"
-                        android:inputType="textCapWords"
                         android:textColor="@color/light_yellow"
                         android:textColorHint="@color/white_dull" />
 
@@ -83,9 +85,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dp"
-                        android:inputType="textCapWords"
                         android:layout_weight="1"
                         android:hint="@string/lname"
+                        android:inputType="textCapWords"
                         android:shadowColor="@color/light_yellow"
                         android:singleLine="true"
                         android:textColor="@color/light_yellow"
@@ -109,8 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
-                    android:inputType="textPassword"
                     android:hint="@string/pwd"
+                    android:inputType="textPassword"
                     android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />
@@ -120,8 +122,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
-                    android:inputType="phone"
                     android:hint="@string/Phno"
+                    android:inputType="phone"
                     android:singleLine="true"
                     android:textColor="@color/light_yellow"
                     android:textColorHint="@color/white_dull" />

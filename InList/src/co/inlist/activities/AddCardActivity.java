@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -92,7 +93,7 @@ public class AddCardActivity extends Activity implements
 				String subString = strCardNum.substring(
 						strCardNum.length() - 4, strCardNum.length());
 				edt_card_num.setText("**** **** **** " + subString);
-				
+
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -119,7 +120,7 @@ public class AddCardActivity extends Activity implements
 								Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR)
 								.toString())) {
 					yearPos = i;
-					
+
 				}
 			}
 			sp_year.setSelection(yearPos);
@@ -267,8 +268,8 @@ public class AddCardActivity extends Activity implements
 		Intent scanIntent = new Intent(this, CardIOActivity.class);
 
 		// required for authentication with card.io
-		scanIntent
-				.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constant.MY_CARDIO_APP_TOKEN);
+		scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN,
+				Constant.MY_CARDIO_APP_TOKEN);
 
 		// customize these values to suit your needs.
 		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false); // default:
@@ -404,8 +405,15 @@ public class AddCardActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
+		JSONObject result = null;
+		try {
+			result = new JSONObject(result1);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (flagCardDelete) {
 			try {
 				if (result.getString("success").equals("true")) {
@@ -481,11 +489,25 @@ public class AddCardActivity extends Activity implements
 							.ReadSharePrefrence(AddCardActivity.this,
 									Constant.SHRED_PR.KEY_ADDCARD_FROM)
 							.toString().equals("1")) {
-						startActivity(new Intent(AddCardActivity.this,
-								CompletePurchaseActivity.class));
-						finish();
-						overridePendingTransition(R.anim.hold_top,
-								R.anim.exit_in_bottom);
+
+						if (UtilInList
+								.ReadSharePrefrence(AddCardActivity.this,
+										Constant.SHRED_PR.KEY_VIP_STATUS)
+								.toString().equals("non-vip")) {
+
+							startActivity(new Intent(AddCardActivity.this,
+									VipMemberShipActivity.class));
+							overridePendingTransition(R.anim.enter_from_bottom,
+									R.anim.hold_bottom);
+							finish();
+
+						} else {
+							startActivity(new Intent(AddCardActivity.this,
+									CompletePurchaseActivity.class));
+							overridePendingTransition(R.anim.hold_top,
+									R.anim.exit_in_bottom);
+							finish();
+						}
 					} else {
 						UtilInList.validateDialog(AddCardActivity.this, result
 								.getJSONArray("messages").getString(0),
@@ -701,7 +723,7 @@ public class AddCardActivity extends Activity implements
 
 			}
 		});
-		
+
 	}
 
 	@Override

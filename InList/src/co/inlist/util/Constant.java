@@ -132,6 +132,7 @@ public class Constant {
 		public static final String PLZ_ENTER_OCM = "Please enter other club memberships";
 		public static final String PLZ_ANNUAL_INCOME = "Please select annual income";
 		public static final String PLZ_MUSIC_TYPE = "Please select music type";
+		public static final String PLZ_PHOTO = "Please select photo";
 
 	}
 

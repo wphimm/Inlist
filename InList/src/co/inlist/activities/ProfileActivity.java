@@ -198,6 +198,8 @@ public class ProfileActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				UtilInList.WriteSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_ADDCARD_FROM, "0");
 				startActivity(new Intent(ProfileActivity.this,
 						VipMemberShipActivity.class));
 				overridePendingTransition(R.anim.enter_from_left,
@@ -418,6 +420,43 @@ public class ProfileActivity extends Activity implements
 						}
 					}
 				}
+			}
+
+			try {
+				JSONObject jObj = new JSONObject(result);
+				UtilInList.WriteSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_SESSIONID,
+						jObj.getJSONObject("session").getJSONObject("userInfo")
+								.getString("sessionId"));
+				UtilInList.WriteSharePrefrence(ProfileActivity.this,
+						Constant.SHRED_PR.KEY_VIP_STATUS,
+						jObj.getJSONObject("session").getJSONObject("userInfo")
+								.getString("vip_status"));
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			if (UtilInList
+					.ReadSharePrefrence(ProfileActivity.this,
+							Constant.SHRED_PR.KEY_VIP_STATUS).toString()
+					.equals("vip")) {
+
+				relativeVip.setVisibility(View.GONE);
+
+			} else if (UtilInList
+					.ReadSharePrefrence(ProfileActivity.this,
+							Constant.SHRED_PR.KEY_VIP_STATUS).toString()
+					.equals("pending")) {
+
+				relativeVip.setVisibility(View.VISIBLE);
+				txt_vip_membership_req.setText("PENDING VIP REQUEST");
+
+			} else {
+
+				relativeVip.setVisibility(View.VISIBLE);
+				txt_vip_membership_req.setText("REQUEST VIP MEMBERSHIP");
+
 			}
 
 		}

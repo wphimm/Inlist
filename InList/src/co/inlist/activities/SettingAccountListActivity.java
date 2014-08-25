@@ -297,7 +297,7 @@ public class SettingAccountListActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result) {
 		// TODO Auto-generated method stub
 		Log.e("result:", ">>>>>" + result);
 	}

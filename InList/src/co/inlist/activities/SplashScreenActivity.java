@@ -14,9 +14,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 import co.inlist.util.Constant;
+import co.inlist.util.GPSTracker;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
@@ -30,6 +32,7 @@ public class SplashScreenActivity extends Activity {
 
 	public static final int SPLASH_TIMEOUT = 2000;
 	public static SplashScreenActivity objSplash;
+	public GPSTracker gps;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class SplashScreenActivity extends Activity {
 				"53f5d8ba07229a6bcc000008");
 
 		objSplash = this;
+		gps = new GPSTracker(getApplicationContext());
 
 		try {
 			Parse.initialize(this, Constant.YOUR_APP_ID,
@@ -49,24 +53,28 @@ public class SplashScreenActivity extends Activity {
 					.setDefaultPushCallback(this, SplashScreenActivity.class);
 			ParseInstallation.getCurrentInstallation().saveInBackground();
 			ParseAnalytics.trackAppOpened(getIntent());
-			Log.e("parse id:", ">>"
-					+ ParseInstallation.getCurrentInstallation()
-							.getInstallationId());
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 
-		if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
+		Handler hn = new Handler();
+		hn.postDelayed(new Runnable() {
 
-			new PrepRegAsyncTask().execute();
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					new PrepRegAsyncTask().execute();
+				} else {
+					UtilInList.validateDialog(SplashScreenActivity.this, ""
+							+ Constant.ERRORS.NO_INTERNET_CONNECTION,
+							Constant.ERRORS.NO_INTERNET_CONNECTION_TITLE);
 
-		} else {
-			UtilInList.validateDialog(SplashScreenActivity.this, ""
-					+ Constant.ERRORS.NO_INTERNET_CONNECTION,
-					Constant.ERRORS.NO_INTERNET_CONNECTION_TITLE);
-
-		}
+				}
+			}
+		}, 200);
 
 	}
 
@@ -102,10 +110,6 @@ public class SplashScreenActivity extends Activity {
 
 			try {
 				JSONObject result = new JSONObject(result1);
-				UtilInList.writeToFile(result.getJSONObject("data").toString(),
-						Constant.PREF_VAL.OFFLINE_FILE_PRE_REGISTER,
-						SplashScreenActivity.this);
-
 				String str_temp = result.getString("status");
 				if (str_temp.equals("success")) {
 
@@ -129,7 +133,7 @@ public class SplashScreenActivity extends Activity {
 				e.printStackTrace();
 			}
 
-			new PartyAreaAsyncTask(getApplicationContext()).execute("");
+			checkPrefsAndSplash();
 
 		}
 
@@ -193,7 +197,7 @@ public class SplashScreenActivity extends Activity {
 				e.printStackTrace();
 			}
 
-			new AddDeviceAsyncTask().execute();
+			new PartyAreaAsyncTask(getApplicationContext()).execute("");
 		}
 
 	}
@@ -237,12 +241,13 @@ public class SplashScreenActivity extends Activity {
 			UtilInList.WriteSharePrefrence(SplashScreenActivity.this,
 					Constant.SHRED_PR.KEY_RESULT_PARTY_AREA, "" + result);
 
-			checkPrefsAndSplash();
+			new AddDeviceAsyncTask().execute();
 		}
 
 	}
 
 	private void checkPrefsAndSplash() {
+
 		try {
 			new Timer().schedule(new TimerTask() {
 				public void run() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -202,8 +203,15 @@ public class NotificationsSettingsActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
+		JSONObject result = null;
+		try {
+			result = new JSONObject(result1);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			if (result.getString("success").equals("true")) {
 

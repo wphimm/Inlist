@@ -768,8 +768,15 @@ public class HomeScreenActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
+		JSONObject result = null;
+		try {
+			result = new JSONObject(result1);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			if (result.getString("success").equals("true")) {
 

@@ -5,7 +5,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -14,10 +13,9 @@ import co.inlist.interfaces.AsyncTaskCompleteListener;
 import co.inlist.util.MyProgressbar;
 
 public class WebServiceDataCollectorAsyncTask extends
-		AsyncTask<String, Void, JSONObject> {
+		AsyncTask<String, Void, String> {
 	private final HttpClient Client = new DefaultHttpClient();
 	private String content;
-	private JSONObject jObj;
 	public AsyncTaskCompleteListener callback;
 	String URL;
 	MyProgressbar progress;
@@ -29,7 +27,7 @@ public class WebServiceDataCollectorAsyncTask extends
 	}
 
 	@Override
-	protected JSONObject doInBackground(String... arg0) {
+	protected String doInBackground(String... arg0) {
 		// TODO Auto-generated method stub
 
 		try {
@@ -41,20 +39,19 @@ public class WebServiceDataCollectorAsyncTask extends
 
 			content = Client.execute(httpget, responseHandler);
 
-			jObj = new JSONObject(content);
-
 		} catch (Exception e) {
 			Log.v("WebServiceDataCollectorAsyncTask.java",
 					"Exception to call web service : " + e);
 		}
 
-		return jObj;
+		return content;
 	}
 
 	@Override
-	protected void onPostExecute(JSONObject result) {
-		callback.onTaskComplete(result);
+	protected void onPostExecute(String result) {
+		
 		progress.dismiss();
+		callback.onTaskComplete(result);
 	}
 
 	@Override

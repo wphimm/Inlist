@@ -80,6 +80,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import co.inlist.activities.R;
+import co.inlist.activities.SplashScreenActivity;
 
 @SuppressLint("SimpleDateFormat")
 public class UtilInList {
@@ -196,9 +197,7 @@ public class UtilInList {
 					tv.setText(
 							addClickablePartTextViewResizable(
 									Html.fromHtml(text), tv, maxLine,
-									expandText, viewMore),
-
-							BufferType.SPANNABLE);
+									expandText, viewMore), BufferType.SPANNABLE);
 				} else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
 					int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
 
@@ -547,7 +546,6 @@ public class UtilInList {
 		@SuppressWarnings("static-access")
 		SharedPreferences read_data = context.getSharedPreferences(
 				Constant.SHRED_PR.SHARE_PREF, context.MODE_PRIVATE);
-		
 
 		return read_data.getString(key, Constant.BLANK);
 	}
@@ -560,15 +558,21 @@ public class UtilInList {
 		HttpPost httpPost = new HttpPost(url);
 
 		// ************* Common Data: *****************//
-		//GPSTracker gps = new GPSTracker(context);
 		nameValuePairs.add(new BasicNameValuePair("common_appVersion", ""
 				+ UtilInList.getCommon_appVersion(context)));
 		nameValuePairs.add(new BasicNameValuePair("common_deviceId", ""
 				+ UtilInList.getDeviceId(context)));
-//		nameValuePairs.add(new BasicNameValuePair("common_locationLatitude", ""
-//				+ gps.getLatitude()));
-//		nameValuePairs.add(new BasicNameValuePair("common_locationLongitude",
-//				"" + gps.getLongitude()));
+		try {
+			nameValuePairs
+					.add(new BasicNameValuePair("common_locationLatitude", ""
+							+ SplashScreenActivity.objSplash.gps.getLatitude()));
+			nameValuePairs
+					.add(new BasicNameValuePair("common_locationLongitude", ""
+							+ SplashScreenActivity.objSplash.gps.getLongitude()));
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		// ******************************************* //
 
 		Log.e("reqURL", "" + url);

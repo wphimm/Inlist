@@ -3,13 +3,13 @@ package co.inlist.serverutils;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import co.inlist.interfaces.AsyncTaskCompleteListener;
+import co.inlist.util.Constant;
 import co.inlist.util.MyProgressbar;
 import co.inlist.util.UtilInList;
 
@@ -62,17 +62,21 @@ public class WebServiceDataPosterAsyncTask extends
 			// TODO: handle exception
 		}
 
-		Log.i("result", ">>" + result);
-
-		JSONObject jObj;
 		try {
-			jObj = new JSONObject(result);
-			callback.onTaskComplete(jObj);
-			// fragment_addconnection_search
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JSONObject jObj = new JSONObject(result);
+			UtilInList.WriteSharePrefrence(context,
+					Constant.SHRED_PR.KEY_SESSIONID,
+					jObj.getJSONObject("session").getJSONObject("userInfo")
+							.getString("sessionId"));
+			UtilInList.WriteSharePrefrence(context,
+					Constant.SHRED_PR.KEY_VIP_STATUS,
+					jObj.getJSONObject("session").getJSONObject("userInfo")
+							.getString("vip_status"));
+
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
+		callback.onTaskComplete(result);
 
 	}
 

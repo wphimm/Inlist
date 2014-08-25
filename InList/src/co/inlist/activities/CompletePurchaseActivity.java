@@ -1,6 +1,5 @@
 package co.inlist.activities;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -175,42 +174,45 @@ public class CompletePurchaseActivity extends Activity implements
 				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
 						Constant.SHRED_PR.KEY_YOUR_MINIMUM).toString() + " ");
 
-		String strCardNum = ""
-				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
-						Constant.SHRED_PR.KEY_USER_CARD_NUMBER).toString();
-		txtCardNum.setText("" + strCardNum);
 
-		try {
-			String subString = strCardNum.substring(strCardNum.length() - 4,
-					strCardNum.length());
-			txtCardNum.setText("**** **** **** " + subString);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		txtCardName
-				.setText(""
-						+ UtilInList.ReadSharePrefrence(
-								CompletePurchaseActivity.this,
-								Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME)
-								.toString());
-
-		String strYear = ""
-				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
-						Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR).toString();
-
-		try {
-			strYear = strYear.substring(strYear.length() - 2, strYear.length());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		String strMonthYear = new DecimalFormat("00").format(Integer
-				.parseInt(UtilInList.ReadSharePrefrence(
-						CompletePurchaseActivity.this,
-						Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH).toString()))
-				+ "/" + strYear;
-		txtDate.setText("" + strMonthYear);
+		
+//		String strCardNum = ""
+//				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
+//						Constant.SHRED_PR.KEY_USER_CARD_NUMBER).toString();
+//		txtCardNum.setText("" + strCardNum);
+//
+//		try {
+//			String subString = strCardNum.substring(strCardNum.length() - 4,
+//					strCardNum.length());
+//			txtCardNum.setText("**** **** **** " + subString);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//
+//		txtCardName
+//				.setText(""
+//						+ UtilInList.ReadSharePrefrence(
+//								CompletePurchaseActivity.this,
+//								Constant.SHRED_PR.KEY_USER_CARD_HOLDER_NAME)
+//								.toString());
+//
+//		String strYear = ""
+//				+ UtilInList.ReadSharePrefrence(CompletePurchaseActivity.this,
+//						Constant.SHRED_PR.KEY_USER_CARD_EXP_YEAR).toString();
+//
+//		try {
+//			strYear = strYear.substring(strYear.length() - 2, strYear.length());
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//
+//		String strMonthYear = new DecimalFormat("00").format(Integer
+//				.parseInt(UtilInList.ReadSharePrefrence(
+//						CompletePurchaseActivity.this,
+//						Constant.SHRED_PR.KEY_USER_CARD_EXP_MONTH).toString()))
+//				+ "/" + strYear;
+//		txtDate.setText("" + strMonthYear);
+		
 
 		// ****** Payment Type **********************//
 		if (map.get("payment_type").equals("at_door")) {
@@ -292,8 +294,15 @@ public class CompletePurchaseActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
+		JSONObject result = null;
+		try {
+			result = new JSONObject(result1);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (flagQuote) {
 			try {
 				if (result.getString("success").equals("true")) {

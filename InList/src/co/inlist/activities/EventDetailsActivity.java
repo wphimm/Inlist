@@ -277,7 +277,11 @@ public class EventDetailsActivity extends Activity implements
 
 		txt_details.setText("" + map.get("event_description") + " ");
 
-		UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
+		try {
+			UtilInList.makeTextViewResizable(txt_details, 3, "MORE", true);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		txt_atmosphere.setText("" + map.get("atmosphere"));
 		txt_music.setText("" + map.get("music_type"));
@@ -709,16 +713,6 @@ public class EventDetailsActivity extends Activity implements
 
 			final View imageLayout = inflater.inflate(pageId, null);
 
-			// RelativeLayout.LayoutParams layoutParams = new
-			// RelativeLayout.LayoutParams(
-			// RelativeLayout.LayoutParams.WRAP_CONTENT,
-			// RelativeLayout.LayoutParams.WRAP_CONTENT);
-			//
-			// layoutParams.width = img_event_poster_url.getWidth();
-			// layoutParams.height = img_event_poster_url.getHeight();
-			//
-			// pager.setLayoutParams(layoutParams);
-
 			final ImageView imageView = (ImageView) imageLayout
 					.findViewById(R.id.image);
 
@@ -994,6 +988,21 @@ public class EventDetailsActivity extends Activity implements
 				e.printStackTrace();
 			}
 
+			try {
+				JSONObject jObj = new JSONObject(result);
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_SESSIONID,
+						jObj.getJSONObject("session").getJSONObject("userInfo")
+								.getString("sessionId"));
+				UtilInList.WriteSharePrefrence(EventDetailsActivity.this,
+						Constant.SHRED_PR.KEY_VIP_STATUS,
+						jObj.getJSONObject("session").getJSONObject("userInfo")
+								.getString("vip_status"));
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
 			if (UtilInList.isInternetConnectionExist(getApplicationContext())) {
 				new PushNotificationTest().execute();
 			}
@@ -1089,24 +1098,40 @@ public class EventDetailsActivity extends Activity implements
 							EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
-						if (map.get("card_required").equals("0")) {
-							startActivity(new Intent(EventDetailsActivity.this,
-									CompletePurchaseActivity.class));
-							overridePendingTransition(R.anim.enter_from_left,
-									R.anim.hold_bottom);
-						} else {
+						// User Already Logged in:
+
+						if (UtilInList
+								.ReadSharePrefrence(EventDetailsActivity.this,
+										Constant.SHRED_PR.KEY_VIP_STATUS)
+								.toString().equals("non-vip")) {
+
+							// Need to send VIP Request:
+
 							if (UtilInList
 									.ReadSharePrefrence(
 											EventDetailsActivity.this,
 											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-									.toString().equals("1")) {
+									.toString().equals("1")
+									|| map.get("card_required").equals("0")) {
+
+								// Card already added or card not required:
+
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
 								startActivity(new Intent(
 										EventDetailsActivity.this,
-										CompletePurchaseActivity.class));
+										VipMemberShipActivity.class));
 								overridePendingTransition(
-										R.anim.enter_from_left,
+										R.anim.enter_from_bottom,
 										R.anim.hold_bottom);
+
 							} else {
+
+								// Card required:
+
 								UtilInList
 										.WriteSharePrefrence(
 												EventDetailsActivity.this,
@@ -1118,9 +1143,48 @@ public class EventDetailsActivity extends Activity implements
 								overridePendingTransition(
 										R.anim.enter_from_bottom,
 										R.anim.hold_bottom);
+
+							}
+						} else {
+							if (UtilInList
+									.ReadSharePrefrence(
+											EventDetailsActivity.this,
+											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+									.toString().equals("1")
+									|| map.get("card_required").equals("0")) {
+
+								// Card already added or card not required:
+
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										CompletePurchaseActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_left,
+										R.anim.hold_bottom);
+
+							} else {
+
+								// Card required:
+
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										AddCardActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_bottom,
+										R.anim.hold_bottom);
+
 							}
 						}
+
 					} else {
+
+						// User not logged in:
+
 						UtilInList.WriteSharePrefrence(
 								EventDetailsActivity.this,
 								Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
@@ -1129,6 +1193,7 @@ public class EventDetailsActivity extends Activity implements
 								LoginActivity.class));
 						overridePendingTransition(R.anim.enter_from_bottom,
 								R.anim.hold_bottom);
+
 					}
 				}
 			}
@@ -1177,24 +1242,40 @@ public class EventDetailsActivity extends Activity implements
 							EventDetailsActivity.this,
 							Constant.SHRED_PR.KEY_LOGIN_STATUS).equals("true")) {
 
-						if (map.get("card_required").equals("0")) {
-							startActivity(new Intent(EventDetailsActivity.this,
-									CompletePurchaseActivity.class));
-							overridePendingTransition(R.anim.enter_from_left,
-									R.anim.hold_bottom);
-						} else {
+						// User Already Logged in:
+
+						if (UtilInList
+								.ReadSharePrefrence(EventDetailsActivity.this,
+										Constant.SHRED_PR.KEY_VIP_STATUS)
+								.toString().equals("non-vip")) {
+
+							// Need to send VIP Request:
+
 							if (UtilInList
 									.ReadSharePrefrence(
 											EventDetailsActivity.this,
 											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
-									.toString().equals("1")) {
+									.toString().equals("1")
+									|| map.get("card_required").equals("0")) {
+
+								// Card already added or card not required:
+
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
 								startActivity(new Intent(
 										EventDetailsActivity.this,
-										CompletePurchaseActivity.class));
+										VipMemberShipActivity.class));
 								overridePendingTransition(
-										R.anim.enter_from_left,
+										R.anim.enter_from_bottom,
 										R.anim.hold_bottom);
+
 							} else {
+
+								// Card required:
+
 								UtilInList
 										.WriteSharePrefrence(
 												EventDetailsActivity.this,
@@ -1206,9 +1287,48 @@ public class EventDetailsActivity extends Activity implements
 								overridePendingTransition(
 										R.anim.enter_from_bottom,
 										R.anim.hold_bottom);
+
+							}
+						} else {
+							if (UtilInList
+									.ReadSharePrefrence(
+											EventDetailsActivity.this,
+											Constant.SHRED_PR.KEY_USER_CARD_ADDED)
+									.toString().equals("1")
+									|| map.get("card_required").equals("0")) {
+
+								// Card already added or card not required:
+
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										CompletePurchaseActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_left,
+										R.anim.hold_bottom);
+
+							} else {
+
+								// Card required:
+
+								UtilInList
+										.WriteSharePrefrence(
+												EventDetailsActivity.this,
+												Constant.SHRED_PR.KEY_ADDCARD_FROM,
+												"1");
+								startActivity(new Intent(
+										EventDetailsActivity.this,
+										AddCardActivity.class));
+								overridePendingTransition(
+										R.anim.enter_from_bottom,
+										R.anim.hold_bottom);
+
 							}
 						}
+
 					} else {
+
+						// User not logged in:
+
 						UtilInList.WriteSharePrefrence(
 								EventDetailsActivity.this,
 								Constant.SHRED_PR.KEY_LOGIN_FROM, "1");
@@ -1217,6 +1337,7 @@ public class EventDetailsActivity extends Activity implements
 								LoginActivity.class));
 						overridePendingTransition(R.anim.enter_from_bottom,
 								R.anim.hold_bottom);
+
 					}
 				}
 			}

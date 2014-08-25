@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -395,8 +397,15 @@ public class SignUpActivity extends Activity implements
 	}
 
 	@Override
-	public void onTaskComplete(JSONObject result) {
+	public void onTaskComplete(String result1) {
 		// TODO Auto-generated method stub
+		JSONObject result = null;
+		try {
+			result = new JSONObject(result1);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			Log.v("", ">>>>> chk register response : " + result.toString());
 			if (result.getString("success").toString().equals("true")) {
@@ -561,7 +570,8 @@ public class SignUpActivity extends Activity implements
 										.replace(" ", "%20")));
 						params.add(new BasicNameValuePair("access_token", ""
 								+ facebook.getAccessToken().toString().trim()));
-						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
 						params.add(new BasicNameValuePair("PHPSESSIONID", ""
 								+ UtilInList.ReadSharePrefrence(
 										SignUpActivity.this,
@@ -594,7 +604,8 @@ public class SignUpActivity extends Activity implements
 								"membership_question_answer", edt_su_ans
 										.getText().toString().trim()
 										.replace(" ", "%20")));
-						params.add(new BasicNameValuePair("device_type", "android"));
+						params.add(new BasicNameValuePair("device_type",
+								"android"));
 						params.add(new BasicNameValuePair("PHPSESSIONID", ""
 								+ UtilInList.ReadSharePrefrence(
 										SignUpActivity.this,
@@ -617,115 +628,146 @@ public class SignUpActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (edt_su_fname.getText().toString().trim().equals("")) {
-					edt_su_fname.setText("");
-					edt_su_fname.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_fname.setHint("First Name");
-				} else if (edt_su_lname.getText().toString().trim().equals("")) {
-					edt_su_lname.setText("");
-					edt_su_lname.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_lname.setHint("Last Name");
-				} else if (edt_su_e_mail.getText().toString().trim().equals("")) {
-					edt_su_e_mail.setText("");
-					edt_su_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_e_mail.setHint("Email Invalid");
-				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
-						edt_su_e_mail.getText().toString().trim()).matches() == false) {
-					edt_su_e_mail.setText("");
-					edt_su_e_mail.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_e_mail.setHint("Email Invalid");
-				} else if (edt_su_pwd.getText().toString().trim().equals("")) {
-					edt_su_pwd.setText("");
-					edt_su_pwd.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_pwd.setHint("Password Incorrect");
-				} else if (edt_su_phno.getText().toString().trim().equals("")) {
-					edt_su_phno.setText("");
-					edt_su_phno.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_phno.setHint("Phone Number Incorrect");
-				} else if (edt_su_ans.getText().toString().trim().equals("")) {
-					edt_su_ans.setText("");
-					edt_su_ans.setHintTextColor(getResources().getColor(
-							R.color.light_red));
-					edt_su_ans.setHint("Please Enter Answer");
 
-				} else {
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(edt_su_fname.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_su_lname.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_su_e_mail.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_su_pwd.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_su_phno.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(edt_su_ans.getWindowToken(), 0);
 
-					if (fb_regiter_flag) {
-
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-						params.add(new BasicNameValuePair("device_id",
-								UtilInList.getDeviceId(SignUpActivity.this)));
-						params.add(new BasicNameValuePair("email",
-								edt_su_e_mail.getText().toString().trim()));
-						params.add(new BasicNameValuePair("password",
-								edt_su_pwd.getText().toString().trim()));
-						params.add(new BasicNameValuePair("first_name",
-								edt_su_fname.getText().toString().trim()));
-						params.add(new BasicNameValuePair("last_name",
-								edt_su_lname.getText().toString().trim()));
-						params.add(new BasicNameValuePair("phone", edt_su_phno
-								.getText().toString().trim()));
-						params.add(new BasicNameValuePair(
-								"membership_question_id", question_id));
-						params.add(new BasicNameValuePair(
-								"membership_question_answer", edt_su_ans
-										.getText().toString().trim()
-										.replace(" ", "%20")));
-						params.add(new BasicNameValuePair("access_token", ""
-								+ facebook.getAccessToken().toString().trim()));
-						params.add(new BasicNameValuePair("device_type", "android"));
-						params.add(new BasicNameValuePair("PHPSESSIONID", ""
-								+ UtilInList.ReadSharePrefrence(
-										SignUpActivity.this,
-										Constant.SHRED_PR.KEY_SESSIONID)));
-
-						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
-								params, Constant.API
-										+ Constant.ACTIONS.REGISTER_FB)
-								.execute();
+				if (UtilInList
+						.isInternetConnectionExist(getApplicationContext())) {
+					if (edt_su_fname.getText().toString().trim().equals("")) {
+						edt_su_fname.setText("");
+						edt_su_fname.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_fname.setHint("First Name");
+					} else if (edt_su_lname.getText().toString().trim()
+							.equals("")) {
+						edt_su_lname.setText("");
+						edt_su_lname.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_lname.setHint("Last Name");
+					} else if (edt_su_e_mail.getText().toString().trim()
+							.equals("")) {
+						edt_su_e_mail.setText("");
+						edt_su_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_e_mail.setHint("Email Invalid");
+					} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(
+							edt_su_e_mail.getText().toString().trim())
+							.matches() == false) {
+						edt_su_e_mail.setText("");
+						edt_su_e_mail.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_e_mail.setHint("Email Invalid");
+					} else if (edt_su_pwd.getText().toString().trim()
+							.equals("")) {
+						edt_su_pwd.setText("");
+						edt_su_pwd.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_pwd.setHint("Password Incorrect");
+					} else if (edt_su_phno.getText().toString().trim()
+							.equals("")) {
+						edt_su_phno.setText("");
+						edt_su_phno.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_phno.setHint("Phone Number Incorrect");
+					} else if (edt_su_ans.getText().toString().trim()
+							.equals("")) {
+						edt_su_ans.setText("");
+						edt_su_ans.setHintTextColor(getResources().getColor(
+								R.color.light_red));
+						edt_su_ans.setHint("Please Enter Answer");
 
 					} else {
 
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						if (fb_regiter_flag) {
 
-						params.add(new BasicNameValuePair("device_id",
-								UtilInList.getDeviceId(SignUpActivity.this)));
-						params.add(new BasicNameValuePair("email",
-								edt_su_e_mail.getText().toString().trim()));
-						params.add(new BasicNameValuePair("password",
-								edt_su_pwd.getText().toString().trim()));
-						params.add(new BasicNameValuePair("first_name",
-								edt_su_fname.getText().toString().trim()));
-						params.add(new BasicNameValuePair("last_name",
-								edt_su_lname.getText().toString().trim()));
-						params.add(new BasicNameValuePair("phone", edt_su_phno
-								.getText().toString().trim()));
-						params.add(new BasicNameValuePair(
-								"membership_question_id", question_id));
-						params.add(new BasicNameValuePair(
-								"membership_question_answer", edt_su_ans
-										.getText().toString().trim()
-										.replace(" ", "%20")));
-						params.add(new BasicNameValuePair("device_type", "android"));
-						params.add(new BasicNameValuePair("PHPSESSIONID", ""
-								+ UtilInList.ReadSharePrefrence(
-										SignUpActivity.this,
-										Constant.SHRED_PR.KEY_SESSIONID)));
+							List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-						new WebServiceDataPosterAsyncTask(SignUpActivity.this,
-								params, Constant.API
-										+ Constant.ACTIONS.REGISTRATION)
-								.execute();
+							params.add(new BasicNameValuePair("device_id",
+									UtilInList.getDeviceId(SignUpActivity.this)));
+							params.add(new BasicNameValuePair("email",
+									edt_su_e_mail.getText().toString().trim()));
+							params.add(new BasicNameValuePair("password",
+									edt_su_pwd.getText().toString().trim()));
+							params.add(new BasicNameValuePair("first_name",
+									edt_su_fname.getText().toString().trim()));
+							params.add(new BasicNameValuePair("last_name",
+									edt_su_lname.getText().toString().trim()));
+							params.add(new BasicNameValuePair("phone",
+									edt_su_phno.getText().toString().trim()));
+							params.add(new BasicNameValuePair(
+									"membership_question_id", question_id));
+							params.add(new BasicNameValuePair(
+									"membership_question_answer", edt_su_ans
+											.getText().toString().trim()
+											.replace(" ", "%20")));
+							params.add(new BasicNameValuePair("access_token",
+									""
+											+ facebook.getAccessToken()
+													.toString().trim()));
+							params.add(new BasicNameValuePair("device_type",
+									"android"));
+							params.add(new BasicNameValuePair(
+									"PHPSESSIONID",
+									""
+											+ UtilInList
+													.ReadSharePrefrence(
+															SignUpActivity.this,
+															Constant.SHRED_PR.KEY_SESSIONID)));
 
+							new WebServiceDataPosterAsyncTask(
+									SignUpActivity.this, params, Constant.API
+											+ Constant.ACTIONS.REGISTER_FB)
+									.execute();
+
+						} else {
+
+							List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+							params.add(new BasicNameValuePair("device_id",
+									UtilInList.getDeviceId(SignUpActivity.this)));
+							params.add(new BasicNameValuePair("email",
+									edt_su_e_mail.getText().toString().trim()));
+							params.add(new BasicNameValuePair("password",
+									edt_su_pwd.getText().toString().trim()));
+							params.add(new BasicNameValuePair("first_name",
+									edt_su_fname.getText().toString().trim()));
+							params.add(new BasicNameValuePair("last_name",
+									edt_su_lname.getText().toString().trim()));
+							params.add(new BasicNameValuePair("phone",
+									edt_su_phno.getText().toString().trim()));
+							params.add(new BasicNameValuePair(
+									"membership_question_id", question_id));
+							params.add(new BasicNameValuePair(
+									"membership_question_answer", edt_su_ans
+											.getText().toString().trim()
+											.replace(" ", "%20")));
+							params.add(new BasicNameValuePair("device_type",
+									"android"));
+							params.add(new BasicNameValuePair(
+									"PHPSESSIONID",
+									""
+											+ UtilInList
+													.ReadSharePrefrence(
+															SignUpActivity.this,
+															Constant.SHRED_PR.KEY_SESSIONID)));
+
+							new WebServiceDataPosterAsyncTask(
+									SignUpActivity.this, params, Constant.API
+											+ Constant.ACTIONS.REGISTRATION)
+									.execute();
+
+						}
 					}
 
+				} else {
+					UtilInList.validateDialog(SignUpActivity.this, ""
+							+ Constant.network_error, Constant.AppName);
 				}
 
 			}

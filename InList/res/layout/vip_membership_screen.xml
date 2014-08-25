@@ -25,7 +25,8 @@
                     android:layout_width="110dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/user"
-                    android:contentDescription="@string/iv_desc" />
+                    android:contentDescription="@string/iv_desc"
+                    android:scaleType="fitXY" />
 
                 <View
                     android:layout_width="1dp"
